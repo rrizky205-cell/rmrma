@@ -1,0 +1,16 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/dashboard", "destination": "/dashboard.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/register", "destination": "/register.html" },
+    { "source": "/budget", "destination": "/budget.html" },
+    { "source": "/wallet", "destination": "/wallet.html" },
+    { "source": "/laporan", "destination": "/laporan.html" },
+    { "source": "/settings", "destination": "/settings.html" },
+    { "source": "/transaksi", "destination": "/dashboard.html" },
+    { "source": "/download-zip", "destination": "/tatadana-project.zip" }
+  ]
+}

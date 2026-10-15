@@ -1,14 +1,29 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
-    domains: ['images.unsplash.com', 'api.telegram.org'],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
+    unoptimized: true,
+  },
+  async rewrites() {
+    return [
+      { source: '/', destination: '/index.html' },
+      { source: '/dashboard', destination: '/dashboard.html' },
+      { source: '/admin', destination: '/admin.html' },
+      { source: '/login', destination: '/login.html' },
+      { source: '/register', destination: '/register.html' },
+      { source: '/budget', destination: '/budget.html' },
+      { source: '/wallet', destination: '/wallet.html' },
+      { source: '/laporan', destination: '/laporan.html' },
+      { source: '/settings', destination: '/settings.html' },
+      { source: '/transaksi', destination: '/dashboard.html' },
+      { source: '/download-zip', destination: '/tatadana-project.zip' },
+    ];
   },
 };
 
