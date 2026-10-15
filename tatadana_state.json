@@ -1,0 +1,157 @@
+﻿{
+    "wallets":  [
+                    {
+                        "id":  "w1",
+                        "name":  "BCA",
+                        "balance":  9000000,
+                        "type":  "bank",
+                        "color":  "#0066AE",
+                        "isDefault":  true
+                    },
+                    {
+                        "id":  "w2",
+                        "name":  "Mandiri",
+                        "balance":  200000,
+                        "type":  "bank",
+                        "color":  "#003D79",
+                        "isDefault":  false
+                    },
+                    {
+                        "id":  "w3",
+                        "name":  "GoPay",
+                        "balance":  0,
+                        "type":  "ewallet",
+                        "color":  "#00AED6",
+                        "isDefault":  false
+                    },
+                    {
+                        "id":  "w4",
+                        "name":  "Cash",
+                        "balance":  0,
+                        "type":  "cash",
+                        "color":  "#10B981",
+                        "isDefault":  false
+                    }
+                ],
+    "budgets":  [
+                    {
+                        "id":  "b_1792080151725",
+                        "name":  "⛽ Bensin",
+                        "limit":  500000,
+                        "color":  "#facc15"
+                    }
+                ],
+    "customCategories":  [
+                             "🎮 Top Up Skin ML",
+                             "🏋️ Member gym",
+                             "👶 Kebutuhan Anak",
+                             "✈️ Traveling",
+                             "🚗 Transportasi",
+                             "🌐 Kuota",
+                             "⛽ Bensin"
+                         ],
+    "chatHistory":  [
+                        {
+                            "id":  "ch_init_1792079633946",
+                            "text":  "Pendaftaran akun baru: Mimah (anggora11@gmail.com)",
+                            "time":  "2026-10-15 22:53",
+                            "reply":  "Selamat datang di TataDana! Seluruh saldo dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
+                            "sender":  "system",
+                            "platform":  "web"
+                        },
+                        {
+                            "id":  "ch_init_1792079633881",
+                            "text":  "Pendaftaran akun baru: Mimah (anggora11@gmail.com)",
+                            "time":  "2026-10-15 15:53",
+                            "reply":  "Selamat datang di TataDana! Seluruh saldo, budgeting, dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
+                            "sender":  "system",
+                            "platform":  "web"
+                        },
+                        {
+                            "id":  "ch_init_1792079988790",
+                            "sender":  "system",
+                            "text":  "Pendaftaran akun baru: Monyet (beruk99@gmail.com)",
+                            "reply":  "Selamat datang di TataDana! Seluruh saldo dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
+                            "time":  "2026-10-15 22:59",
+                            "platform":  "web"
+                        },
+                        {
+                            "id":  "ch_init_1792079988740",
+                            "sender":  "system",
+                            "text":  "Pendaftaran akun baru: Monyet (beruk99@gmail.com)",
+                            "reply":  "Selamat datang di TataDana! Seluruh saldo, budgeting, dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
+                            "time":  "2026-10-15 15:59",
+                            "platform":  "web"
+                        }
+                    ],
+    "transactions":  [
+                         {
+                             "id":  "tx_1792080127508",
+                             "type":  "income",
+                             "amount":  9000000,
+                             "walletId":  "w1",
+                             "walletName":  "BCA",
+                             "targetWalletId":  null,
+                             "targetWalletName":  null,
+                             "category":  "💰 Gaji Pokok \u0026 Upah",
+                             "note":  "",
+                             "date":  "2026-10-15",
+                             "datetime":  "2026-10-15 23:02"
+                         },
+                         {
+                             "id":  "tx_1792080100529",
+                             "type":  "income",
+                             "amount":  200000,
+                             "walletId":  "w2",
+                             "walletName":  "Mandiri",
+                             "targetWalletId":  null,
+                             "targetWalletName":  null,
+                             "category":  "⚡ Bonus, THR \u0026 Insentif",
+                             "note":  "",
+                             "date":  "2026-10-15",
+                             "datetime":  "2026-10-15 23:01"
+                         }
+                     ],
+    "deletedTxIds":  null,
+    "deletedWalletIds":  null,
+    "users":  [
+                  {
+                      "id":  "usr_1792079988779",
+                      "name":  "Monyet",
+                      "email":  "beruk99@gmail.com",
+                      "phone":  "+62 82116156884",
+                      "registeredAt":  "2026-10-15 22:59",
+                      "plan":  "Gratis",
+                      "paymentStatus":  "Aktif",
+                      "paymentMethod":  "-",
+                      "role":  "User",
+                      "telegramUsername":  "-"
+                  },
+                  {
+                      "id":  "usr_1792079633926",
+                      "name":  "Mimah",
+                      "email":  "anggora11@gmail.com",
+                      "phone":  "+62 89513102470",
+                      "registeredAt":  "2026-10-15 22:53",
+                      "plan":  "Pro",
+                      "paymentStatus":  "Approved",
+                      "paymentMethod":  "Mandiri Transfer",
+                      "role":  "Pro Quantum",
+                      "telegramUsername":  "-"
+                  },
+                  {
+                      "id":  "usr_superadmin",
+                      "name":  "Rizky M. Riady",
+                      "email":  "rrizky205@gmail.com",
+                      "phone":  "+62 89513102470",
+                      "registeredAt":  "2026-10-15 00:00",
+                      "plan":  "Pro",
+                      "paymentStatus":  "Approved",
+                      "paymentMethod":  "System Superadmin",
+                      "role":  "Superadmin",
+                      "telegramUsername":  "@DANATATA_BOT"
+                  }
+              ],
+    "telegramToken":  "8901649639:AAEiVyOO7dM76YAl8RmhoFiGtwekD7KFmhQ",
+    "telegramBotUsername":  "DANATATA_BOT"
+}

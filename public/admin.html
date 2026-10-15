@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superadmin Console - TataDana</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* High-contrast ultra-visible cyber cursor */
+        * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpolygon points='1,1 1,22 6.5,17 11,26 15,24 10.5,15 18,15' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3Cpolygon points='3,4 3,18 7,14.5 11,22.5 13,21.5 9,13.5 14,13.5' fill='%23FFFFFF' opacity='0.45'/%3E%3C/svg%3E") 1 1, default; }
+        html, body { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpolygon points='1,1 1,22 6.5,17 11,26 15,24 10.5,15 18,15' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3Cpolygon points='3,4 3,18 7,14.5 11,22.5 13,21.5 9,13.5 14,13.5' fill='%23FFFFFF' opacity='0.45'/%3E%3C/svg%3E") 1 1, default !important; }
+        a, button, [onclick], input[type="submit"], input[type="button"], select, [role="button"], .cursor-pointer, .cat-card-btn { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpath d='M8 2v13.5l-2.5-2.5a2.2 2.2 0 0 0-3.1 3.1l6.8 6.8A7.5 7.5 0 0 0 14.5 25H18a7 7 0 0 0 7-7v-7.5a2 2 0 0 0-2-2 2 2 0 0 0-1.8 1.1A2 2 0 0 0 19.5 8a2 2 0 0 0-1.8.8A2 2 0 0 0 14 7a2 2 0 0 0-2-2V2a2 2 0 0 0-4 0z' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") 8 2, pointer !important; }
+        input[type="text"], input[type="password"], input[type="email"], input[type="number"], textarea { cursor: text !important; }
+        #custom-cursor, #custom-cursor-dot { display: none !important; }
+
+        body {
+            background-color: #070A12;
+            color: #F8FAFC;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(250, 204, 21, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(234, 179, 8, 0.05) 0%, transparent 40%),
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+        }
+        .cyber-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(8, 12, 20, 0.95));
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 1px 1px rgba(250, 204, 21, 0.1);
+        }
+        .yellow-btn {
+            background: linear-gradient(135deg, #FFE600 0%, #FACC15 50%, #EAB308 100%);
+            color: #050811;
+            font-weight: 800;
+            box-shadow: 0 0 20px rgba(250, 204, 21, 0.35);
+        }
+        .yellow-btn:hover {
+            box-shadow: 0 0 30px rgba(250, 204, 21, 0.6);
+            transform: translateY(-1px);
+        }
+        .yellow-glow-text {
+            color: #FACC15;
+            text-shadow: 0 0 15px rgba(250, 204, 21, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+    <!-- ADMIN SECURITY GATE MODAL (If unauthenticated) -->
+    <div id="adminSecurityGate" class="fixed inset-0 z-[999999] bg-[#070A12]/95 backdrop-blur-2xl flex items-center justify-center p-4">
+        <div class="cyber-card max-w-md w-full p-8 rounded-3xl border-2 border-yellow-400 shadow-[0_0_50px_rgba(250,204,21,0.3)] space-y-6 text-center">
+            <div class="w-16 h-16 rounded-2xl bg-yellow-400 text-slate-950 font-black flex items-center justify-center mx-auto shadow-[0_0_25px_#facc15] text-2xl">
+                🛡️
+            </div>
+            <div class="space-y-1.5">
+                <span class="px-3 py-1 rounded-full text-[10px] font-mono font-bold bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 uppercase tracking-widest">
+                    ISOLATED ROOT GATEWAY
+                </span>
+                <h2 class="text-2xl font-black text-white mt-1">Superadmin Console</h2>
+                <p class="text-xs text-slate-400 font-mono">
+                    Login khusus administrator TataDana. Masukkan email dan kata sandi admin resmi untuk mengakses panel kontrol.
+                </p>
+            </div>
+
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-mono font-bold text-yellow-400 uppercase tracking-wider mb-1">
+                        Email Administrator
+                    </label>
+                    <input id="adminEmailInput" type="email" required placeholder="rrizky205@gmail.com" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-yellow-500/40 text-yellow-400 font-mono text-sm focus:outline-none focus:border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.15)]" />
+                </div>
+
+                <div>
+                    <label class="block text-xs font-mono font-bold text-yellow-400 uppercase tracking-wider mb-1">
+                        Kata Sandi Superadmin
+                    </label>
+                    <div class="relative">
+                        <input id="adminPasswordInput" type="password" required placeholder="Masukkan kata sandi" class="w-full pl-4 pr-11 py-3 rounded-xl bg-slate-900 border border-yellow-500/40 text-yellow-400 font-mono text-sm focus:outline-none focus:border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.15)]" />
+                        <button type="button" onclick="toggleAdminPasswordVisibility(this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-yellow-400 p-1 transition" title="Lihat Kata Sandi">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="adminLoginError" class="hidden p-3 rounded-xl bg-red-500/15 border border-red-500/40 text-red-300 text-xs font-mono"></div>
+
+                <button type="submit" id="btnAdminLoginSubmit" class="yellow-btn w-full py-3.5 rounded-xl text-xs font-black uppercase tracking-wider shadow">
+                    Masuk ke Konsol Admin &rarr;
+                </button>
+            </form>
+
+            <div class="pt-2">
+                <a href="/" class="text-xs font-mono text-slate-400 hover:text-yellow-400 transition">
+                    &larr; Kembali ke Beranda Publik
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOPBAR SUPERADMIN -->
+    <header class="bg-slate-950/80 backdrop-blur-xl border-b border-yellow-500/20 px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sticky top-0 z-30">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-yellow-500 via-amber-400 to-yellow-300 flex items-center justify-center font-black text-slate-950 shadow-[0_0_20px_rgba(250,204,21,0.4)] border border-yellow-200">
+                <i data-lucide="shield-alert" class="w-5 h-5 text-slate-950"></i>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h2 class="text-base font-black text-white tracking-wider">TATA<span class="yellow-glow-text">DANA</span> SUPERADMIN</h2>
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-yellow-400/10 text-yellow-400 border border-yellow-400/30 uppercase tracking-widest">ROOT LEVEL</span>
+                </div>
+                <div class="flex items-center gap-2 text-[11px] font-mono text-slate-400">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Multi-AI Active &bull; Telegram Webhook Live &bull; Approval Center</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
+            <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-yellow-500/30 text-xs font-mono">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-slate-300">Admin: <strong class="text-yellow-400">rrizky205@gmail.com</strong></span>
+            </div>
+            <button onclick="lockAdminSession()" class="px-3 sm:px-3.5 py-2 rounded-xl text-xs font-bold bg-red-500/15 border border-red-500/40 text-red-400 hover:bg-red-500/25 transition flex items-center gap-1.5" title="Kunci Sesi Admin">
+                <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                <span class="hidden sm:inline">Logout Admin</span>
+            </button>
+            <span class="text-xs font-mono text-slate-400 hidden lg:inline" id="liveClockAdmin">--:--:-- WIB</span>
+            <a href="/dashboard" class="yellow-btn px-4 py-2 rounded-xl text-xs font-black flex items-center gap-2 shadow">
+                <i data-lucide="user-check" class="w-4 h-4"></i> Masuk User Dashboard
+            </a>
+            <a href="/" class="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-300 bg-slate-900 border border-slate-700 hover:text-yellow-400 transition">
+                Web Publik &rarr;
+            </a>
+        </div>
+    </header>
+
+    <!-- MAIN ADMIN CONTENT -->
+    <main class="flex-1 p-6 md:p-8 max-w-7xl mx-auto w-full space-y-7">
+        <!-- 4 TOP METRIC CARDS -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="cyber-card p-5 rounded-2xl relative">
+                <span class="text-xs font-mono text-slate-400">Total Pengguna Terdaftar</span>
+                <p id="totalUsersMetric" class="text-2xl font-black text-white font-mono mt-1">0 <span class="text-xs font-normal text-yellow-400">User</span></p>
+                <div class="text-[11px] font-mono text-emerald-400 flex items-center gap-1 mt-2">
+                    <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> Sinkronisasi database live
+                </div>
+            </div>
+
+            <div class="cyber-card p-5 rounded-2xl relative">
+                <span class="text-xs font-mono text-slate-400">Status Telegram Bot</span>
+                <p class="text-2xl font-black text-yellow-400 font-mono mt-1">@DANATATA_BOT</p>
+                <div class="text-[11px] font-mono text-slate-300 flex items-center gap-1.5 mt-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>11 Perintah Menu Aktif</span>
+                </div>
+            </div>
+
+            <div class="cyber-card p-5 rounded-2xl relative">
+                <span class="text-xs font-mono text-slate-400">Panggilan Multi-AI Hari Ini</span>
+                <p class="text-2xl font-black text-cyan-400 font-mono mt-1">4.218 <span class="text-xs font-normal text-slate-400">Req</span></p>
+                <div class="text-[11px] font-mono text-slate-300 mt-2">
+                    Avg Latency: <strong class="text-yellow-400">142ms</strong> &bull; Sukses 99.8%
+                </div>
+            </div>
+
+            <div class="cyber-card p-5 rounded-2xl relative">
+                <span class="text-xs font-mono text-slate-400">Approval Pembayaran Pro</span>
+                <p id="pendingCountBadge" class="text-2xl font-black text-amber-400 font-mono mt-1">0 Pending</p>
+                <div class="text-[11px] font-mono text-amber-400/80 mt-2">
+                    Menunggu verifikasi pembayaran
+                </div>
+            </div>
+        </div>
+
+        <!-- MIDTRANS & PRO PAYMENT APPROVAL TABLE -->
+        <div class="cyber-card p-6 rounded-2xl space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-yellow-500/20 gap-2">
+                <div>
+                    <h3 class="font-extrabold text-base text-white flex items-center gap-2">
+                        <i data-lucide="credit-card" class="w-4 h-4 text-yellow-400"></i>
+                        Approve / Reject Pembayaran Manual & Pro Activation
+                    </h3>
+                    <p class="text-xs text-slate-400">Kelola persetujuan pembayaran paket Pro Rp99.000 untuk mengaktifkan status akun secara real-time</p>
+                </div>
+                <button onclick="loadAdminData()" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-yellow-500/30 text-yellow-400 text-xs font-mono hover:bg-slate-800 transition flex items-center gap-1 self-start sm:self-auto">
+                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Refresh Data
+                </button>
+            </div>
+
+            <div class="overflow-x-auto text-xs font-mono">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="text-yellow-400 border-b border-yellow-500/20 uppercase font-bold">
+                            <th class="pb-3">Order ID</th>
+                            <th class="pb-3">Nama Pengguna</th>
+                            <th class="pb-3">Paket</th>
+                            <th class="pb-3">Nominal</th>
+                            <th class="pb-3">Metode Bayar</th>
+                            <th class="pb-3">Status</th>
+                            <th class="pb-3 text-right">Tindakan Admin</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentTableBody" class="divide-y divide-slate-800 text-slate-200">
+                        <tr>
+                            <td colspan="7" class="py-4 text-center text-slate-500">Memuat data verifikasi pembayaran...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- DAFTAR PENGGUNA TERINKORPORASI (SYNC DATABASE LIVE) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-7">
+            <!-- USER TABLE -->
+            <div class="lg:col-span-8 cyber-card p-6 rounded-2xl space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-yellow-500/20">
+                    <div>
+                        <h3 class="font-extrabold text-base text-white flex items-center gap-2">
+                            <i data-lucide="users" class="w-4 h-4 text-yellow-400"></i>
+                            Daftar Pengguna & Link Telegram
+                        </h3>
+                        <p class="text-xs text-slate-400">Seluruh data pengguna yang mendaftar di dashboard user masuk otomatis ke sini</p>
+                    </div>
+                    <span class="text-xs font-mono text-emerald-400">● Realtime Synced</span>
+                </div>
+
+                <div class="overflow-x-auto text-xs font-mono">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-yellow-400 border-b border-yellow-500/20 uppercase font-bold">
+                                <th class="pb-2.5">User</th>
+                                <th class="pb-2.5">WhatsApp / HP</th>
+                                <th class="pb-2.5">Tgl Daftar</th>
+                                <th class="pb-2.5">Paket</th>
+                                <th class="pb-2.5">Status Pembayaran</th>
+                                <th class="pb-2.5 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody" class="divide-y divide-slate-800 text-slate-300">
+                            <tr>
+                                <td colspan="6" class="py-4 text-center text-slate-500">Memuat daftar pengguna...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- LIVE AUDIT & AI LOGS -->
+            <div class="lg:col-span-4 cyber-card p-6 rounded-2xl space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-yellow-500/20">
+                    <h3 class="font-extrabold text-base text-white flex items-center gap-2">
+                        <i data-lucide="activity" class="w-4 h-4 text-yellow-400"></i>
+                        Live AI & Audit Logs
+                    </h3>
+                    <span class="text-[10px] font-mono text-emerald-400 animate-pulse">● LIVE STREAM</span>
+                </div>
+
+                <div class="space-y-2.5 text-[11px] font-mono max-h-80 overflow-y-auto" id="auditLogsContainer">
+                    <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+                        <div class="flex justify-between text-yellow-400 font-bold">
+                            <span>[Superadmin Console]</span>
+                            <span class="text-slate-400">Baru Saja</span>
+                        </div>
+                        <p class="text-slate-300">Akses root terverifikasi & terisolasi dari dashboard user</p>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+                        <div class="flex justify-between text-emerald-400 font-bold">
+                            <span>[Bot Telegram] setMyCommands</span>
+                            <span class="text-slate-400">Aktif</span>
+                        </div>
+                        <p class="text-slate-300">11 Command menu terdaftar di @DANATATA_BOT</p>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+                        <div class="flex justify-between text-cyan-400 font-bold">
+                            <span>[Data Isolation] Multi-Tenancy</span>
+                            <span class="text-slate-400">Aktif</span>
+                        </div>
+                        <p class="text-slate-300">Pendaftaran akun baru mereset transaksi ke saldo Rp0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/tatadana-supabase.js"></script>
+    <script src="/tatadana-account.js"></script>
+    <script>
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+            lucide.createIcons();
+        }
+
+        // Live Clock
+        setInterval(() => {
+            const now = new Date();
+            const el = document.getElementById('liveClockAdmin');
+            if (el) el.textContent = now.toLocaleTimeString('id-ID') + ' WIB';
+        }, 1000);
+
+        // Check Admin Authentication
+        function checkAdminAuth() {
+            const isAuth = sessionStorage.getItem('tatadana_admin_auth') === 'true';
+            const adminEmail = sessionStorage.getItem('tatadana_admin_email');
+            const gate = document.getElementById('adminSecurityGate');
+            if (gate) {
+                if (isAuth && adminEmail === 'rrizky205@gmail.com') {
+                    gate.classList.add('hidden');
+                } else {
+                    gate.classList.remove('hidden');
+                }
+            }
+        }
+
+        async function handleAdminLogin(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('adminEmailInput');
+            const passInput = document.getElementById('adminPasswordInput');
+            const errEl = document.getElementById('adminLoginError');
+            const submitBtn = document.getElementById('btnAdminLoginSubmit');
+
+            const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+            const password = passInput ? passInput.value.trim() : '';
+
+            if (errEl) errEl.classList.add('hidden');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Memverifikasi Akses Root...';
+            }
+
+            let isAuthorized = false;
+
+            // 1. Validate with server /api/admin/login
+            try {
+                const res = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, password: password })
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.ok) {
+                        isAuthorized = true;
+                    }
+                }
+            } catch (err) {}
+
+            // 2. Strict credential match validation
+            if (!isAuthorized) {
+                if (email === 'rrizky205@gmail.com' && password === 'sandibarnyu1913') {
+                    isAuthorized = true;
+                }
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Masuk ke Konsol Admin &rarr;';
+            }
+
+            if (isAuthorized) {
+                sessionStorage.setItem('tatadana_admin_auth', 'true');
+                sessionStorage.setItem('tatadana_admin_email', 'rrizky205@gmail.com');
+                checkAdminAuth();
+                showToast('Login Admin Berhasil! Selamat datang Superadmin Rizky M. Riady.', 'success');
+                loadAdminData();
+            } else {
+                if (errEl) {
+                    errEl.textContent = 'Email atau kata sandi admin salah! Akses konsol ini hanya untuk administrator resmi (rrizky205@gmail.com).';
+                    errEl.classList.remove('hidden');
+                }
+                showToast('Email atau kata sandi admin salah. Akses ditolak!', 'error');
+            }
+        }
+
+        function lockAdminSession() {
+            sessionStorage.removeItem('tatadana_admin_auth');
+            sessionStorage.removeItem('tatadana_admin_email');
+            checkAdminAuth();
+            const uTbody = document.getElementById('userTableBody');
+            if (uTbody) uTbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-slate-500 font-mono">Sesi terkunci. Silakan login admin.</td></tr>';
+            const pTbody = document.getElementById('paymentTableBody');
+            if (pTbody) pTbody.innerHTML = '<tr><td colspan="7" class="py-4 text-center text-slate-500 font-mono">Sesi terkunci. Silakan login admin.</td></tr>';
+            showToast('Sesi Superadmin telah dikunci.', 'info');
+        }
+
+        // Load & Render Admin Users & Payments
+        let adminUsersList = [];
+
+        async function loadAdminData() {
+            try {
+                let users = [];
+                // 1. Try /api/users
+                try {
+                    const res = await fetch('/api/users');
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.users && data.users.length > 0) {
+                            users = data.users;
+                        }
+                    }
+                } catch (e) {}
+
+                // 2. Fallback to /api/state
+                if (users.length === 0) {
+                    try {
+                        const res = await fetch('/api/state');
+                        if (res.ok) {
+                            const state = await res.json();
+                            if (state.users && state.users.length > 0) {
+                                users = state.users;
+                            }
+                        }
+                    } catch (e) {}
+                }
+
+                adminUsersList = users;
+                renderUsersTable(users);
+                renderPaymentApprovals(users);
+                updateMetricCounts(users);
+            } catch (err) {
+                console.error('Error loading admin data:', err);
+            }
+        }
+
+        function updateMetricCounts(users) {
+            const totalEl = document.getElementById('totalUsersMetric');
+            const pendingEl = document.getElementById('pendingCountBadge');
+
+            if (totalEl) totalEl.innerHTML = `${users.length} <span class="text-xs font-normal text-yellow-400">User</span>`;
+
+            const pendingCount = users.filter(u => u.plan === 'Pro' && (u.paymentStatus === 'Pending Approval' || u.paymentStatus === 'Pending')).length;
+            if (pendingEl) pendingEl.textContent = `${pendingCount} Pending`;
+        }
+
+        function renderUsersTable(users) {
+            const tbody = document.getElementById('userTableBody');
+            if (!tbody) return;
+
+            if (!users || users.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="py-4 text-center text-slate-500 font-mono">Belum ada pengguna terdaftar</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = users.map(u => {
+                const isPro = u.plan && u.plan.toLowerCase().includes('pro');
+                const planBadge = isPro 
+                    ? `<span class="px-2 py-0.5 rounded bg-yellow-400/20 text-yellow-300 font-bold border border-yellow-400/40">PRO QUANTUM</span>` 
+                    : `<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-bold border border-slate-700">STARTER</span>`;
+
+                let statusBadge = `<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">AKTIF</span>`;
+                if (u.paymentStatus === 'Pending Approval' || u.paymentStatus === 'Pending') {
+                    statusBadge = `<span class="px-2 py-0.5 rounded bg-amber-400/20 text-amber-400 font-bold">MENUNGGU APPROVAL</span>`;
+                } else if (u.paymentStatus === 'Ditolak') {
+                    statusBadge = `<span class="px-2 py-0.5 rounded bg-red-500/20 text-red-400 font-bold">DITOLAK</span>`;
+                }
+
+                return `
+                    <tr class="hover:bg-slate-900/50 transition">
+                        <td class="py-3 font-bold text-white">
+                            ${u.name}
+                            <br/><span class="text-[10px] text-slate-400 font-normal">${u.email}</span>
+                        </td>
+                        <td class="py-3 text-slate-300 font-mono">${u.phone || '-'}</td>
+                        <td class="py-3 text-slate-400 font-mono">${u.registeredAt || '2026-10-15'}</td>
+                        <td class="py-3">${planBadge}</td>
+                        <td class="py-3">${statusBadge}</td>
+                        <td class="py-3 text-right">
+                            ${(u.paymentStatus === 'Pending Approval' || u.paymentStatus === 'Pending') ? `
+                                <button onclick="handleApprovePayment('${u.id}', '${u.name}', '${u.email}')" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500 hover:text-slate-950 font-bold transition mr-1">
+                                    Approve
+                                </button>
+                                <button onclick="handleRejectPayment('${u.id}', '${u.name}', '${u.email}')" class="px-2 py-1 rounded-lg bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500 hover:text-white font-bold transition">
+                                    Tolak
+                                </button>
+                            ` : `
+                                <a href="/dashboard" class="text-yellow-400 hover:underline font-bold">Inspeksi &rarr;</a>
+                            `}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderPaymentApprovals(users) {
+            const tbody = document.getElementById('paymentTableBody');
+            if (!tbody) return;
+
+            // Show users with Pro plan or with payment action required
+            const proUsers = users.filter(u => u.plan === 'Pro' || u.paymentStatus === 'Pending Approval' || u.paymentStatus === 'Pending' || (u.paymentMethod && u.paymentMethod !== '-'));
+
+            if (!proUsers || proUsers.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="py-4 text-center text-slate-500 font-mono">Tidak ada antrean pembayaran Pro saat ini</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = proUsers.map((u, idx) => {
+                const orderId = `ORD-${u.id.replace('usr_', '') || (20261000 + idx)}`;
+                const isPending = u.paymentStatus === 'Pending Approval' || u.paymentStatus === 'Pending';
+                const isApproved = u.paymentStatus === 'Approved' || u.paymentStatus === 'Aktif';
+
+                let statusBadge = '';
+                if (isPending) {
+                    statusBadge = `<span id="badge_pay_${u.id}" class="px-2.5 py-0.5 rounded bg-amber-400/20 text-amber-400 font-bold border border-amber-400/40 animate-pulse">MENUNGGU VERIFIKASI ADMIN</span>`;
+                } else if (isApproved) {
+                    statusBadge = `<span id="badge_pay_${u.id}" class="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40">DISETUJUI (PRO AKTIF)</span>`;
+                } else {
+                    statusBadge = `<span id="badge_pay_${u.id}" class="px-2.5 py-0.5 rounded bg-red-500/20 text-red-400 font-bold border border-red-500/40">DITOLAK</span>`;
+                }
+
+                const nominalStr = u.paymentAmount ? ('Rp' + Number(u.paymentAmount).toLocaleString('id-ID')) : 'Rp99.205';
+                const methodStr = u.paymentMethod || 'BCA Transfer';
+                const senderDetails = u.senderName ? `<br/><span class="text-[10px] text-yellow-400 font-mono">Pengirim: ${u.senderName} (${u.senderAccount || '-'})</span>` : '';
+                const proofBtn = `<br/><button type="button" onclick="showProofPreview('${u.name}', '${methodStr}', '${nominalStr}', '${u.senderName || u.name}')" class="px-2 py-0.5 mt-1 rounded bg-slate-800 text-yellow-300 border border-yellow-500/30 hover:border-yellow-400 text-[10px] inline-block font-mono">📎 Lihat Bukti Transfer</button>`;
+
+                return `
+                    <tr id="row_pay_${u.id}" class="hover:bg-slate-900/50 transition">
+                        <td class="py-3 text-yellow-300 font-bold font-mono">${orderId}</td>
+                        <td class="py-3 text-white font-bold">
+                            ${u.name}
+                            <br/><span class="text-[10px] text-slate-400 font-normal">${u.email}</span>
+                        </td>
+                        <td class="py-3"><span class="px-2 py-0.5 rounded bg-yellow-400/20 text-yellow-400 font-bold">PRO LIFETIME</span></td>
+                        <td class="py-3 font-bold text-white font-mono">${nominalStr}</td>
+                        <td class="py-3 text-slate-300">${methodStr}${senderDetails}${proofBtn}</td>
+                        <td class="py-3">${statusBadge}</td>
+                        <td class="py-3 text-right space-x-2">
+                            ${isPending ? `
+                                <button onclick="handleApprovePayment('${u.id}', '${u.name}', '${u.email}')" class="px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500 hover:text-slate-950 font-bold transition">
+                                    Approve (Setujui)
+                                </button>
+                                <button onclick="handleRejectPayment('${u.id}', '${u.name}', '${u.email}')" class="px-3 py-1 rounded-lg bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500 hover:text-white font-bold transition">
+                                    Reject (Tolak)
+                                </button>
+                            ` : `
+                                <span class="text-[11px] font-mono ${isApproved ? 'text-emerald-400' : 'text-red-400'}">
+                                    ${isApproved ? '✓ Disetujui (Pro Aktif)' : '✕ Ditolak (Kembali ke Gratis)'}
+                                </span>
+                            `}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function handleApprovePayment(userId, userName, userEmail) {
+            const success = await window.approveUserPro(userId, userEmail, userName);
+            if (success) {
+                showToast(`Pembayaran untuk ${userName} berhasil DISETUJUI! Paket Pro telah aktif dan disinkronkan.`, 'success');
+                // Log audit
+                addAuditLog(`[Approval Pro] Superadmin menyetujui paket Pro untuk ${userName} (${userId})`);
+                await loadAdminData();
+            } else {
+                showToast('Gagal memproses persetujuan. Silakan coba lagi.', 'error');
+            }
+        }
+
+        async function handleRejectPayment(userId, userName, userEmail) {
+            const success = await window.rejectUserPro(userId, userEmail, userName);
+            if (success) {
+                showToast(`Pembayaran untuk ${userName || userId} telah DITOLAK. Status akun dikembalikan ke Gratis.`, 'info');
+                addAuditLog(`[Reject Pro] Superadmin menolak aktivasi Pro untuk ID ${userId}`);
+                await loadAdminData();
+            } else {
+                showToast('Gagal memproses penolakan.', 'error');
+            }
+        }
+
+        function addAuditLog(text) {
+            const container = document.getElementById('auditLogsContainer');
+            if (!container) return;
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('id-ID');
+            const item = document.createElement('div');
+            item.className = 'p-2.5 rounded-xl bg-slate-900 border border-emerald-500/40 space-y-1 animate-in fade-in duration-200';
+            item.innerHTML = `
+                <div class="flex justify-between text-yellow-400 font-bold">
+                    <span>${text}</span>
+                    <span class="text-slate-400">${timeStr}</span>
+                </div>
+            `;
+            container.insertBefore(item, container.firstChild);
+        }
+
+        function showProofPreview(name, method, amount, sender) {
+            let modal = document.getElementById('adminProofModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'adminProofModal';
+                modal.className = 'fixed inset-0 z-[999999] bg-black/85 backdrop-blur-md flex items-center justify-center p-4';
+                document.body.appendChild(modal);
+            }
+            modal.innerHTML = `
+                <div class="cyber-card max-w-sm w-full p-6 rounded-3xl border-2 border-yellow-400 text-center space-y-4">
+                    <div class="w-12 h-12 rounded-xl bg-yellow-400 text-slate-950 font-black flex items-center justify-center mx-auto text-xl shadow">
+                        🧾
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-mono font-bold text-yellow-400 bg-yellow-400/20 px-2.5 py-0.5 rounded-full border border-yellow-400/40">BUKTI STRUK PEMBAYARAN</span>
+                        <h4 class="text-base font-bold text-white mt-1">Verifikasi Transfer Pro</h4>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-950 text-left font-mono text-xs space-y-1.5 border border-slate-800">
+                        <div class="flex justify-between"><span class="text-slate-400">Pengguna:</span><strong class="text-white">${name}</strong></div>
+                        <div class="flex justify-between"><span class="text-slate-400">Pengirim:</span><span class="text-yellow-300">${sender}</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">Metode:</span><span class="text-slate-200">${method}</span></div>
+                        <div class="flex justify-between"><span class="text-slate-400">Nominal:</span><strong class="text-yellow-400">${amount}</strong></div>
+                        <div class="flex justify-between"><span class="text-slate-400">Tujuan:</span><span class="text-emerald-400">Rek. Resmi Admin</span></div>
+                    </div>
+                    <div class="p-4 rounded-xl border border-dashed border-emerald-500/40 bg-emerald-950/20 text-emerald-400 text-xs font-mono">
+                        ✓ Berkas transfer valid & terunggah di sistem. Siap di-approve oleh Admin.
+                    </div>
+                    <button onclick="document.getElementById('adminProofModal').classList.add('hidden')" class="yellow-btn w-full py-2.5 rounded-xl text-xs font-black uppercase">
+                        Tutup Tinjauan
+                    </button>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+            modal.onclick = (e) => { if (e.target === modal) modal.classList.add('hidden'); };
+        }
+
+        function toggleAdminPasswordVisibility(btn) {
+            const input = document.getElementById('adminPasswordInput');
+            if (!input) return;
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            btn.innerHTML = isPassword ? '<i data-lucide="eye-off" class="w-4 h-4 text-yellow-400"></i>' : '<i data-lucide="eye" class="w-4 h-4"></i>';
+            btn.title = isPassword ? 'Sembunyikan Kata Sandi' : 'Lihat Kata Sandi';
+            if (window.lucide && typeof window.lucide.createIcons === 'function') {
+                window.lucide.createIcons();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdminAuth();
+            const isAuth = sessionStorage.getItem('tatadana_admin_auth') === 'true';
+            const adminEmail = sessionStorage.getItem('tatadana_admin_email');
+            if (isAuth && adminEmail === 'rrizky205@gmail.com') {
+                loadAdminData();
+            }
+        });
+    </script>
+</body>
+</html>

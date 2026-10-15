@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catat Transaksi - TataDana</title>
+    <script>window.location.replace('/dashboard');</script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* High-contrast ultra-visible cyber cursor */
+        * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpolygon points='1,1 1,22 6.5,17 11,26 15,24 10.5,15 18,15' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3Cpolygon points='3,4 3,18 7,14.5 11,22.5 13,21.5 9,13.5 14,13.5' fill='%23FFFFFF' opacity='0.45'/%3E%3C/svg%3E") 1 1, default; }
+        html, body { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpolygon points='1,1 1,22 6.5,17 11,26 15,24 10.5,15 18,15' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3Cpolygon points='3,4 3,18 7,14.5 11,22.5 13,21.5 9,13.5 14,13.5' fill='%23FFFFFF' opacity='0.45'/%3E%3C/svg%3E") 1 1, default !important; }
+        a, button, [onclick], input[type="submit"], input[type="button"], select, [role="button"], .cursor-pointer, .cat-card-btn { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpath d='M8 2v13.5l-2.5-2.5a2.2 2.2 0 0 0-3.1 3.1l6.8 6.8A7.5 7.5 0 0 0 14.5 25H18a7 7 0 0 0 7-7v-7.5a2 2 0 0 0-2-2 2 2 0 0 0-1.8 1.1A2 2 0 0 0 19.5 8a2 2 0 0 0-1.8.8A2 2 0 0 0 14 7a2 2 0 0 0-2-2V2a2 2 0 0 0-4 0z' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") 8 2, pointer !important; }
+        input[type="text"], input[type="password"], input[type="email"], input[type="number"], textarea { cursor: text !important; }
+        #custom-cursor, #custom-cursor-dot { display: none !important; }
+
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; color: #0F172A; }
+        .silver-card { background: white; border: 1px solid #E2E8F0; }
+        .orange-btn { background: linear-gradient(135deg, #FF6B00 0%, #EA580C 100%); color: white; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row antialiased">
+    <!-- MOBILE TOPBAR (< md) -->
+    <div class="md:hidden w-full bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
+        <a href="/" class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-orange-500 flex items-center justify-center text-white font-bold text-xs shadow-sm">TD</div>
+            <span class="font-bold text-slate-900 text-base">Tata<span class="text-orange-500">Dana</span></span>
+        </a>
+        <div class="flex items-center gap-2">
+            <button onclick="openAccountModal()" class="px-2.5 py-1 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200 flex items-center gap-1.5 shadow-sm">
+                <span>👤 Akun</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            </button>
+            <button onclick="openMobileDrawer()" class="p-2 rounded-xl bg-slate-100 text-slate-600 hover:text-slate-900" title="Menu Navigasi">
+                <i data-lucide="menu" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col justify-between p-5 min-h-screen shrink-0">
+        <div class="space-y-6">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                <a href="/" class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-orange-600 to-orange-400 flex items-center justify-center text-white shadow-sm">
+                        <i data-lucide="wallet-cards" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-xl font-bold tracking-tight text-slate-900">Tata<span class="text-orange-500">Dana</span></span>
+                </a>
+                <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-gradient-to-r from-orange-600 to-amber-500 text-white shadow-sm">PRO USER</span>
+            </div>
+
+            <nav class="space-y-1.5 font-medium text-sm">
+                <a href="/dashboard" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition">
+                    <i data-lucide="home" class="w-4 h-4"></i> <span>Beranda</span>
+                </a>
+                <a href="/laporan" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition">
+                    <i data-lucide="bar-chart-3" class="w-4 h-4"></i> <span>Laporan</span>
+                </a>
+                <a href="/budget" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition">
+                    <i data-lucide="target" class="w-4 h-4"></i> <span>Budget</span>
+                </a>
+                <a href="/wallet" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition">
+                    <i data-lucide="wallet" class="w-4 h-4"></i> <span>Wallet</span>
+                </a>
+                <a href="/settings" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition">
+                    <i data-lucide="settings" class="w-4 h-4"></i> <span>Settings</span>
+                </a>
+                <!-- DEDICATED AKUN MENU ITEM IN SIDEBAR -->
+                <button onclick="openAccountModal()" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="user-check" class="w-4 h-4 text-orange-500"></i>
+                        <span>Menu Akun</span>
+                    </div>
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                </button>
+            </nav>
+        </div>
+
+        <div class="pt-4 border-t border-slate-100 space-y-3">
+            <div onclick="openAccountModal()" id="sidebarUserCard" data-tatadana-sidebar-user class="flex items-center gap-3 px-2 py-1.5 rounded-xl hover:bg-slate-50 cursor-pointer transition">
+                <div class="w-9 h-9 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-xs">BP</div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-bold text-slate-900 truncate">Budi Pratama</p>
+                    <p class="text-[11px] text-slate-400 truncate">budi@tatadana.id</p>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <button onclick="logoutTataDana()" class="w-full py-2 text-center text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition">Keluar / Logout</button>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-extrabold text-slate-900">Catat & Kelola Transaksi</h1>
+                <p class="text-xs text-slate-500">Input transaksi manual dan kelola daftar riwayat transaksi dengan fitur hapus otomatis</p>
+            </div>
+            <div class="flex items-center gap-2.5">
+                <!-- DEDICATED AKUN BUTTON IN TOPBAR -->
+                <button onclick="openAccountModal()" id="topbarAccountBtn" data-tatadana-account-topbar class="px-3.5 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:border-orange-500 hover:text-orange-600 transition flex items-center gap-2 shadow-sm">
+                    <span class="w-5 h-5 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-[10px]">BP</span>
+                    <span>Akun</span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                </button>
+                <a href="/dashboard" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1.5">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Kembali ke Dashboard
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- FORM INPUT TRANSAKSI MANUAL -->
+            <div class="lg:col-span-5 silver-card p-6 rounded-2xl shadow-sm h-fit">
+                <h2 class="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i data-lucide="plus-circle" class="w-4 h-4 text-orange-500"></i>
+                    Form Transaksi Baru
+                </h2>
+                <form onsubmit="handleManualTx(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5 font-mono">Nominal (IDR)</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-3 text-orange-500 font-bold font-mono">Rp</span>
+                            <input id="manualAmount" type="text" inputmode="numeric" required placeholder="Contoh: 150.000" data-currency="true" class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-300 text-sm font-bold focus:outline-none focus:border-orange-500 font-mono" />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5 font-mono">Kategori</label>
+                            <select id="manualCategory" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5 font-mono">Dompet</label>
+                            <select id="manualWallet" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5 font-mono">Catatan</label>
+                        <input id="manualNote" type="text" placeholder="Contoh: Member gym bulanan" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs" />
+                    </div>
+                    <button type="submit" class="orange-btn w-full py-3 rounded-xl text-xs font-bold mt-2 shadow cursor-pointer">Simpan Transaksi Sekarang</button>
+                </form>
+            </div>
+
+            <!-- RIWAYAT TRANSAKSI DENGAN FITUR HAPUS SINKRON -->
+            <div class="lg:col-span-7 silver-card p-6 rounded-2xl shadow-sm space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                            <i data-lucide="list" class="w-4 h-4 text-orange-500"></i>
+                            Daftar Transaksi (Klik Hapus untuk Rollback Saldo)
+                        </h2>
+                        <span id="transaksiCountBadge" class="text-[11px] text-slate-400 font-mono">0 Transaksi Tercatat</span>
+                    </div>
+                    <a href="/laporan" class="text-xs font-bold text-orange-600 hover:underline">Semua &rarr;</a>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs font-mono">
+                        <thead>
+                            <tr class="border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider">
+                                <th class="pb-2.5">Tanggal</th>
+                                <th class="pb-2.5">Kategori & Catatan</th>
+                                <th class="pb-2.5">Dompet</th>
+                                <th class="pb-2.5 text-right">Nominal</th>
+                                <th class="pb-2.5 text-center">Hapus</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transaksiListTbody" class="divide-y divide-slate-100 text-slate-700">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        lucide.createIcons();
+
+        function formatRupiah(num) {
+            return 'Rp' + new Intl.NumberFormat('id-ID').format(Math.round(num || 0));
+        }
+
+        function populateFormOptions() {
+            const state = typeof window.getTataDanaState === 'function' ? window.getTataDanaState() : { wallets: [], budgets: [], customCategories: [] };
+            
+            // 1. Wallets
+            const wSelect = document.getElementById('manualWallet');
+            if (wSelect) {
+                wSelect.innerHTML = '';
+                (state.wallets || []).forEach(w => {
+                    const opt = document.createElement('option');
+                    opt.value = w.id;
+                    opt.textContent = `${w.name} (${formatRupiah(w.balance)})`;
+                    if (w.isDefault) opt.selected = true;
+                    wSelect.appendChild(opt);
+                });
+            }
+
+            // 2. Categories
+            const cSelect = document.getElementById('manualCategory');
+            if (cSelect) {
+                cSelect.innerHTML = '';
+                const baseCats = [
+                    '🍜 Makanan & Minuman',
+                    '🚗 Transportasi & Bensin',
+                    '🏋️ member gym',
+                    '👕 Belanja Fashion & Pakaian',
+                    '🏠 Listrik PLN, Air & Tagihan',
+                    '☕ Kopi & Nongkrong',
+                    '🛒 Supermarket & Kebutuhan Rumah',
+                    '💰 Gaji Pokok & Upah'
+                ];
+                const budgetCats = (state.budgets || []).map(b => b.name);
+                const customCats = state.customCategories || [];
+                const allCats = [...new Set([...baseCats, ...budgetCats, ...customCats])];
+                allCats.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c;
+                    opt.textContent = c;
+                    cSelect.appendChild(opt);
+                });
+            }
+        }
+
+        function renderTransaksiList() {
+            const state = typeof window.getTataDanaState === 'function' ? window.getTataDanaState() : { transactions: [] };
+            const tbody = document.getElementById('transaksiListTbody');
+            const countBadge = document.getElementById('transaksiCountBadge');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const txs = state.transactions || [];
+            if (countBadge) countBadge.innerText = `${txs.length} Transaksi Tercatat`;
+
+            if (txs.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="py-8 text-center text-slate-400 font-mono">
+                            Belum ada transaksi tercatat. Gunakan form di sebelah kiri untuk menambah transaksi!
+                        </td>
+                    </tr>
+                `;
+            } else {
+                txs.slice(0, 15).forEach(t => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-slate-50 transition';
+                    const isExp = t.type === 'expense';
+                    const isInc = t.type === 'income';
+                    const amountClass = isExp ? 'text-amber-600 font-bold' : isInc ? 'text-emerald-600 font-bold' : 'text-sky-600 font-bold';
+                    const prefix = isExp ? '-' : isInc ? '+' : '';
+                    const walletDisplay = (t.type === 'transfer' && t.targetWalletName) ? `${t.walletName} ➔ ${t.targetWalletName}` : (t.walletName || '-');
+
+                    row.innerHTML = `
+                        <td class="py-3 text-slate-500 font-medium">${t.datetime || t.date || '-'}</td>
+                        <td class="py-3">
+                            <span class="font-bold text-slate-800">${t.category}</span>
+                            ${t.note ? `<div class="text-[11px] text-slate-400 truncate max-w-xs">${t.note}</div>` : ''}
+                        </td>
+                        <td class="py-3"><span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-bold text-[11px]">${walletDisplay}</span></td>
+                        <td class="py-3 text-right ${amountClass}">${prefix}${formatRupiah(t.amount)}</td>
+                        <td class="py-3 text-center">
+                            <button onclick="window.deleteTransaction('${t.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition cursor-pointer" title="Hapus Transaksi (Rollback Saldo)">
+                                <svg class="w-4 h-4 inline-block text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+            lucide.createIcons();
+        }
+
+        window.renderTransaksiList = renderTransaksiList;
+        window.addEventListener('tatadana-state-updated', () => {
+            populateFormOptions();
+            renderTransaksiList();
+        });
+
+        function handleManualTx(e) {
+            e.preventDefault();
+            const rawAmount = document.getElementById('manualAmount').value;
+            const amount = window.parseFormattedNominal ? window.parseFormattedNominal(rawAmount) : parseFloat(rawAmount.replace(/\D/g, ''));
+            if (!amount || amount <= 0) {
+                if (window.showToast) window.showToast('Silakan masukkan nominal yang valid!', 'error');
+                return;
+            }
+
+            const cat = document.getElementById('manualCategory').value;
+            const walletId = document.getElementById('manualWallet').value;
+            const note = document.getElementById('manualNote').value;
+            const state = typeof window.getTataDanaState === 'function' ? window.getTataDanaState() : { transactions: [], wallets: [] };
+
+            const w = (state.wallets || []).find(item => item.id === walletId) || state.wallets[0] || { id: 'w1', name: 'BCA', balance: 0 };
+            const isIncome = cat.includes('Gaji') || cat.includes('Pemasukan') || cat.includes('Dividen') || cat.includes('Bonus');
+            if (isIncome) {
+                w.balance += amount;
+            } else {
+                w.balance -= amount;
+            }
+
+            const now = new Date();
+            const dateStr = now.toISOString().split('T')[0];
+            const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+            const newTx = {
+                id: 'tx_web_' + Date.now(),
+                type: isIncome ? 'income' : 'expense',
+                amount: amount,
+                walletId: w.id,
+                walletName: w.name,
+                category: cat,
+                note: note,
+                date: dateStr,
+                datetime: `${dateStr} ${timeStr}`
+            };
+
+            state.transactions = [newTx, ...(state.transactions || [])];
+            if (typeof window.saveTataDanaState === 'function') {
+                window.saveTataDanaState(state);
+            }
+
+            document.getElementById('manualAmount').value = '';
+            document.getElementById('manualNote').value = '';
+            populateFormOptions();
+            renderTransaksiList();
+
+            if (window.showToast) {
+                window.showToast('✓ Transaksi berhasil dicatat & data langsung tersinkron!', 'success');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            populateFormOptions();
+            renderTransaksiList();
+            if (window.initCurrencyInputs) window.initCurrencyInputs();
+        });
+    </script>
+    <!-- UNIFIED AI BOT & TOAST SYSTEM & ACCOUNT -->
+    <script src="/tatadana-supabase.js"></script>
+    <script src="/tatadana-ai-bot.js"></script>
+    <script src="/tatadana-account.js"></script>
+</body>
+</html>

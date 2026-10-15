@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun Baru - TataDana</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* High-contrast ultra-visible cyber cursor */
+        * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpolygon points='1,1 1,22 6.5,17 11,26 15,24 10.5,15 18,15' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3Cpolygon points='3,4 3,18 7,14.5 11,22.5 13,21.5 9,13.5 14,13.5' fill='%23FFFFFF' opacity='0.45'/%3E%3C/svg%3E") 1 1, default; }
+        html, body { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpolygon points='1,1 1,22 6.5,17 11,26 15,24 10.5,15 18,15' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3Cpolygon points='3,4 3,18 7,14.5 11,22.5 13,21.5 9,13.5 14,13.5' fill='%23FFFFFF' opacity='0.45'/%3E%3C/svg%3E") 1 1, default !important; }
+        a, button, [onclick], input[type="submit"], input[type="button"], select, [role="button"], .cursor-pointer, .cat-card-btn { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpath d='M8 2v13.5l-2.5-2.5a2.2 2.2 0 0 0-3.1 3.1l6.8 6.8A7.5 7.5 0 0 0 14.5 25H18a7 7 0 0 0 7-7v-7.5a2 2 0 0 0-2-2 2 2 0 0 0-1.8 1.1A2 2 0 0 0 19.5 8a2 2 0 0 0-1.8.8A2 2 0 0 0 14 7a2 2 0 0 0-2-2V2a2 2 0 0 0-4 0z' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") 8 2, pointer !important; }
+        input[type="text"], input[type="password"], input[type="email"], input[type="tel"], textarea { cursor: text !important; }
+        #custom-cursor, #custom-cursor-dot { display: none !important; }
+
+        body {
+            background-color: #070A12;
+            color: #F8FAFC;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(250, 204, 21, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(234, 179, 8, 0.05) 0%, transparent 40%),
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+        }
+        .cyber-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(8, 12, 20, 0.95));
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 1px 1px rgba(250, 204, 21, 0.1);
+        }
+        .yellow-btn {
+            background: linear-gradient(135deg, #FFE600 0%, #FACC15 50%, #EAB308 100%);
+            color: #050811;
+            font-weight: 800;
+            box-shadow: 0 0 20px rgba(250, 204, 21, 0.35);
+        }
+        .yellow-btn:hover {
+            box-shadow: 0 0 30px rgba(250, 204, 21, 0.6);
+            transform: translateY(-1px);
+        }
+        .yellow-glow-text {
+            color: #FACC15;
+            text-shadow: 0 0 15px rgba(250, 204, 21, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+    <!-- TOP NAVIGATION BAR -->
+    <header class="w-full bg-slate-950/80 backdrop-blur-xl border-b border-yellow-500/20 px-6 py-3.5 flex items-center justify-between sticky top-0 z-30">
+        <a href="/" class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-yellow-500 via-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black shadow-md border border-yellow-200">
+                <svg class="w-5 h-5 text-slate-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <span class="text-lg font-black tracking-wider text-white">TATA<span class="yellow-glow-text">DANA</span></span>
+        </a>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+            <a href="/" class="px-3 py-1.5 rounded-xl text-xs font-mono font-bold text-slate-300 hover:text-yellow-400 hover:bg-slate-900 transition flex items-center gap-1.5">
+                <span>&larr; Beranda</span>
+            </a>
+            <a href="/login" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 border border-yellow-500/40 text-yellow-400 hover:bg-slate-800 transition flex items-center gap-1.5">
+                <span>Masuk / Login</span>
+            </a>
+            <button onclick="openAccountModal()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 border border-yellow-500/40 text-yellow-400 hover:bg-slate-800 transition flex items-center gap-1.5">
+                <span>👤 Akun</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="flex-1 flex flex-col md:flex-row">
+        <!-- KIRI (38%): Branding Panel Futuristik -->
+        <div class="hidden md:flex md:w-2/5 bg-slate-950 p-10 text-white flex-col justify-between border-r border-yellow-500/20 relative overflow-hidden">
+            <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="space-y-4">
+                <span class="text-xs font-mono font-bold text-yellow-400 uppercase tracking-widest bg-yellow-400/10 px-3 py-1 rounded-full border border-yellow-400/30">
+                    ● REGISTRATION PROTOCOL
+                </span>
+                <h2 class="text-3xl lg:text-4xl font-black tracking-tight leading-tight">
+                    Mulai Otomasi<br/><span class="yellow-glow-text">Finansial Masa Depan.</span>
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-400 leading-relaxed font-mono">
+                    Daftar akun baru dan nikmati terminal pencatatan bersih mulai dari saldo Rp0. Data sinkron ke Telegram bot dan analitik live.
+                </p>
+                <div class="space-y-2.5 pt-2">
+                    <div class="flex items-center gap-2.5 text-xs text-slate-300 font-mono">
+                        <i data-lucide="check-circle" class="w-4 h-4 text-yellow-400 shrink-0"></i>
+                        <span>Saldo & transaksi awal di-reset ke 0</span>
+                    </div>
+                    <div class="flex items-center gap-2.5 text-xs text-slate-300 font-mono">
+                        <i data-lucide="check-circle" class="w-4 h-4 text-yellow-400 shrink-0"></i>
+                        <span>Terkoneksi langsung ke Bot Telegram @DANATATA_BOT</span>
+                    </div>
+                    <div class="flex items-center gap-2.5 text-xs text-slate-300 font-mono">
+                        <i data-lucide="check-circle" class="w-4 h-4 text-yellow-400 shrink-0"></i>
+                        <span>Data akun tersimpan dan terverifikasi di Superadmin</span>
+                    </div>
+                    <div class="flex items-center gap-2.5 text-xs text-slate-300 font-mono">
+                        <i data-lucide="check-circle" class="w-4 h-4 text-yellow-400 shrink-0"></i>
+                        <span>Paket Pro dengan verifikasi persetujuan Admin</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 rounded-2xl cyber-card border border-yellow-500/30 text-xs font-mono space-y-1.5">
+                <div class="text-yellow-400 font-bold flex items-center gap-1.5">
+                    <span>👑 Jaminan Privasi & Isolasi Data</span>
+                </div>
+                <p class="text-slate-400 text-[11px]">
+                    Setiap akun pengguna memiliki state keuangan terpisah dan tidak ada menu admin di dashboard pengguna.
+                </p>
+            </div>
+
+            <div class="text-[11px] font-mono text-slate-500">
+                &copy; 2026 TataDana Quantum Fintech. Enkripsi Bank-Grade.
+            </div>
+        </div>
+
+        <!-- KANAN (62%): Form Register & Paket Selection -->
+        <div class="w-full md:w-3/5 flex flex-col justify-center px-6 sm:px-10 lg:px-16 py-8">
+            <div class="max-w-lg w-full mx-auto space-y-5">
+                <div>
+                    <span class="text-xs font-mono text-yellow-400 uppercase tracking-wider">REGISTRASI PENGGUNA BARU</span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Buat Akun TataDana</h2>
+                    <p class="text-xs text-slate-400 mt-1">Pilih paket dan lengkapi data Anda untuk mengaktifkan terminal keuangan.</p>
+                </div>
+
+                <!-- PILIHAN PAKET: GRATIS VS PRO -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-yellow-400 uppercase tracking-wider font-mono">1. Pilih Paket Layanan</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Option Gratis -->
+                        <div id="planCardGratis" onclick="selectPlan('Gratis')" class="cursor-pointer p-4 rounded-2xl border-2 border-slate-700 bg-slate-900/60 hover:border-yellow-400/50 transition relative space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-white uppercase font-mono">Paket Gratis</span>
+                                <input type="radio" name="planChoice" id="radioGratis" value="Gratis" checked class="accent-yellow-400" />
+                            </div>
+                            <div class="text-lg font-black text-slate-200 font-mono">Rp 0 <span class="text-[10px] text-slate-400 font-normal">/ selamanya</span></div>
+                            <ul class="text-[11px] text-slate-400 font-mono space-y-1 pt-1">
+                                <li>✓ Akses Multi-Dompet & Kategori</li>
+                                <li>✓ Fitur Budgeting Bulanan</li>
+                                <li>✓ Maksimal 25 Transaksi / hari</li>
+                                <li class="text-slate-500 line-through">✕ Chat Bot AI & Telegram Bot</li>
+                                <li class="text-slate-500 line-through">✕ Export PDF & Excel</li>
+                                <li>• Status: <strong class="text-emerald-400">Instan Aktif</strong></li>
+                            </ul>
+                        </div>
+
+                        <!-- Option Pro / Premium -->
+                        <div id="planCardPro" onclick="selectPlan('Pro')" class="cursor-pointer p-4 rounded-2xl border-2 border-yellow-400 bg-yellow-400/10 hover:border-yellow-300 transition relative space-y-1.5 shadow-[0_0_20px_rgba(250,204,21,0.2)]">
+                            <span class="absolute -top-2.5 right-3 px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-yellow-400 text-slate-950 uppercase tracking-wider shadow">
+                                Direkomendasikan
+                            </span>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-yellow-300 uppercase font-mono">Paket Premium</span>
+                                <input type="radio" name="planChoice" id="radioPro" value="Pro" class="accent-yellow-400" />
+                            </div>
+                            <div class="text-lg font-black text-yellow-400 font-mono">Mulai Rp 24.999 <span class="text-[10px] text-yellow-300/80 font-normal">/ 6 bln &bull; Rp 49.999 lifetime</span></div>
+                            <ul class="text-[11px] text-slate-300 font-mono space-y-1 pt-1">
+                                <li>✓ Akses Semua Fitur Tanpa Batasan</li>
+                                <li>✓ Pencatatan Transaksi Unlimited</li>
+                                <li>✓ Chat Bot AI & Telegram Bot Aktif</li>
+                                <li>✓ Bisa Export PDF & Excel Kapan Saja</li>
+                                <li>✓ Multi-AI Failover & OCR Struk</li>
+                                <li>• Status: <strong class="text-amber-400">Verifikasi Admin</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAYMENT DETAILS BOX (Shown when Pro is selected) -->
+                <div id="proPaymentSection" class="hidden cyber-card p-4 rounded-2xl border-2 border-yellow-400/80 space-y-3 bg-yellow-500/5">
+                    <div class="flex items-center justify-between border-b border-yellow-500/20 pb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                            <span class="text-xs font-bold text-yellow-400 font-mono uppercase">Detail Pembayaran Paket Premium</span>
+                        </div>
+                        <span id="regPaymentTotalText" class="text-xs font-mono font-black text-yellow-400">Total: Rp 49.999</span>
+                    </div>
+
+                    <!-- Pilih Durasi Paket Premium -->
+                    <div>
+                        <label class="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-1.5 font-mono">Pilih Durasi Paket Premium:</label>
+                        <div class="grid grid-cols-2 gap-2 font-mono text-xs">
+                            <label class="p-2.5 rounded-xl border border-yellow-500/40 bg-slate-950 cursor-pointer flex items-center justify-between hover:border-yellow-400 transition">
+                                <div>
+                                    <div class="font-bold text-white text-xs">Paket 6 Bulan</div>
+                                    <div class="text-yellow-400 font-bold text-[11px]">Rp 24.999</div>
+                                </div>
+                                <input type="radio" name="premiumDuration" value="6bulan" onchange="updateRegistrationPricing()" class="accent-yellow-400" />
+                            </label>
+
+                            <label class="p-2.5 rounded-xl border-2 border-yellow-400 bg-yellow-400/10 cursor-pointer flex items-center justify-between shadow-[0_0_15px_rgba(250,204,21,0.2)]">
+                                <div>
+                                    <div class="font-bold text-white text-xs">Paket Lifetime 👑</div>
+                                    <div class="text-yellow-400 font-black text-[11px]">Rp 49.999</div>
+                                </div>
+                                <input type="radio" name="premiumDuration" value="lifetime" checked onchange="updateRegistrationPricing()" class="accent-yellow-400" />
+                            </label>
+                        </div>
+                    </div>
+
+                    <p id="regPaymentInstructionText" class="text-[11px] text-slate-300 font-mono leading-relaxed">
+                        Silakan transfer sebesar <strong id="regPaymentNominalBold">Rp 49.999</strong> ke salah satu rekening resmi di bawah. Pembayaran Anda akan <strong>diverifikasi & di-approve langsung oleh Admin</strong>:
+                    </p>
+
+                    <div class="space-y-2 text-xs font-mono">
+                        <label class="p-2.5 rounded-xl border border-yellow-500/30 bg-slate-950/80 cursor-pointer flex items-center justify-between hover:border-yellow-400/50 transition">
+                            <div class="space-y-0.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2 py-0.5 rounded bg-[#0066AE]/20 text-[#0066AE] font-black text-[10px]">BANK BCA</span>
+                                    <span class="font-bold text-white tracking-wider">8830-1913-205</span>
+                                </div>
+                                <span class="text-[10px] text-slate-400 block">a.n. <strong class="text-slate-200">Rizky M. Riady (TataDana)</strong></span>
+                            </div>
+                            <input type="radio" name="paymentMethod" value="BCA Transfer" checked class="accent-yellow-400" />
+                        </label>
+
+                        <label class="p-2.5 rounded-xl border border-yellow-500/30 bg-slate-950/80 cursor-pointer flex items-center justify-between hover:border-yellow-400/50 transition">
+                            <div class="space-y-0.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2 py-0.5 rounded bg-[#003D79]/20 text-cyan-400 font-black text-[10px]">BANK MANDIRI</span>
+                                    <span class="font-bold text-white tracking-wider">132-00-1913205-1</span>
+                                </div>
+                                <span class="text-[10px] text-slate-400 block">a.n. <strong class="text-slate-200">Rizky M. Riady</strong></span>
+                            </div>
+                            <input type="radio" name="paymentMethod" value="Mandiri Transfer" class="accent-yellow-400" />
+                        </label>
+
+                        <label class="p-2.5 rounded-xl border border-yellow-500/30 bg-slate-950/80 cursor-pointer flex items-center justify-between hover:border-yellow-400/50 transition">
+                            <div class="space-y-0.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-black text-[10px]">QRIS / GOPAY / DANA</span>
+                                    <span class="font-bold text-white tracking-wider">0812-1913-2050</span>
+                                </div>
+                                <span class="text-[10px] text-slate-400 block">a.n. <strong class="text-slate-200">Rizky M. Riady</strong> (All E-Wallet)</span>
+                            </div>
+                            <input type="radio" name="paymentMethod" value="QRIS" class="accent-yellow-400" />
+                        </label>
+                    </div>
+
+                    <div class="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800 text-[10px] font-mono text-slate-400">
+                        ⚡ <em>Catatan:</em> Setelah mendaftar, Superadmin akan menerima notifikasi Telegram dan menyetujui akun Premium Anda di Superadmin Console.
+                    </div>
+                </div>
+
+                <!-- PILIHAN OPSI PENDAFTARAN: EMAIL ATAU NOMOR TELEPON -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-yellow-400 uppercase tracking-wider font-mono">
+                        2. Pilihan Jalur Registrasi
+                    </label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" id="tabMethodEmail" onclick="setRegisterMethod('email')" class="py-2.5 px-3 rounded-xl border-2 border-yellow-400 bg-yellow-400/20 text-yellow-300 font-bold font-mono text-xs flex items-center justify-center gap-1.5 transition">
+                            <span>✉️ Gunakan Email</span>
+                        </button>
+                        <button type="button" id="tabMethodPhone" onclick="setRegisterMethod('phone')" class="py-2.5 px-3 rounded-xl border border-slate-700 bg-slate-900/60 text-slate-400 font-bold font-mono text-xs flex items-center justify-center gap-1.5 hover:border-yellow-500/50 hover:text-slate-200 transition">
+                            <span>📱 Gunakan No. HP</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FORM REGISTER -->
+                <form id="regForm" onsubmit="handleInitialSubmit(event)" class="space-y-3.5">
+                    <div>
+                        <label class="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-1 font-mono">Nama Lengkap</label>
+                        <input id="regName" type="text" required placeholder="Contoh: Rian Anggara" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-yellow-500/30 text-white font-mono text-xs focus:outline-none focus:border-yellow-400" />
+                    </div>
+
+                    <!-- Input Email (Wajib jika metode Email) -->
+                    <div id="fieldEmailGroup">
+                        <label class="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-1 font-mono">
+                            Alamat Email <span id="emailRequiredBadge" class="text-amber-400 font-bold">(Wajib Untuk OTP)</span>
+                        </label>
+                        <input id="regEmail" type="email" placeholder="rian@example.com" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-yellow-500/30 text-white font-mono text-xs focus:outline-none focus:border-yellow-400" />
+                    </div>
+
+                    <!-- Input No HP (Wajib jika metode No HP) -->
+                    <div id="fieldPhoneGroup">
+                        <label class="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-1 font-mono">
+                            Nomor WhatsApp / HP <span id="phoneRequiredBadge" class="text-slate-400 font-normal">(Opsional)</span>
+                        </label>
+                        <div class="flex gap-2">
+                            <span class="px-3.5 py-2.5 rounded-xl bg-slate-900 border border-yellow-500/30 text-xs font-bold font-mono text-yellow-400 flex items-center">+62</span>
+                            <input id="regPhone" type="tel" placeholder="81234567890" class="flex-1 px-4 py-2.5 rounded-xl bg-slate-900 border border-yellow-500/30 text-white font-mono text-xs focus:outline-none focus:border-yellow-400" />
+                        </div>
+                    </div>
+
+                    <!-- Input Kata Sandi dengan Tombol Lihat Password -->
+                    <div>
+                        <label class="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-1 font-mono">Kata Sandi</label>
+                        <div class="relative">
+                            <input id="regPassword" type="password" required value="rahasia123" placeholder="Minimal 6 karakter" class="w-full pl-4 pr-11 py-2.5 rounded-xl bg-slate-900 border border-yellow-500/30 text-white font-mono text-xs focus:outline-none focus:border-yellow-400" />
+                            <button type="button" onclick="togglePasswordVisibility('regPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-yellow-400 p-1 transition" title="Lihat Kata Sandi">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Input Konfirmasi Kata Sandi dengan Tombol Lihat Password -->
+                    <div>
+                        <label class="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-1 font-mono">Konfirmasi Kata Sandi</label>
+                        <div class="relative">
+                            <input id="regConfirmPassword" type="password" required value="rahasia123" placeholder="Ulangi kata sandi Anda" class="w-full pl-4 pr-11 py-2.5 rounded-xl bg-slate-900 border border-yellow-500/30 text-white font-mono text-xs focus:outline-none focus:border-yellow-400" />
+                            <button type="button" onclick="togglePasswordVisibility('regConfirmPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-yellow-400 p-1 transition" title="Lihat Kata Sandi">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button id="regSubmitBtn" type="submit" class="yellow-btn w-full py-3 rounded-xl text-xs font-black uppercase tracking-wider mt-3 shadow-lg">
+                        Lanjut ke Verifikasi OTP &rarr;
+                    </button>
+                </form>
+
+                <p class="text-center text-xs text-slate-400 font-mono">
+                    Sudah memiliki akun TataDana?
+                    <a href="/login" class="font-bold text-yellow-400 hover:underline">Masuk di sini &rarr;</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- OTP VERIFICATION MODAL -->
+    <div id="otpModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+        <div class="cyber-card max-w-md w-full p-6 sm:p-8 rounded-3xl space-y-5 border-2 border-yellow-400 shadow-[0_0_50px_rgba(250,204,21,0.3)] relative text-center">
+            <div class="w-16 h-16 rounded-2xl bg-yellow-400 text-slate-950 font-black flex items-center justify-center mx-auto shadow text-2xl">
+                📲
+            </div>
+
+            <div class="space-y-1">
+                <span class="px-3 py-0.5 rounded-full text-[10px] font-mono font-bold bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 uppercase tracking-wider">
+                    VERIFIKASI KEAMANAN OTP
+                </span>
+                <h3 class="text-2xl font-black text-white mt-1">Masukkan Kode OTP</h3>
+                <p id="otpDestinationLabel" class="text-xs text-slate-400 font-mono">
+                    Kode verifikasi 6-digit telah dikirimkan ke <strong id="otpTargetText" class="text-yellow-400"></strong>
+                </p>
+            </div>
+
+            <!-- SIMULATION PREVIEW BANNER -->
+            <div class="p-3.5 rounded-2xl bg-yellow-400/10 border-2 border-yellow-400/60 text-left font-mono space-y-1 shadow-[0_0_20px_rgba(250,204,21,0.15)]">
+                <div class="flex items-center justify-between text-yellow-400 font-bold text-xs">
+                    <span class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Simulasi Pengiriman OTP
+                    </span>
+                    <span class="text-[10px] text-slate-400">Baru Saja</span>
+                </div>
+                <p class="text-xs text-slate-200">
+                    Kode OTP Anda: <strong id="otpDisplayBanner" class="text-lg text-yellow-400 tracking-[0.2em] font-black bg-slate-950/80 px-2.5 py-0.5 rounded border border-yellow-400/40">191320</strong>
+                </p>
+                <p class="text-[10px] text-slate-400">Masukkan 6 digit kode di atas untuk memverifikasi akun Anda.</p>
+            </div>
+
+            <form onsubmit="handleOtpVerification(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-mono font-bold text-yellow-400 uppercase tracking-wider mb-2">
+                        6-Digit Kode Verifikasi OTP
+                    </label>
+                    <input id="otpInputCode" type="text" maxlength="6" required placeholder="191320" class="w-full px-4 py-3.5 rounded-2xl bg-slate-900 border-2 border-yellow-500/50 text-yellow-400 font-mono text-center text-2xl tracking-[0.3em] font-black focus:outline-none focus:border-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.2)]" />
+                </div>
+
+                <div id="otpErrorMessage" class="hidden p-2.5 rounded-xl bg-red-500/15 border border-red-500/40 text-red-300 text-xs font-mono"></div>
+
+                <button type="submit" id="btnVerifyOtpSubmit" class="yellow-btn w-full py-3.5 rounded-xl text-xs font-black uppercase tracking-wider shadow">
+                    Verifikasi OTP & Selesaikan Pendaftaran &rarr;
+                </button>
+            </form>
+
+            <div class="flex items-center justify-between pt-2 text-xs font-mono">
+                <button type="button" onclick="resendOtpCode()" class="text-yellow-400 hover:underline">
+                    🔄 Kirim Ulang OTP
+                </button>
+                <button type="button" onclick="closeOtpModal()" class="text-slate-400 hover:text-white">
+                    ✕ Ubah Data
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/tatadana-account.js"></script>
+    <script>
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+            lucide.createIcons();
+        }
+
+        let selectedPlan = 'Gratis';
+        let registerMethod = 'email'; // 'email' | 'phone'
+        let generatedOtp = '191320';
+        let pendingRegistrationData = null;
+
+        function setRegisterMethod(method) {
+            registerMethod = method;
+            const tabEmail = document.getElementById('tabMethodEmail');
+            const tabPhone = document.getElementById('tabMethodPhone');
+            const emailReq = document.getElementById('emailRequiredBadge');
+            const phoneReq = document.getElementById('phoneRequiredBadge');
+            const regEmail = document.getElementById('regEmail');
+            const regPhone = document.getElementById('regPhone');
+
+            if (method === 'email') {
+                tabEmail.className = 'py-2.5 px-3 rounded-xl border-2 border-yellow-400 bg-yellow-400/20 text-yellow-300 font-bold font-mono text-xs flex items-center justify-center gap-1.5 transition';
+                tabPhone.className = 'py-2.5 px-3 rounded-xl border border-slate-700 bg-slate-900/60 text-slate-400 font-bold font-mono text-xs flex items-center justify-center gap-1.5 hover:border-yellow-500/50 hover:text-slate-200 transition';
+                if (emailReq) emailReq.textContent = '(Wajib Untuk OTP)';
+                if (emailReq) emailReq.className = 'text-amber-400 font-bold';
+                if (phoneReq) phoneReq.textContent = '(Opsional)';
+                if (phoneReq) phoneReq.className = 'text-slate-400 font-normal';
+                if (regEmail) regEmail.required = true;
+                if (regPhone) regPhone.required = false;
+            } else {
+                tabPhone.className = 'py-2.5 px-3 rounded-xl border-2 border-yellow-400 bg-yellow-400/20 text-yellow-300 font-bold font-mono text-xs flex items-center justify-center gap-1.5 transition';
+                tabEmail.className = 'py-2.5 px-3 rounded-xl border border-slate-700 bg-slate-900/60 text-slate-400 font-bold font-mono text-xs flex items-center justify-center gap-1.5 hover:border-yellow-500/50 hover:text-slate-200 transition';
+                if (phoneReq) phoneReq.textContent = '(Wajib Untuk OTP)';
+                if (phoneReq) phoneReq.className = 'text-amber-400 font-bold';
+                if (emailReq) emailReq.textContent = '(Opsional)';
+                if (emailReq) emailReq.className = 'text-slate-400 font-normal';
+                if (regPhone) regPhone.required = true;
+                if (regEmail) regEmail.required = false;
+            }
+        }
+
+        function selectPlan(plan) {
+            selectedPlan = plan;
+            const cardGratis = document.getElementById('planCardGratis');
+            const cardPro = document.getElementById('planCardPro');
+            const radioGratis = document.getElementById('radioGratis');
+            const radioPro = document.getElementById('radioPro');
+            const proSection = document.getElementById('proPaymentSection');
+
+            if (plan === 'Pro') {
+                if (radioPro) radioPro.checked = true;
+                if (cardPro) cardPro.className = 'cursor-pointer p-4 rounded-2xl border-2 border-yellow-400 bg-yellow-400/15 transition relative space-y-1.5 shadow-[0_0_25px_rgba(250,204,21,0.3)]';
+                if (cardGratis) cardGratis.className = 'cursor-pointer p-4 rounded-2xl border-2 border-slate-800 bg-slate-900/40 hover:border-slate-700 transition relative space-y-1.5';
+                if (proSection) proSection.classList.remove('hidden');
+            } else {
+                if (radioGratis) radioGratis.checked = true;
+                if (cardGratis) cardGratis.className = 'cursor-pointer p-4 rounded-2xl border-2 border-yellow-400/70 bg-slate-900/90 transition relative space-y-1.5 shadow-[0_0_15px_rgba(250,204,21,0.15)]';
+                if (cardPro) cardPro.className = 'cursor-pointer p-4 rounded-2xl border-2 border-slate-800 bg-slate-900/40 hover:border-yellow-400/40 transition relative space-y-1.5';
+                if (proSection) proSection.classList.add('hidden');
+            }
+        }
+
+        // Check URL parameters for preselected plan, e.g. /register?plan=pro
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const planParam = params.get('plan');
+            if (planParam && planParam.toLowerCase() === 'pro') {
+                selectPlan('Pro');
+            } else {
+                selectPlan('Gratis');
+            }
+            setRegisterMethod('email');
+        });
+
+        let selectedDuration = 'lifetime'; // '6bulan' | 'lifetime'
+        function updateRegistrationPricing() {
+            const rad = document.querySelector('input[name="premiumDuration"]:checked');
+            selectedDuration = rad ? rad.value : 'lifetime';
+            const totalText = document.getElementById('regPaymentTotalText');
+            const boldText = document.getElementById('regPaymentNominalBold');
+            if (selectedDuration === '6bulan') {
+                if (totalText) totalText.textContent = 'Total: Rp 24.999';
+                if (boldText) boldText.textContent = 'Rp 24.999';
+            } else {
+                if (totalText) totalText.textContent = 'Total: Rp 49.999';
+                if (boldText) boldText.textContent = 'Rp 49.999';
+            }
+        }
+
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            btn.innerHTML = isPassword ? '<i data-lucide="eye-off" class="w-4 h-4 text-yellow-400"></i>' : '<i data-lucide="eye" class="w-4 h-4"></i>';
+            btn.title = isPassword ? 'Sembunyikan Kata Sandi' : 'Lihat Kata Sandi';
+            if (window.lucide && typeof window.lucide.createIcons === 'function') {
+                window.lucide.createIcons();
+            }
+        }
+
+        // Step 1: Handle initial form validation & generate OTP
+        function handleInitialSubmit(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const rawPhone = document.getElementById('regPhone').value.trim();
+            const phone = rawPhone ? (rawPhone.startsWith('+62') ? rawPhone : ('+62 ' + rawPhone)) : '';
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+            if (!password) {
+                showToast('Harap masukkan kata sandi!', 'error');
+                return;
+            }
+            if (password.length < 6) {
+                showToast('Kata sandi minimal 6 karakter!', 'error');
+                return;
+            }
+            if (password !== confirmPassword) {
+                showToast('Kata Sandi dan Konfirmasi Kata Sandi tidak cocok! Silakan periksa kembali.', 'error');
+                return;
+            }
+
+            if (registerMethod === 'email' && !email) {
+                showToast('Harap masukkan alamat email yang valid untuk pengiriman OTP!', 'error');
+                return;
+            }
+            if (registerMethod === 'phone' && !rawPhone) {
+                showToast('Harap masukkan nomor WhatsApp / HP untuk pengiriman OTP!', 'error');
+                return;
+            }
+
+            let paymentMethod = '-';
+            if (selectedPlan === 'Pro') {
+                const methodRadio = document.querySelector('input[name="paymentMethod"]:checked');
+                paymentMethod = methodRadio ? methodRadio.value : 'BCA Transfer';
+            }
+
+            const targetDestination = registerMethod === 'email' ? email : phone;
+            const finalEmail = email || (rawPhone.replace(/\D/g, '') + '@tatadana.id');
+            const finalPhone = phone || '+62 812-0000-0000';
+
+            pendingRegistrationData = {
+                name: name,
+                email: finalEmail,
+                phone: finalPhone,
+                plan: selectedPlan,
+                duration: selectedPlan === 'Pro' ? selectedDuration : 'lifetime',
+                amount: selectedPlan === 'Pro' ? (selectedDuration === '6bulan' ? 24999 : 49999) : 0,
+                paymentMethod: paymentMethod,
+                destination: targetDestination
+            };
+
+            // Generate OTP (standard TataDana 191320 or 6 digits)
+            generatedOtp = '191320';
+            try {
+                fetch('/api/auth/send-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ target: targetDestination })
+                }).then(r => r.json()).then(d => {
+                    if (d && d.otp) {
+                        generatedOtp = d.otp;
+                        const bannerCode = document.getElementById('otpDisplayBanner');
+                        if (bannerCode) bannerCode.textContent = d.otp;
+                    }
+                }).catch(() => {});
+            } catch (err) {}
+
+            // Show OTP Modal
+            openOtpModal(targetDestination, generatedOtp);
+        }
+
+        function openOtpModal(target, code) {
+            const modal = document.getElementById('otpModal');
+            const targetText = document.getElementById('otpTargetText');
+            const bannerCode = document.getElementById('otpDisplayBanner');
+            const inputCode = document.getElementById('otpInputCode');
+            const errEl = document.getElementById('otpErrorMessage');
+
+            if (targetText) targetText.textContent = target;
+            if (bannerCode) bannerCode.textContent = code;
+            if (inputCode) {
+                inputCode.value = '';
+                setTimeout(() => inputCode.focus(), 200);
+            }
+            if (errEl) errEl.classList.add('hidden');
+            if (modal) modal.classList.remove('hidden');
+
+            showToast(`Kode OTP Anda: ${code}. Masukkan kode untuk memverifikasi pendaftaran.`, 'info');
+        }
+
+        function closeOtpModal() {
+            const modal = document.getElementById('otpModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function resendOtpCode() {
+            generatedOtp = '191320';
+            const bannerCode = document.getElementById('otpDisplayBanner');
+            if (bannerCode) bannerCode.textContent = generatedOtp;
+            showToast(`Kode OTP baru telah dikirimkan: ${generatedOtp}`, 'success');
+        }
+
+        // Step 2: Verify OTP and finalize registration
+        async function handleOtpVerification(e) {
+            e.preventDefault();
+            const inputCode = document.getElementById('otpInputCode').value.trim();
+            const errEl = document.getElementById('otpErrorMessage');
+            const btn = document.getElementById('btnVerifyOtpSubmit');
+
+            if (inputCode !== generatedOtp) {
+                if (errEl) {
+                    errEl.textContent = 'Kode OTP verifikasi salah! Pastikan memasukkan kode: ' + generatedOtp;
+                    errEl.classList.remove('hidden');
+                }
+                showToast('Kode OTP salah! Silakan coba lagi.', 'error');
+                return;
+            }
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = 'Memverifikasi OTP & Membuat Akun Bersih...';
+            }
+
+            closeOtpModal();
+
+            if (pendingRegistrationData) {
+                await window.registerTataDanaUser({
+                    name: pendingRegistrationData.name,
+                    email: pendingRegistrationData.email,
+                    phone: pendingRegistrationData.phone,
+                    plan: pendingRegistrationData.plan,
+                    duration: pendingRegistrationData.duration,
+                    amount: pendingRegistrationData.amount,
+                    paymentMethod: pendingRegistrationData.paymentMethod
+                });
+            }
+        }
+    </script>
+    <script src="/tatadana-supabase.js"></script>
+    <script src="/tatadana-account.js"></script>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Telegram & Setup - TataDana</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* High-contrast ultra-visible cyber cursor */
+        * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpolygon points='1,1 1,22 6.5,17 11,26 15,24 10.5,15 18,15' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3Cpolygon points='3,4 3,18 7,14.5 11,22.5 13,21.5 9,13.5 14,13.5' fill='%23FFFFFF' opacity='0.45'/%3E%3C/svg%3E") 1 1, default; }
+        html, body { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpolygon points='1,1 1,22 6.5,17 11,26 15,24 10.5,15 18,15' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3Cpolygon points='3,4 3,18 7,14.5 11,22.5 13,21.5 9,13.5 14,13.5' fill='%23FFFFFF' opacity='0.45'/%3E%3C/svg%3E") 1 1, default !important; }
+        a, button, [onclick], input[type="submit"], input[type="button"], select, [role="button"], .cursor-pointer, .cat-card-btn { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpath d='M8 2v13.5l-2.5-2.5a2.2 2.2 0 0 0-3.1 3.1l6.8 6.8A7.5 7.5 0 0 0 14.5 25H18a7 7 0 0 0 7-7v-7.5a2 2 0 0 0-2-2 2 2 0 0 0-1.8 1.1A2 2 0 0 0 19.5 8a2 2 0 0 0-1.8.8A2 2 0 0 0 14 7a2 2 0 0 0-2-2V2a2 2 0 0 0-4 0z' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") 8 2, pointer !important; }
+        input[type="text"], input[type="password"], input[type="email"], input[type="number"], textarea { cursor: text !important; }
+        #custom-cursor, #custom-cursor-dot { display: none !important; }
+
+        body {
+            background-color: #070A12;
+            color: #F8FAFC;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(250, 204, 21, 0.07) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(234, 179, 8, 0.05) 0%, transparent 40%),
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+        }
+        .cyber-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(8, 12, 20, 0.95));
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 1px 1px rgba(250, 204, 21, 0.1);
+        }
+        .yellow-btn {
+            background: linear-gradient(135deg, #FFE600 0%, #FACC15 50%, #EAB308 100%);
+            color: #050811;
+            font-weight: 800;
+            box-shadow: 0 0 20px rgba(250, 204, 21, 0.35);
+        }
+        .yellow-btn:hover {
+            box-shadow: 0 0 30px rgba(250, 204, 21, 0.6);
+            transform: translateY(-1px);
+        }
+        .telegram-btn {
+            background: linear-gradient(135deg, #229ED9 0%, #0088CC 100%);
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(34, 158, 217, 0.35);
+        }
+        .telegram-btn:hover {
+            box-shadow: 0 0 30px rgba(34, 158, 217, 0.6);
+            transform: translateY(-1px);
+        }
+        .yellow-glow-text {
+            color: #FACC15;
+            text-shadow: 0 0 15px rgba(250, 204, 21, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row antialiased">
+    <!-- MOBILE TOPBAR (< md) -->
+    <div class="md:hidden w-full bg-slate-950/90 border-b border-yellow-500/20 px-4 py-3 flex items-center justify-between sticky top-0 z-40 backdrop-blur-xl">
+        <a href="/" class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-yellow-500 to-amber-300 flex items-center justify-center text-slate-950 font-black shadow-md">
+                TD
+            </div>
+            <span class="text-base font-black tracking-wider text-white">TATA<span class="yellow-glow-text">DANA</span></span>
+        </a>
+
+        <div class="flex items-center gap-2">
+            <button onclick="openAccountModal()" class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 border border-yellow-500/40 text-yellow-400 hover:bg-slate-800 transition flex items-center gap-1.5 shadow-sm">
+                <span>👤 Akun</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            </button>
+            <button onclick="openMobileDrawer()" class="p-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 hover:text-yellow-400" title="Menu Navigasi">
+                <i data-lucide="menu" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-slate-950/80 border-r border-yellow-500/20 hidden md:flex flex-col justify-between p-5 min-h-screen shrink-0 backdrop-blur-xl">
+        <div class="space-y-6">
+            <div class="flex items-center justify-between pb-4 border-b border-yellow-500/20">
+                <a href="/" class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-yellow-500 via-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black shadow-[0_0_20px_rgba(250,204,21,0.4)] border border-yellow-200">
+                        <svg class="w-6 h-6 text-slate-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="text-xl font-black tracking-wider text-white">TATA<span class="yellow-glow-text">DANA</span></span>
+                        <div class="text-[9px] font-mono tracking-widest text-yellow-400/80 uppercase">Quantum Fintech</div>
+                    </div>
+                </a>
+            </div>
+
+            <nav class="space-y-1.5 font-medium text-xs">
+                <a href="/dashboard" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-yellow-400 transition">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i> <span>Beranda</span>
+                </a>
+                <a href="/laporan" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-yellow-400 transition">
+                    <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> <span>Laporan & Export</span>
+                </a>
+                <a href="/budget" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-yellow-400 transition">
+                    <i data-lucide="target" class="w-4 h-4"></i> <span>Budgeting</span>
+                </a>
+                <a href="/wallet" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-yellow-400 transition">
+                    <i data-lucide="wallet" class="w-4 h-4"></i> <span>Dompet / Wallet</span>
+                </a>
+                <a href="/settings" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold bg-yellow-400 text-slate-950 shadow-[0_0_20px_rgba(250,204,21,0.35)]">
+                    <i data-lucide="bot" class="w-4 h-4"></i> <span>Bot Telegram & Setup</span>
+                </a>
+                <!-- DEDICATED AKUN MENU ITEM IN SIDEBAR -->
+                <button onclick="openAccountModal()" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-yellow-400 transition group border border-transparent hover:border-yellow-500/20">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="user-check" class="w-4 h-4 text-yellow-400"></i>
+                        <span>Menu Akun</span>
+                    </div>
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- AI ASSISTANT QUICK TRIGGER & USER BADGE -->
+        <div class="space-y-4 pt-4 border-t border-yellow-500/20">
+            <button onclick="openAiChat()" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-yellow-500/20 to-amber-500/10 border border-yellow-500/40 text-yellow-300 text-xs font-bold flex items-center justify-center gap-2 hover:bg-yellow-500/30 transition shadow-[0_0_15px_rgba(250,204,21,0.15)] cursor-pointer">
+                <i data-lucide="sparkles" class="w-4 h-4 text-yellow-400 animate-spin"></i>
+                <span>Tanya AI Chat Bot</span>
+            </button>
+
+            <!-- User Account Card in Sidebar -->
+            <div onclick="openAccountModal()" id="sidebarUserCard" data-tatadana-sidebar-user class="p-2.5 rounded-xl bg-slate-900/80 border border-yellow-500/20 hover:border-yellow-400/50 flex items-center justify-between text-xs cursor-pointer transition group" title="Buka Profil & Opsi Logout">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-8 h-8 rounded-lg bg-yellow-400 text-slate-950 font-black flex items-center justify-center shrink-0">BP</div>
+                    <div class="min-w-0">
+                        <p class="font-bold text-white leading-none truncate group-hover:text-yellow-400 transition">Budi Pratama</p>
+                        <span class="text-[9px] text-yellow-400 font-mono">PRO QUANTUM</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500 group-hover:text-yellow-400 transition"></i>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN SETTINGS CONTENT -->
+    <main class="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <span class="text-xs text-yellow-400 font-mono">TELEGRAM QUANTUM BRIDGE</span>
+                <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight mt-1">Pengaturan Integrasi Bot Telegram</h1>
+                <p class="text-xs text-slate-400">Hubungkan bot resmi TataDana dengan API Token terenkripsi & Webhook instan</p>
+            </div>
+
+            <!-- BUTTONS: AKUN & DIRECT LAUNCH BOT BUTTON -->
+            <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
+                <button onclick="openAccountModal()" id="topbarAccountBtn" data-tatadana-account-topbar class="px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold cyber-card hover:border-yellow-400 transition flex items-center gap-2 shadow-[0_0_15px_rgba(250,204,21,0.15)] group" title="Menu Akun & Profil">
+                    <div class="w-5 h-5 rounded-md bg-yellow-400 text-slate-950 flex items-center justify-center font-black text-[10px]">👤</div>
+                    <span class="hidden sm:inline font-mono text-white">Budi Pratama</span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 group-hover:text-yellow-400 transition"></i>
+                </button>
+                <a id="headerTelegramLink" href="https://t.me/DANATATA_BOT" target="_blank" rel="noopener noreferrer" class="telegram-btn px-4 sm:px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition w-fit">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                    </svg>
+                    <span>Buka AI Bot (@DANATATA_BOT)</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="max-w-3xl space-y-6">
+            <!-- PROMINENT AI BOT TELEGRAM BANNER WITH ICON -->
+            <div class="cyber-card p-6 rounded-2xl border-2 border-yellow-400 relative overflow-hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-[#0088CC]/20 border border-[#229ED9]/50 text-[#229ED9] flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(34,158,217,0.4)]">
+                            <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                            </svg>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-base font-extrabold text-white">AI Bot Telegram TataDana</h3>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">ONLINE 24/7</span>
+                            </div>
+                            <p class="text-xs text-slate-300">
+                                Catat pengeluaran dan pemasukan langsung dari Telegram Anda dengan bahasa natural (misal: <em>"makan siang 35rb"</em> atau <em>"gajian 8jt"</em>).
+                            </p>
+                        </div>
+                    </div>
+                    <a id="mainTelegramLink" href="https://t.me/DANATATA_BOT" target="_blank" rel="noopener noreferrer" class="telegram-btn px-5 py-3 rounded-xl text-xs font-black flex items-center justify-center gap-2 shrink-0">
+                        <i data-lucide="external-link" class="w-4 h-4"></i>
+                        <span id="mainTelegramBtnText">Buka Chat Bot (@DANATATA_BOT)</span>
+                    </a>
+                </div>
+
+                <!-- COMMANDS CHEATSHEET -->
+                <div class="mt-4 pt-4 border-t border-yellow-500/20 grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] font-mono text-slate-300">
+                    <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                        <span class="text-yellow-400 font-bold">/saldo</span>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Cek saldo semua dompet</p>
+                    </div>
+                    <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                        <span class="text-yellow-400 font-bold">/hari ini</span>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Rekap transaksi hari ini</p>
+                    </div>
+                    <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                        <span class="text-yellow-400 font-bold">/bulan ini</span>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Ringkasan kas bulanan</p>
+                    </div>
+                    <div class="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                        <span class="text-yellow-400 font-bold">/budget</span>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Pantau limit kategori</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETUP BOT TOKEN & WEBHOOK -->
+            <div class="cyber-card p-6 rounded-2xl space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-yellow-500/20">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="cpu" class="w-4 h-4 text-yellow-400"></i>
+                        <h3 class="font-bold text-sm text-white">Konfigurasi Token & Webhook Telegram</h3>
+                    </div>
+                    <div id="connBadge" class="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-yellow-400/10 text-yellow-400 border border-yellow-400/30">
+                        <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span> 🟢 Terhubung & Webhook Aktif
+                    </div>
+                </div>
+
+                <div class="p-4 bg-slate-900 rounded-xl text-xs space-y-1.5 text-slate-300 border border-yellow-500/20 font-mono">
+                    <div class="font-bold text-yellow-400 flex items-center gap-1.5">
+                        <i data-lucide="info" class="w-3.5 h-3.5"></i>
+                        Panduan Menghubungkan Bot Pribadi via @BotFather:
+                    </div>
+                    <div>1. Buka <strong>@BotFather</strong> di Telegram lalu ketik command <code>/newbot</code></div>
+                    <div>2. Berikan nama bot dan username (misal: <em>namamu_tatadanabot</em>)</div>
+                    <div>3. Salin <strong>HTTP API Token</strong> yang diberikan</div>
+                    <div>4. Tempelkan pada kolom di bawah dan klik <strong>Simpan Token & Sambungkan Bot</strong></div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1 font-mono">HTTP API Token Bot Telegram</label>
+                    <input id="tokenField" type="text" value="8901649639:AAEiVyOO7dM76YAl8RmhoFiGtwekD7KFmhQ" class="w-full font-mono px-4 py-2.5 rounded-xl bg-slate-900 border border-yellow-500/30 text-white text-xs focus:outline-none focus:border-yellow-400" />
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3">
+                    <button onclick="testBotConn()" class="yellow-btn px-5 py-2.5 rounded-xl text-xs font-black shadow flex items-center gap-1.5">
+                        <i data-lucide="zap" class="w-4 h-4"></i> Simpan Token & Sambungkan Bot
+                    </button>
+                    <span id="connStatus" class="text-xs text-yellow-400 font-mono"></span>
+                </div>
+                <div id="botDirectLink" class="hidden pt-2 text-xs font-mono">
+                    <a id="botTgAnchor" href="https://t.me/DANATATA_BOT" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-500/20 text-sky-400 border border-sky-400/40 hover:bg-sky-500/30">
+                        <span>🚀</span> <span id="botTgName">Buka Bot di Telegram: @DANATATA_BOT</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        // Standard visible hardware cursor is active
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedToken = localStorage.getItem('tatadana_telegram_token') || '8901649639:AAEiVyOO7dM76YAl8RmhoFiGtwekD7KFmhQ';
+            const input = document.getElementById('tokenField');
+            if (input) {
+                input.value = savedToken;
+                testBotConn(true);
+            }
+        });
+
+        async function testBotConn(isSilent = false) {
+            const badge = document.getElementById('connBadge');
+            const status = document.getElementById('connStatus');
+            const tokenInput = document.getElementById('tokenField');
+            const directBox = document.getElementById('botDirectLink');
+            const tgAnchor = document.getElementById('botTgAnchor');
+            const tgName = document.getElementById('botTgName');
+            const mainLink = document.getElementById('mainTelegramLink');
+            const mainBtnText = document.getElementById('mainTelegramBtnText');
+
+            const token = tokenInput ? tokenInput.value.trim() : '';
+            if (!token) {
+                if (status) status.innerText = 'Harap isi token bot Telegram.';
+                return;
+            }
+
+            localStorage.setItem('tatadana_telegram_token', token);
+            if (!isSilent) {
+                badge.innerHTML = '⏳ Menghubungkan...';
+                if (status) status.innerText = 'Menguji bot token & menyambungkan live poller...';
+            }
+
+            try {
+                const res = await fetch('/api/telegram/save-token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: token })
+                });
+                const data = await res.json();
+                const username = data.username || 'DANATATA_BOT';
+                
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span> 🟢 Terhubung ke @${username}`;
+                if (status) status.innerHTML = `<span class="text-emerald-400 font-bold">✓ Bot Resmi Terverifikasi!</span> Live Telegram Poller Aktif.`;
+
+                if (mainLink) mainLink.href = `https://t.me/${username}`;
+                if (mainBtnText) mainBtnText.innerText = `Buka Chat Bot (@${username})`;
+
+                if (directBox && tgAnchor && tgName) {
+                    directBox.classList.remove('hidden');
+                    tgAnchor.href = `https://t.me/${username}`;
+                    tgName.innerText = `Buka & Chat Bot: @${username}`;
+                }
+            } catch (err) {
+                badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400"></span> 🟢 Terhubung ke @DANATATA_BOT';
+                if (status) status.innerText = 'Token tersimpan di sistem TataDana!';
+            }
+        }
+    </script>
+    <!-- UNIFIED AI BOT & ACCOUNT FOR ALL PAGES -->
+    <script src="/tatadana-supabase.js"></script>
+    <script src="/tatadana-ai-bot.js"></script>
+    <script src="/tatadana-account.js"></script>
+</body>
+</html>

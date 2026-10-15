@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Keuangan Futuristik - TataDana</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* High-contrast ultra-visible cyber cursor */
+        * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpolygon points='1,1 1,22 6.5,17 11,26 15,24 10.5,15 18,15' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3Cpolygon points='3,4 3,18 7,14.5 11,22.5 13,21.5 9,13.5 14,13.5' fill='%23FFFFFF' opacity='0.45'/%3E%3C/svg%3E") 1 1, default; }
+        html, body { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpolygon points='1,1 1,22 6.5,17 11,26 15,24 10.5,15 18,15' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3Cpolygon points='3,4 3,18 7,14.5 11,22.5 13,21.5 9,13.5 14,13.5' fill='%23FFFFFF' opacity='0.45'/%3E%3C/svg%3E") 1 1, default !important; }
+        a, button, [onclick], input[type="submit"], input[type="button"], select, [role="button"], .cursor-pointer, .cat-card-btn { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpath d='M8 2v13.5l-2.5-2.5a2.2 2.2 0 0 0-3.1 3.1l6.8 6.8A7.5 7.5 0 0 0 14.5 25H18a7 7 0 0 0 7-7v-7.5a2 2 0 0 0-2-2 2 2 0 0 0-1.8 1.1A2 2 0 0 0 19.5 8a2 2 0 0 0-1.8.8A2 2 0 0 0 14 7a2 2 0 0 0-2-2V2a2 2 0 0 0-4 0z' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") 8 2, pointer !important; }
+        input[type="text"], input[type="password"], input[type="email"], input[type="number"], textarea { cursor: text !important; }
+        #custom-cursor, #custom-cursor-dot { display: none !important; }
+
+        body {
+            background-color: #070A12;
+            color: #F8FAFC;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(250, 204, 21, 0.07) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(234, 179, 8, 0.05) 0%, transparent 40%),
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+        }
+        .cyber-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(8, 12, 20, 0.95));
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 1px 1px rgba(250, 204, 21, 0.1);
+        }
+        .yellow-btn {
+            background: linear-gradient(135deg, #FFE600 0%, #FACC15 50%, #EAB308 100%);
+            color: #050811;
+            font-weight: 800;
+            box-shadow: 0 0 20px rgba(250, 204, 21, 0.35);
+        }
+        .yellow-glow-text {
+            color: #FACC15;
+            text-shadow: 0 0 15px rgba(250, 204, 21, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row antialiased">
+    <!-- MOBILE TOPBAR (< md) -->
+    <div class="md:hidden w-full bg-slate-950/90 border-b border-yellow-500/20 px-4 py-3 flex items-center justify-between sticky top-0 z-40 backdrop-blur-xl">
+        <a href="/" class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-yellow-500 to-amber-300 flex items-center justify-center text-slate-950 font-black shadow-md">
+                TD
+            </div>
+            <span class="text-base font-black tracking-wider text-white">TATA<span class="yellow-glow-text">DANA</span></span>
+        </a>
+
+        <div class="flex items-center gap-2">
+            <button onclick="openAccountModal()" class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 border border-yellow-500/40 text-yellow-400 hover:bg-slate-800 transition flex items-center gap-1.5 shadow-sm">
+                <span>👤 Akun</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            </button>
+            <button onclick="openMobileDrawer()" class="p-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 hover:text-yellow-400" title="Menu Navigasi">
+                <i data-lucide="menu" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-slate-950/80 border-r border-yellow-500/20 hidden md:flex flex-col justify-between p-5 min-h-screen shrink-0 backdrop-blur-xl">
+        <div class="space-y-6">
+            <div class="flex items-center justify-between pb-4 border-b border-yellow-500/20">
+                <a href="/" class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-yellow-500 via-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black shadow-[0_0_20px_rgba(250,204,21,0.4)] border border-yellow-200">
+                        <svg class="w-6 h-6 text-slate-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="text-xl font-black tracking-wider text-white">TATA<span class="yellow-glow-text">DANA</span></span>
+                        <div class="text-[9px] font-mono tracking-widest text-yellow-400/80 uppercase">Quantum Fintech</div>
+                    </div>
+                </a>
+            </div>
+
+            <nav class="space-y-1.5 font-medium text-xs">
+                <a href="/dashboard" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-yellow-400 transition">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i> <span>Beranda</span>
+                </a>
+                <a href="/laporan" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold bg-yellow-400 text-slate-950 shadow-[0_0_20px_rgba(250,204,21,0.35)]">
+                    <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> <span>Laporan & Export</span>
+                </a>
+                <a href="/budget" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-yellow-400 transition">
+                    <i data-lucide="target" class="w-4 h-4"></i> <span>Budgeting</span>
+                </a>
+                <a href="/wallet" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-yellow-400 transition">
+                    <i data-lucide="wallet" class="w-4 h-4"></i> <span>Dompet / Wallet</span>
+                </a>
+                <a href="/settings" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-yellow-400 transition">
+                    <i data-lucide="bot" class="w-4 h-4"></i> <span>Bot Telegram & Setup</span>
+                </a>
+                <!-- DEDICATED AKUN MENU ITEM IN SIDEBAR -->
+                <button onclick="openAccountModal()" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-yellow-400 transition group border border-transparent hover:border-yellow-500/20">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="user-check" class="w-4 h-4 text-yellow-400"></i>
+                        <span>Menu Akun</span>
+                    </div>
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- AI ASSISTANT QUICK TRIGGER & USER BADGE -->
+        <div class="space-y-4 pt-4 border-t border-yellow-500/20">
+            <button onclick="openAiChat()" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-yellow-500/20 to-amber-500/10 border border-yellow-500/40 text-yellow-300 text-xs font-bold flex items-center justify-center gap-2 hover:bg-yellow-500/30 transition shadow-[0_0_15px_rgba(250,204,21,0.15)] cursor-pointer">
+                <i data-lucide="sparkles" class="w-4 h-4 text-yellow-400 animate-spin"></i>
+                <span>Tanya AI Chat Bot</span>
+            </button>
+
+            <!-- User Account Card in Sidebar -->
+            <div onclick="openAccountModal()" id="sidebarUserCard" data-tatadana-sidebar-user class="p-2.5 rounded-xl bg-slate-900/80 border border-yellow-500/20 hover:border-yellow-400/50 flex items-center justify-between text-xs cursor-pointer transition group" title="Buka Profil & Opsi Logout">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-8 h-8 rounded-lg bg-yellow-400 text-slate-950 font-black flex items-center justify-center shrink-0">BP</div>
+                    <div class="min-w-0">
+                        <p class="font-bold text-white leading-none truncate group-hover:text-yellow-400 transition">Budi Pratama</p>
+                        <span class="text-[9px] text-yellow-400 font-mono">PRO QUANTUM</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500 group-hover:text-yellow-400 transition"></i>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN LAPORAN CONTENT -->
+    <main class="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <span class="text-xs text-yellow-400 font-mono">AUDIT PROTOCOL &bull; SINKRONISASI AKTIF</span>
+                <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight mt-1">Laporan & Riwayat Transaksi</h1>
+            </div>
+
+            <!-- EXPORT ACTION BUTTONS & DEDICATED AKUN MENU -->
+            <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
+                <button onclick="openAccountModal()" id="topbarAccountBtn" data-tatadana-account-topbar class="px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold cyber-card hover:border-yellow-400 transition flex items-center gap-2 shadow-[0_0_15px_rgba(250,204,21,0.15)] group" title="Menu Akun & Profil">
+                    <div class="w-5 h-5 rounded-md bg-yellow-400 text-slate-950 flex items-center justify-center font-black text-[10px]">👤</div>
+                    <span class="hidden sm:inline font-mono text-white">Budi Pratama</span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 group-hover:text-yellow-400 transition"></i>
+                </button>
+                <button type="button" onclick="handleExportClick(event, 'pdf')" class="px-3.5 sm:px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-900 text-yellow-400 border border-yellow-500/40 hover:bg-slate-800 transition flex items-center gap-1.5 shadow-[0_0_15px_rgba(250,204,21,0.15)] cursor-pointer">
+                    <i data-lucide="file-text" class="w-4 h-4"></i> <span>Export PDF</span>
+                </button>
+                <button type="button" onclick="handleExportClick(event, 'excel')" class="px-3.5 sm:px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-950 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-900 transition flex items-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.15)] cursor-pointer">
+                    <i data-lucide="sheet" class="w-4 h-4"></i> <span>Export Excel</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- PERIODE FILTER (BULAN ANU DAN TAHUN ANU) -->
+        <div class="cyber-card p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3 flex-wrap">
+                <span class="text-xs font-bold text-yellow-400 uppercase tracking-wider font-mono">Pilih Periode:</span>
+                
+                <!-- SELECT BULAN -->
+                <select id="filterMonth" onchange="renderLaporan()" class="px-3.5 py-2 rounded-xl bg-slate-900 border border-yellow-500/30 text-white text-xs font-mono focus:outline-none focus:border-yellow-400">
+                    <option value="all">Semua Bulan</option>
+                    <option value="01">Januari</option>
+                    <option value="02">Februari</option>
+                    <option value="03">Maret</option>
+                    <option value="04">April</option>
+                    <option value="05">Mei</option>
+                    <option value="06">Juni</option>
+                    <option value="07">Juli</option>
+                    <option value="08">Agustus</option>
+                    <option value="09">September</option>
+                    <option value="10" selected>Oktober</option>
+                    <option value="11">November</option>
+                    <option value="12">Desember</option>
+                </select>
+
+                <!-- SELECT TAHUN -->
+                <select id="filterYear" onchange="renderLaporan()" class="px-3.5 py-2 rounded-xl bg-slate-900 border border-yellow-500/30 text-white text-xs font-mono focus:outline-none focus:border-yellow-400">
+                    <option value="all">Semua Tahun</option>
+                    <option value="2026" selected>2026</option>
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                    <option value="2027">2027</option>
+                </select>
+
+                <!-- SELECT JENIS -->
+                <select id="filterType" onchange="renderLaporan()" class="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-yellow-400">
+                    <option value="all">Semua Jenis</option>
+                    <option value="expense">Pengeluaran</option>
+                    <option value="income">Pemasukan</option>
+                    <option value="transfer">Transfer</option>
+                </select>
+            </div>
+
+            <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
+                <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
+                <span id="filteredCount">0 Transaksi Ditemukan</span>
+            </div>
+        </div>
+
+        <!-- 3 SUMMARY METRICS SINKRON -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div class="cyber-card p-5 rounded-2xl">
+                <span class="text-xs text-slate-400 font-mono">Total Pemasukan Periode Ini</span>
+                <p id="sumIncome" class="text-xl font-black text-emerald-400 font-mono mt-1">Rp0</p>
+            </div>
+            <div class="cyber-card p-5 rounded-2xl">
+                <span class="text-xs text-slate-400 font-mono">Total Pengeluaran Periode Ini</span>
+                <p id="sumExpense" class="text-xl font-black text-yellow-400 font-mono mt-1">Rp0</p>
+            </div>
+            <div class="cyber-card p-5 rounded-2xl">
+                <span class="text-xs text-slate-400 font-mono">Net Cashflow (Selisih)</span>
+                <p id="sumCashflow" class="text-xl font-black text-white font-mono mt-1">Rp0</p>
+            </div>
+        </div>
+
+        <!-- VISUALISASI GRAFIK LAPORAN KEUANGAN (PENGELUARAN BATANG, PEMASUKAN, TRANSFER) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- 1. GRAFIK BATANG PENGELUARAN PER KATEGORI -->
+            <div class="cyber-card p-5 rounded-2xl flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
+                            <i data-lucide="bar-chart-2" class="w-4 h-4 text-yellow-400"></i>
+                            Pengeluaran per Kategori
+                        </h3>
+                        <span class="text-[10px] font-mono text-yellow-400/80 px-2 py-0.5 rounded bg-yellow-400/10 border border-yellow-400/30">BATANG</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-3">Distribusi belanja & pos pengeluaran</p>
+                    <div class="h-56 relative">
+                        <canvas id="laporanExpenseChart"></canvas>
+                    </div>
+                </div>
+                <div class="pt-3 border-t border-yellow-500/20 text-[11px] text-slate-400 flex justify-between font-mono">
+                    <span>Total Pengeluaran:</span>
+                    <span id="chartSumExpense" class="text-yellow-400 font-bold">Rp0</span>
+                </div>
+            </div>
+
+            <!-- 2. VISUALISASI GRAFIK PEMASUKAN -->
+            <div class="cyber-card p-5 rounded-2xl flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
+                            <i data-lucide="trending-up" class="w-4 h-4 text-emerald-400"></i>
+                            Visualisasi Pemasukan
+                        </h3>
+                        <span class="text-[10px] font-mono text-emerald-400/80 px-2 py-0.5 rounded bg-emerald-400/10 border border-emerald-400/30">SUMBER KAS</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-3">Breakdown sumber & arus uang masuk</p>
+                    <div class="h-56 relative">
+                        <canvas id="laporanIncomeChart"></canvas>
+                    </div>
+                </div>
+                <div class="pt-3 border-t border-emerald-500/20 text-[11px] text-slate-400 flex justify-between font-mono">
+                    <span>Total Pemasukan:</span>
+                    <span id="chartSumIncome" class="text-emerald-400 font-bold">Rp0</span>
+                </div>
+            </div>
+
+            <!-- 3. VISUALISASI GRAFIK TRANSFER ANTAR DOMPET -->
+            <div class="cyber-card p-5 rounded-2xl flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-extrabold text-white flex items-center gap-2">
+                            <i data-lucide="arrow-left-right" class="w-4 h-4 text-cyan-400"></i>
+                            Transfer Antar Dompet
+                        </h3>
+                        <span class="text-[10px] font-mono text-cyan-400/80 px-2 py-0.5 rounded bg-cyan-400/10 border border-cyan-400/30">MUTASI DOMPET</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-3">Volume pergeseran likuiditas antar dompet</p>
+                    <div class="h-56 relative">
+                        <canvas id="laporanTransferChart"></canvas>
+                    </div>
+                </div>
+                <div class="pt-3 border-t border-cyan-500/20 text-[11px] text-slate-400 flex justify-between font-mono">
+                    <span>Total Transfer:</span>
+                    <span id="chartSumTransfer" class="text-cyan-400 font-bold">Rp0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABEL TRANSAKSI LENGKAP ATAU EMPTY STATE -->
+        <div class="cyber-card rounded-2xl overflow-hidden shadow-sm">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs font-mono">
+                    <thead>
+                        <tr class="bg-slate-950/80 border-b border-yellow-500/20 text-yellow-400 font-bold uppercase tracking-wider">
+                            <th class="p-4">Tanggal Transaksi (WIB)</th>
+                            <th class="p-4">Jenis</th>
+                            <th class="p-4">Kategori</th>
+                            <th class="p-4">Catatan</th>
+                            <th class="p-4">Dompet</th>
+                            <th class="p-4 text-right">Nominal</th>
+                            <th class="p-4 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="laporanTableBody" class="divide-y divide-slate-800 text-slate-200">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- EMPTY STATE CONTAINER (JIKA TIDAK ADA DI BULAN/TAHUN TERTENTU) -->
+            <div id="emptyStateBox" class="hidden p-12 text-center space-y-4">
+                <div class="w-16 h-16 rounded-2xl bg-yellow-400/10 text-yellow-400 border border-yellow-400/30 flex items-center justify-center mx-auto shadow-[0_0_20px_rgba(250,204,21,0.2)]">
+                    <i data-lucide="calendar-x" class="w-8 h-8"></i>
+                </div>
+                <div>
+                    <h3 class="text-base font-extrabold text-white" id="emptyStateTitle">Belum ada transaksi</h3>
+                    <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto" id="emptyStateDesc">
+                        Tidak ada riwayat transaksi pada periode bulan dan tahun yang Anda pilih.
+                    </p>
+                </div>
+                <a href="/dashboard" class="inline-flex items-center gap-2 yellow-btn px-5 py-2.5 rounded-xl text-xs font-black shadow">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i> Catat Transaksi di Dashboard
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        const STORAGE_KEY = 'tatadana_state_v2';
+        function getState() {
+            if (window.getTataDanaState) {
+                return window.getTataDanaState();
+            }
+            let s = localStorage.getItem(STORAGE_KEY);
+            if (!s) {
+                return { wallets: [], budgets: [], transactions: [] };
+            }
+            return JSON.parse(s);
+        }
+
+        function formatRupiah(num) {
+            return 'Rp' + new Intl.NumberFormat('id-ID').format(num);
+        }
+
+        const MONTH_NAMES = {
+            '01': 'Januari', '02': 'Februari', '03': 'Maret', '04': 'April',
+            '05': 'Mei', '06': 'Juni', '07': 'Juli', '08': 'Agustus',
+            '09': 'September', '10': 'Oktober', '11': 'November', '12': 'Desember'
+        };
+
+        let lapExpenseChartInstance = null;
+        let lapIncomeChartInstance = null;
+        let lapTransferChartInstance = null;
+
+        function renderLaporan() {
+            const state = getState();
+            const selectedMonth = document.getElementById('filterMonth').value;
+            const selectedYear = document.getElementById('filterYear').value;
+            const selectedType = document.getElementById('filterType').value;
+
+            let filtered = state.transactions || [];
+
+            if (selectedYear !== 'all') {
+                filtered = filtered.filter(t => t.date && t.date.startsWith(selectedYear));
+            }
+            if (selectedMonth !== 'all') {
+                filtered = filtered.filter(t => {
+                    if (!t.date) return false;
+                    const parts = t.date.split('-');
+                    return parts[1] === selectedMonth;
+                });
+            }
+            if (selectedType !== 'all') {
+                filtered = filtered.filter(t => t.type === selectedType);
+            }
+
+            document.getElementById('filteredCount').innerText = `${filtered.length} Transaksi Ditemukan`;
+
+            // Calculate sums
+            const inc = filtered.filter(t => t.type === 'income').reduce((a, b) => a + b.amount, 0);
+            const exp = filtered.filter(t => t.type === 'expense').reduce((a, b) => a + b.amount, 0);
+            const trf = filtered.filter(t => t.type === 'transfer').reduce((a, b) => a + b.amount, 0);
+            const net = inc - exp;
+
+            document.getElementById('sumIncome').innerText = formatRupiah(inc);
+            document.getElementById('sumExpense').innerText = formatRupiah(exp);
+            document.getElementById('sumCashflow').innerText = (net >= 0 ? '+' : '') + formatRupiah(net);
+
+            const elChartExp = document.getElementById('chartSumExpense');
+            const elChartInc = document.getElementById('chartSumIncome');
+            const elChartTrf = document.getElementById('chartSumTransfer');
+            if (elChartExp) elChartExp.innerText = formatRupiah(exp);
+            if (elChartInc) elChartInc.innerText = formatRupiah(inc);
+            if (elChartTrf) elChartTrf.innerText = formatRupiah(trf);
+
+            // Render Charts
+            renderLaporanCharts(filtered);
+
+            const tbody = document.getElementById('laporanTableBody');
+            const emptyBox = document.getElementById('emptyStateBox');
+            tbody.innerHTML = '';
+
+            if (filtered.length === 0) {
+                emptyBox.classList.remove('hidden');
+                const mLabel = selectedMonth !== 'all' ? MONTH_NAMES[selectedMonth] : '';
+                const yLabel = selectedYear !== 'all' ? selectedYear : '';
+                const pText = (mLabel || yLabel) ? `${mLabel} ${yLabel}`.trim() : 'periode ini';
+                document.getElementById('emptyStateTitle').innerText = `Belum ada transaksi pada periode ${pText}`;
+                document.getElementById('emptyStateDesc').innerText = `Tidak ada mutasi kas masuk, keluar, atau transfer yang tercatat pada ${pText}.`;
+            } else {
+                emptyBox.classList.add('hidden');
+                filtered.forEach(t => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-slate-900/60 transition';
+                    const isExp = t.type === 'expense';
+                    const isInc = t.type === 'income';
+                    const amountClass = isExp ? 'text-yellow-400 font-bold' : isInc ? 'text-emerald-400 font-bold' : 'text-cyan-400 font-bold';
+                    const prefix = isExp ? '-' : isInc ? '+' : '';
+                    const badgeType = isExp ? '<span class="px-2 py-0.5 rounded bg-yellow-400/10 text-yellow-400 text-[10px] font-bold">PENGELUARAN</span>' : isInc ? '<span class="px-2 py-0.5 rounded bg-emerald-400/10 text-emerald-400 text-[10px] font-bold">PEMASUKAN</span>' : '<span class="px-2 py-0.5 rounded bg-cyan-400/10 text-cyan-400 text-[10px] font-bold">TRANSFER</span>';
+                    const walletDisplay = (t.type === 'transfer' && t.targetWalletName) ? `${t.walletName} ➔ ${t.targetWalletName}` : (t.walletName || '-');
+
+                    row.innerHTML = `
+                        <td class="p-4 text-slate-300 font-bold">${t.datetime || t.date} WIB</td>
+                        <td class="p-4">${badgeType}</td>
+                        <td class="p-4 text-white font-bold">${t.category}</td>
+                        <td class="p-4 text-slate-400">${t.note || '-'}</td>
+                        <td class="p-4"><span class="px-2 py-0.5 rounded bg-slate-800 text-yellow-300 font-bold font-mono text-xs">${walletDisplay}</span></td>
+                        <td class="p-4 text-right ${amountClass}">${prefix}${formatRupiah(t.amount)}</td>
+                        <td class="p-4 text-center">
+                            <button onclick="window.deleteTransaction('${t.id}')" class="p-1.5 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition cursor-pointer" title="Hapus Transaksi">
+                                <svg class="w-4 h-4 inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+            lucide.createIcons();
+        }
+
+        function renderLaporanCharts(txList) {
+            if (typeof Chart === 'undefined') return;
+
+            // 1. Chart Pengeluaran per Kategori (Bar Chart)
+            const cExp = document.getElementById('laporanExpenseChart');
+            if (cExp) {
+                const expMap = {};
+                txList.filter(t => t.type === 'expense').forEach(t => {
+                    const c = t.category || 'Lainnya';
+                    expMap[c] = (expMap[c] || 0) + t.amount;
+                });
+                let labels = Object.keys(expMap);
+                let values = Object.values(expMap);
+                if (labels.length === 0) {
+                    labels = ['🍜 Makanan', '🚗 Transport', '🏋️ Gym', '🏠 Utilitas'];
+                    values = [0, 0, 0, 0];
+                }
+
+                if (lapExpenseChartInstance) lapExpenseChartInstance.destroy();
+                lapExpenseChartInstance = new Chart(cExp.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Pengeluaran',
+                            data: values,
+                            backgroundColor: 'rgba(250, 204, 21, 0.85)',
+                            borderColor: '#facc15',
+                            borderWidth: 1.5,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { callbacks: { label: ctx => 'Pengeluaran: ' + formatRupiah(ctx.raw) } }
+                        },
+                        scales: {
+                            x: {
+                                grid: { color: 'rgba(250, 204, 21, 0.05)' },
+                                ticks: {
+                                    color: '#94a3b8',
+                                    font: { size: 9, family: 'JetBrains Mono' },
+                                    callback: function(val) {
+                                        const l = this.getLabelForValue(val);
+                                        return l.length > 12 ? l.slice(0, 10) + '..' : l;
+                                    }
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(250, 204, 21, 0.05)' },
+                                ticks: {
+                                    color: '#94a3b8',
+                                    font: { size: 9, family: 'JetBrains Mono' },
+                                    callback: v => v >= 1000000 ? 'Rp' + (v/1000000) + 'jt' : 'Rp' + v.toLocaleString('id-ID')
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 2. Chart Pemasukan (Bar / Breakdown Chart)
+            const cInc = document.getElementById('laporanIncomeChart');
+            if (cInc) {
+                const incMap = {};
+                txList.filter(t => t.type === 'income').forEach(t => {
+                    const c = t.category || 'Gaji Pokok';
+                    incMap[c] = (incMap[c] || 0) + t.amount;
+                });
+                let labels = Object.keys(incMap);
+                let values = Object.values(incMap);
+                if (labels.length === 0) {
+                    labels = ['💰 Gaji', '⚡ Bonus', '📈 Dividen', '💼 Freelance'];
+                    values = [0, 0, 0, 0];
+                }
+
+                if (lapIncomeChartInstance) lapIncomeChartInstance.destroy();
+                lapIncomeChartInstance = new Chart(cInc.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Pemasukan',
+                            data: values,
+                            backgroundColor: 'rgba(52, 211, 153, 0.85)',
+                            borderColor: '#34d399',
+                            borderWidth: 1.5,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { callbacks: { label: ctx => 'Pemasukan: ' + formatRupiah(ctx.raw) } }
+                        },
+                        scales: {
+                            x: {
+                                grid: { color: 'rgba(52, 211, 153, 0.05)' },
+                                ticks: {
+                                    color: '#94a3b8',
+                                    font: { size: 9, family: 'JetBrains Mono' },
+                                    callback: function(val) {
+                                        const l = this.getLabelForValue(val);
+                                        return l.length > 12 ? l.slice(0, 10) + '..' : l;
+                                    }
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(52, 211, 153, 0.05)' },
+                                ticks: {
+                                    color: '#94a3b8',
+                                    font: { size: 9, family: 'JetBrains Mono' },
+                                    callback: v => v >= 1000000 ? 'Rp' + (v/1000000) + 'jt' : 'Rp' + v.toLocaleString('id-ID')
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 3. Chart Transfer Antar Dompet (Bar Chart)
+            const cTrf = document.getElementById('laporanTransferChart');
+            if (cTrf) {
+                const trfMap = {};
+                txList.filter(t => t.type === 'transfer').forEach(t => {
+                    const r = (t.walletName && t.targetWalletName) ? `${t.walletName} ➔ ${t.targetWalletName}` : 'Transfer Dompet';
+                    trfMap[r] = (trfMap[r] || 0) + t.amount;
+                });
+                let labels = Object.keys(trfMap);
+                let values = Object.values(trfMap);
+                if (labels.length === 0) {
+                    labels = ['BCA ➔ GoPay', 'Mandiri ➔ Cash', 'BCA ➔ Mandiri'];
+                    values = [0, 0, 0];
+                }
+
+                if (lapTransferChartInstance) lapTransferChartInstance.destroy();
+                lapTransferChartInstance = new Chart(cTrf.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Volume Transfer',
+                            data: values,
+                            backgroundColor: 'rgba(56, 189, 248, 0.85)',
+                            borderColor: '#38bdf8',
+                            borderWidth: 1.5,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { callbacks: { label: ctx => 'Transfer: ' + formatRupiah(ctx.raw) } }
+                        },
+                        scales: {
+                            x: {
+                                grid: { color: 'rgba(56, 189, 248, 0.05)' },
+                                ticks: {
+                                    color: '#94a3b8',
+                                    font: { size: 9, family: 'JetBrains Mono' },
+                                    callback: function(val) {
+                                        const l = this.getLabelForValue(val);
+                                        return l.length > 14 ? l.slice(0, 12) + '..' : l;
+                                    }
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(56, 189, 248, 0.05)' },
+                                ticks: {
+                                    color: '#94a3b8',
+                                    font: { size: 9, family: 'JetBrains Mono' },
+                                    callback: v => v >= 1000000 ? 'Rp' + (v/1000000) + 'jt' : 'Rp' + v.toLocaleString('id-ID')
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function handleExportClick(e, type) {
+            if (e) e.preventDefault();
+            if (typeof window.isTataDanaPremium === 'function' && !window.isTataDanaPremium()) {
+                if (typeof window.showPremiumFeatureModal === 'function') {
+                    window.showPremiumFeatureModal('Export Laporan PDF & Excel', 'Fitur export dokumen PDF dan spreadsheet Excel eksklusif untuk pengguna paket Premium TataDana. Silakan upgrade untuk mengunduh laporan keuangan Anda!');
+                } else if (typeof window.showTataDanaToast === 'function') {
+                    window.showTataDanaToast('Fitur export eksklusif untuk pengguna Premium.', 'error');
+                }
+                return;
+            }
+            window.location.href = type === 'pdf' ? '/api/export/pdf' : '/api/export/excel';
+        }
+        window.handleExportClick = handleExportClick;
+
+        window.renderLaporan = renderLaporan;
+        window.addEventListener('tatadana-state-updated', () => {
+            renderLaporan();
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Auto match current month/year if available
+            const now = new Date();
+            const curMonth = String(now.getMonth() + 1).padStart(2, '0');
+            const curYear = String(now.getFullYear());
+            const monthEl = document.getElementById('filterMonth');
+            const yearEl = document.getElementById('filterYear');
+            if (monthEl && monthEl.querySelector(`option[value="${curMonth}"]`)) {
+                monthEl.value = curMonth;
+            }
+            if (yearEl && yearEl.querySelector(`option[value="${curYear}"]`)) {
+                yearEl.value = curYear;
+            }
+            renderLaporan();
+            if (typeof Chart === 'undefined') {
+                setTimeout(renderLaporan, 400);
+            }
+        });
+    </script>
+    <!-- UNIFIED QUANTUM AI BOT & ACCOUNT COMPONENT -->
+    <script src="/tatadana-supabase.js"></script>
+    <script src="/tatadana-ai-bot.js"></script>
+    <script src="/tatadana-account.js"></script>
+</body>
+</html>

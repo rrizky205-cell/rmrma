@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budgeting Futuristik - TataDana</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* High-contrast ultra-visible cyber cursor */
+        * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpolygon points='1,1 1,22 6.5,17 11,26 15,24 10.5,15 18,15' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3Cpolygon points='3,4 3,18 7,14.5 11,22.5 13,21.5 9,13.5 14,13.5' fill='%23FFFFFF' opacity='0.45'/%3E%3C/svg%3E") 1 1, default; }
+        html, body { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpolygon points='1,1 1,22 6.5,17 11,26 15,24 10.5,15 18,15' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3Cpolygon points='3,4 3,18 7,14.5 11,22.5 13,21.5 9,13.5 14,13.5' fill='%23FFFFFF' opacity='0.45'/%3E%3C/svg%3E") 1 1, default !important; }
+        a, button, [onclick], input[type="submit"], input[type="button"], select, [role="button"], .cursor-pointer, .cat-card-btn { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpath d='M8 2v13.5l-2.5-2.5a2.2 2.2 0 0 0-3.1 3.1l6.8 6.8A7.5 7.5 0 0 0 14.5 25H18a7 7 0 0 0 7-7v-7.5a2 2 0 0 0-2-2 2 2 0 0 0-1.8 1.1A2 2 0 0 0 19.5 8a2 2 0 0 0-1.8.8A2 2 0 0 0 14 7a2 2 0 0 0-2-2V2a2 2 0 0 0-4 0z' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") 8 2, pointer !important; }
+        input[type="text"], input[type="password"], input[type="email"], input[type="number"], textarea { cursor: text !important; }
+        #custom-cursor, #custom-cursor-dot { display: none !important; }
+
+        body {
+            background-color: #070A12;
+            color: #F8FAFC;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(250, 204, 21, 0.07) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(234, 179, 8, 0.05) 0%, transparent 40%),
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+        }
+        .cyber-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(8, 12, 20, 0.95));
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 1px 1px rgba(250, 204, 21, 0.1);
+        }
+        .yellow-btn {
+            background: linear-gradient(135deg, #FFE600 0%, #FACC15 50%, #EAB308 100%);
+            color: #050811;
+            font-weight: 800;
+            box-shadow: 0 0 20px rgba(250, 204, 21, 0.35);
+        }
+        .yellow-glow-text {
+            color: #FACC15;
+            text-shadow: 0 0 15px rgba(250, 204, 21, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row antialiased">
+    <!-- MOBILE TOPBAR (< md) -->
+    <div class="md:hidden w-full bg-slate-950/90 border-b border-yellow-500/20 px-4 py-3 flex items-center justify-between sticky top-0 z-40 backdrop-blur-xl">
+        <a href="/" class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-yellow-500 to-amber-300 flex items-center justify-center text-slate-950 font-black shadow-md">
+                TD
+            </div>
+            <span class="text-base font-black tracking-wider text-white">TATA<span class="yellow-glow-text">DANA</span></span>
+        </a>
+
+        <div class="flex items-center gap-2">
+            <button onclick="openAccountModal()" class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-slate-900 border border-yellow-500/40 text-yellow-400 hover:bg-slate-800 transition flex items-center gap-1.5 shadow-sm">
+                <span>👤 Akun</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            </button>
+            <button onclick="openMobileDrawer()" class="p-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 hover:text-yellow-400" title="Menu Navigasi">
+                <i data-lucide="menu" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-slate-950/80 border-r border-yellow-500/20 hidden md:flex flex-col justify-between p-5 min-h-screen shrink-0 backdrop-blur-xl">
+        <div class="space-y-6">
+            <div class="flex items-center justify-between pb-4 border-b border-yellow-500/20">
+                <a href="/" class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-yellow-500 via-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black shadow-[0_0_20px_rgba(250,204,21,0.4)] border border-yellow-200">
+                        <svg class="w-6 h-6 text-slate-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="text-xl font-black tracking-wider text-white">TATA<span class="yellow-glow-text">DANA</span></span>
+                        <div class="text-[9px] font-mono tracking-widest text-yellow-400/80 uppercase">Quantum Fintech</div>
+                    </div>
+                </a>
+            </div>
+
+            <nav class="space-y-1.5 font-medium text-xs">
+                <a href="/dashboard" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-yellow-400 transition">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i> <span>Beranda</span>
+                </a>
+                <a href="/laporan" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-yellow-400 transition">
+                    <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> <span>Laporan & Export</span>
+                </a>
+                <a href="/budget" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold bg-yellow-400 text-slate-950 shadow-[0_0_20px_rgba(250,204,21,0.35)]">
+                    <i data-lucide="target" class="w-4 h-4"></i> <span>Budgeting</span>
+                </a>
+                <a href="/wallet" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-yellow-400 transition">
+                    <i data-lucide="wallet" class="w-4 h-4"></i> <span>Dompet / Wallet</span>
+                </a>
+                <a href="/settings" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-yellow-400 transition">
+                    <i data-lucide="bot" class="w-4 h-4"></i> <span>Bot Telegram & Setup</span>
+                </a>
+                <!-- DEDICATED AKUN MENU ITEM IN SIDEBAR -->
+                <button onclick="openAccountModal()" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 hover:text-yellow-400 transition group border border-transparent hover:border-yellow-500/20">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="user-check" class="w-4 h-4 text-yellow-400"></i>
+                        <span>Menu Akun</span>
+                    </div>
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- AI ASSISTANT QUICK TRIGGER & USER BADGE -->
+        <div class="space-y-4 pt-4 border-t border-yellow-500/20">
+            <button onclick="openAiChat()" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-yellow-500/20 to-amber-500/10 border border-yellow-500/40 text-yellow-300 text-xs font-bold flex items-center justify-center gap-2 hover:bg-yellow-500/30 transition shadow-[0_0_15px_rgba(250,204,21,0.15)] cursor-pointer">
+                <i data-lucide="sparkles" class="w-4 h-4 text-yellow-400 animate-spin"></i>
+                <span>Tanya AI Chat Bot</span>
+            </button>
+
+            <!-- User Account Card in Sidebar -->
+            <div onclick="openAccountModal()" id="sidebarUserCard" data-tatadana-sidebar-user class="p-2.5 rounded-xl bg-slate-900/80 border border-yellow-500/20 hover:border-yellow-400/50 flex items-center justify-between text-xs cursor-pointer transition group" title="Buka Profil & Opsi Logout">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-8 h-8 rounded-lg bg-yellow-400 text-slate-950 font-black flex items-center justify-center shrink-0">BP</div>
+                    <div class="min-w-0">
+                        <p class="font-bold text-white leading-none truncate group-hover:text-yellow-400 transition">Budi Pratama</p>
+                        <span class="text-[9px] text-yellow-400 font-mono">PRO QUANTUM</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-500 group-hover:text-yellow-400 transition"></i>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN BUDGET CONTENT -->
+    <main class="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <span class="text-xs text-yellow-400 font-mono">QUANTUM ALLOCATION MATRIX</span>
+                <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight mt-1">Budget Bulanan per Kategori</h1>
+                <p class="text-xs text-slate-400">Atur batas pengeluaran kustom dengan notifikasi alert 80% & 100% via Telegram</p>
+            </div>
+
+            <!-- BUTTONS: AKUN & TAMBAH KATEGORI BUDGETING KUSTOM -->
+            <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
+                <button onclick="openAccountModal()" id="topbarAccountBtn" data-tatadana-account-topbar class="px-3 sm:px-4 py-2.5 rounded-xl text-xs font-bold cyber-card hover:border-yellow-400 transition flex items-center gap-2 shadow-[0_0_15px_rgba(250,204,21,0.15)] group" title="Menu Akun & Profil">
+                    <div class="w-5 h-5 rounded-md bg-yellow-400 text-slate-950 flex items-center justify-center font-black text-[10px]">👤</div>
+                    <span class="hidden sm:inline font-mono text-white">Budi Pratama</span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 group-hover:text-yellow-400 transition"></i>
+                </button>
+                <button onclick="openAddBudgetModal()" class="yellow-btn px-4 sm:px-5 py-2.5 rounded-xl text-xs font-black flex items-center gap-2 shadow">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i> <span>Tambah Kategori Budgeting</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- BUDGET CARDS GRID -->
+        <div id="budgetsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Rendered by JS -->
+        </div>
+    </main>
+
+    <!-- MODAL TAMBAH KATEGORI BUDGETING KUSTOM DENGAN PILIHAN IKON -->
+    <div id="addBudgetModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="cyber-card max-w-md w-full p-6 sm:p-7 rounded-3xl space-y-4 border-2 border-yellow-400">
+            <div class="flex items-center justify-between pb-3 border-b border-yellow-500/30">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="target" class="w-5 h-5 text-yellow-400"></i>
+                    <h3 class="text-base font-extrabold text-white">Tambah Kategori Budgeting</h3>
+                </div>
+                <button onclick="closeAddBudgetModal()" class="text-slate-400 hover:text-yellow-400 text-lg font-bold">&times;</button>
+            </div>
+
+            <form onsubmit="handleSaveCustomBudget(event)" class="space-y-4">
+                <!-- STEP 1: TENTUKAN IKON TERLEBIH DAHULU -->
+                <div>
+                    <label class="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-1.5 font-mono">1. Pilih Ikon Terlebih Dahulu:</label>
+                    <div id="iconPickerGrid" class="grid grid-cols-7 gap-1.5 p-2 rounded-xl bg-slate-900 border border-yellow-500/30 max-h-36 overflow-y-auto">
+                        <!-- Populated by JS -->
+                    </div>
+                    <input type="hidden" id="selectedBudgetIcon" value="⛽" />
+                </div>
+
+                <!-- STEP 2: NAMA JUDUL BUDGETING -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 font-mono">2. Nama Judul Budgeting</label>
+                    <div class="flex gap-2">
+                        <span id="iconBadgePreview" class="w-11 h-11 rounded-xl bg-yellow-400/20 border border-yellow-400 text-xl flex items-center justify-center shrink-0">⛽</span>
+                        <input id="customBudgetName" type="text" required placeholder="Contoh: Bensin" class="flex-1 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-yellow-400" />
+                    </div>
+                    <p class="text-[10px] text-slate-400 font-mono mt-1">Otomatis tersinkron ke kategori pencatatan transaksi & bot AI.</p>
+                </div>
+
+                <!-- STEP 3: BATAS BUDGET BULANAN -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 font-mono">3. Batas Budget Bulanan (IDR)</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-2.5 text-yellow-400 font-bold font-mono">Rp</span>
+                        <input id="customBudgetLimit" type="text" inputmode="numeric" required placeholder="Contoh: 1.000.000" data-currency="true" class="w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white font-mono text-sm font-bold focus:outline-none focus:border-yellow-400" />
+                    </div>
+                </div>
+
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="closeAddBudgetModal()" class="flex-1 py-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs">
+                        Batal
+                    </button>
+                    <button type="submit" class="flex-1 yellow-btn py-3 rounded-xl text-xs font-black shadow">
+                        Simpan Budget
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT JUDUL & LIMIT BUDGETING -->
+    <div id="editBudgetModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="cyber-card max-w-md w-full p-6 sm:p-7 rounded-3xl space-y-4 border-2 border-yellow-400">
+            <div class="flex items-center justify-between pb-3 border-b border-yellow-500/30">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="edit-3" class="w-5 h-5 text-yellow-400"></i>
+                    <h3 class="text-base font-extrabold text-white">Edit Judul & Limit Budgeting</h3>
+                </div>
+                <button onclick="closeEditBudgetModal()" class="text-slate-400 hover:text-yellow-400 text-lg font-bold">&times;</button>
+            </div>
+
+            <form onsubmit="handleSaveEditBudget(event)" class="space-y-4">
+                <input type="hidden" id="editBudgetId" />
+                <div>
+                    <label class="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-1.5 font-mono">Judul / Nama Budgeting</label>
+                    <input id="editBudgetName" type="text" required class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-yellow-500/30 text-white text-xs font-mono focus:outline-none focus:border-yellow-400" />
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 font-mono">Batas Budget Bulanan (IDR)</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-2.5 text-yellow-400 font-bold font-mono">Rp</span>
+                        <input id="editBudgetLimit" type="text" inputmode="numeric" required placeholder="Contoh: 1.000.000" data-currency="true" class="w-full pl-12 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white font-mono text-sm font-bold focus:outline-none focus:border-yellow-400" />
+                    </div>
+                </div>
+
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="handleDeleteBudget()" class="py-3 px-4 rounded-xl bg-red-950/80 border border-red-500/40 text-red-400 font-bold text-xs hover:bg-red-900">
+                        Hapus
+                    </button>
+                    <button type="button" onclick="closeEditBudgetModal()" class="flex-1 py-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs">
+                        Batal
+                    </button>
+                    <button type="submit" class="flex-1 yellow-btn py-3 rounded-xl text-xs font-black shadow">
+                        Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Standard visible hardware cursor is active
+
+        const STORAGE_KEY = 'tatadana_state_v2';
+        function getState() {
+            if (window.getTataDanaState) return window.getTataDanaState();
+            let s = localStorage.getItem(STORAGE_KEY);
+            if (!s) return { wallets: [], budgets: [], transactions: [], customCategories: [] };
+            return JSON.parse(s);
+        }
+        function saveState(state) {
+            if (typeof window.saveTataDanaState === 'function') {
+                window.saveTataDanaState(state);
+                return;
+            }
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            renderBudgets();
+            try {
+                fetch('/api/state', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(state)
+                }).catch(() => {});
+            } catch (e) {}
+        }
+
+        function formatRupiah(num) {
+            return 'Rp' + new Intl.NumberFormat('id-ID').format(num);
+        }
+
+        // Icon picker list
+        const AVAILABLE_ICONS = ['⛽', '☕', '🍔', '🥤', '🚗', '🛍️', '🛒', '⚡', '🌐', '🎮', '💊', '📚', '🏠', '✈️', '🐾', '🏋️', '💻', '🎁', '💈', '👶', '🏷️'];
+
+        function initIconPicker() {
+            const container = document.getElementById('iconPickerGrid');
+            if (!container) return;
+            container.innerHTML = '';
+            AVAILABLE_ICONS.forEach((ico, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.dataset.icon = ico;
+                btn.className = `p-2 rounded-lg text-lg flex items-center justify-center transition border ${idx === 0 ? 'bg-yellow-400/20 border-yellow-400' : 'bg-slate-900 border-slate-800 hover:border-yellow-500/40'}`;
+                btn.textContent = ico;
+                btn.onclick = () => selectBudgetIcon(ico);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectBudgetIcon(ico) {
+            document.getElementById('selectedBudgetIcon').value = ico;
+            document.getElementById('iconBadgePreview').textContent = ico;
+            const buttons = document.querySelectorAll('#iconPickerGrid button');
+            buttons.forEach(b => {
+                if (b.dataset.icon === ico) {
+                    b.className = 'p-2 rounded-lg text-lg flex items-center justify-center transition border bg-yellow-400/20 border-yellow-400 shadow-[0_0_10px_#facc15]';
+                } else {
+                    b.className = 'p-2 rounded-lg text-lg flex items-center justify-center transition border bg-slate-900 border-slate-800 hover:border-yellow-500/40';
+                }
+            });
+        }
+
+        function renderBudgets() {
+            const state = getState();
+            const grid = document.getElementById('budgetsGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            if (!state.budgets || state.budgets.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full cyber-card p-8 rounded-2xl text-center space-y-3 border-dashed border-2 border-slate-800">
+                        <div class="w-12 h-12 rounded-2xl bg-yellow-400/10 text-yellow-400 flex items-center justify-center mx-auto text-xl">🎯</div>
+                        <h3 class="text-white font-bold text-sm">Belum Ada Kategori Budgeting</h3>
+                        <p class="text-xs text-slate-400 font-mono">Data budgeting akun baru dimulai dari limit Rp0 bersih. Tambahkan kategori budget kustom Anda untuk mulai mengatur alokasi pengeluaran bulanan.</p>
+                        <button onclick="openAddBudgetModal()" class="yellow-btn px-4 py-2 rounded-xl text-xs font-black shadow inline-flex items-center gap-1.5 mt-1">
+                            + Tambah Kategori Budget Pertama &rarr;
+                        </button>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            state.budgets.forEach(b => {
+                const bRaw = (b.name || '').replace(/^[^\w\s]+/, '').trim().toLowerCase();
+                const bNameLower = (b.name || '').toLowerCase().trim();
+                const spent = (state.transactions || [])
+                    .filter(t => {
+                        if (t.type !== 'expense' || !t.category) return false;
+                        const tCat = t.category.toLowerCase().trim();
+                        if (tCat === bNameLower) return true;
+                        if (bRaw && bRaw.length >= 2 && tCat.includes(bRaw)) return true;
+                        if (bRaw && bRaw.length >= 2 && bNameLower.includes(tCat)) return true;
+                        return false;
+                    })
+                    .reduce((acc, t) => acc + t.amount, 0);
+
+                const pct = b.limit > 0 ? Math.min(100, Math.round((spent / b.limit) * 100)) : 0;
+                const sisa = Math.max(0, b.limit - spent);
+                const isWarning = pct >= 80;
+
+                const card = document.createElement('div');
+                card.className = 'cyber-card p-6 rounded-2xl space-y-3 relative';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="font-extrabold text-sm text-white">${b.name}</span>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold ${isWarning ? 'bg-red-500/20 text-red-400 border border-red-500/40' : 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/30'}">${pct}%</span>
+                            <button onclick="openEditBudgetModal('${b.id}')" class="p-1 rounded bg-slate-800 hover:bg-yellow-400 hover:text-slate-950 text-slate-400 transition" title="Edit Judul Budgeting">
+                                <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                            </button>
+                            <button onclick="handleDeleteBudget('${b.id}')" class="p-1 rounded bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition cursor-pointer" title="Hapus Kategori Budget">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="w-full bg-slate-900 rounded-full h-3 overflow-hidden border border-slate-800">
+                        <div class="${isWarning ? 'bg-red-500' : 'bg-yellow-400'} h-3 rounded-full transition-all duration-500 shadow-[0_0_10px_#facc15]" style="width: ${pct}%"></div>
+                    </div>
+                    <div class="flex justify-between text-xs font-mono text-slate-400 pt-1">
+                        <span>Terpakai: ${formatRupiah(spent)} / ${formatRupiah(b.limit)}</span>
+                        <span class="${isWarning ? 'text-red-400 font-bold' : 'text-yellow-400'}">Sisa: ${formatRupiah(sisa)}</span>
+                    </div>
+                    <div class="pt-2 flex justify-between items-center text-xs">
+                        <button onclick="handleDeleteBudget('${b.id}')" class="text-[11px] font-mono text-red-400/70 hover:text-red-400 flex items-center gap-1">
+                            &times; Hapus
+                        </button>
+                        <button onclick="openEditBudgetModal('${b.id}')" class="text-[11px] font-mono text-yellow-400 hover:underline flex items-center gap-1 font-bold">
+                            Ubah Judul / Limit &rarr;
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function openAddBudgetModal() {
+            initIconPicker();
+            document.getElementById('addBudgetModal').classList.remove('hidden');
+            setTimeout(() => {
+                if (window.initCurrencyInputs) window.initCurrencyInputs();
+                const inp = document.getElementById('customBudgetName');
+                if (inp) inp.focus();
+            }, 60);
+        }
+        function closeAddBudgetModal() {
+            document.getElementById('addBudgetModal').classList.add('hidden');
+        }
+
+        let isSavingBudget = false;
+        function handleSaveCustomBudget(e) {
+            e.preventDefault();
+            if (isSavingBudget) return;
+            isSavingBudget = true;
+
+            try {
+                const rawTitle = document.getElementById('customBudgetName').value.trim();
+                const icon = document.getElementById('selectedBudgetIcon').value || '🏷️';
+                const rawLimit = document.getElementById('customBudgetLimit').value;
+                const limit = window.parseFormattedNominal ? window.parseFormattedNominal(rawLimit) : (parseFloat(rawLimit.replace(/\D/g, '')) || 0);
+                if (!rawTitle || limit <= 0) {
+                    if (window.showToast) window.showToast('Silakan isi judul dan nominal batas budget!', 'error');
+                    isSavingBudget = false;
+                    return;
+                }
+
+                // Full category name with chosen icon
+                const fullName = `${icon} ${rawTitle}`;
+
+                const state = getState();
+                state.budgets = state.budgets || [];
+
+                // Check if existing budget has the same title to avoid duplicate items
+                const existingIdx = state.budgets.findIndex(b => (b.name || '').trim().toLowerCase() === fullName.toLowerCase());
+                if (existingIdx !== -1) {
+                    state.budgets[existingIdx].limit = limit;
+                } else {
+                    state.budgets.push({
+                        id: 'b_' + Date.now(),
+                        name: fullName,
+                        limit: limit,
+                        color: '#facc15'
+                    });
+                }
+
+                // Automatically register in customCategories so it immediately syncs to transaction recording
+                state.customCategories = state.customCategories || [];
+                if (!state.customCategories.includes(fullName)) {
+                    state.customCategories.push(fullName);
+                }
+
+                saveState(state);
+                closeAddBudgetModal();
+                document.getElementById('customBudgetName').value = '';
+                document.getElementById('customBudgetLimit').value = '';
+                if (window.showToast) {
+                    window.showToast(`✓ Kategori budgeting "${fullName}" berhasil disimpan!`, 'success');
+                }
+            } finally {
+                setTimeout(() => { isSavingBudget = false; }, 300);
+            }
+        }
+
+        // EDIT BUDGET TITLE & LIMIT
+        function openEditBudgetModal(id) {
+            const state = getState();
+            const b = state.budgets.find(item => item.id === id);
+            if (!b) return;
+
+            document.getElementById('editBudgetId').value = b.id;
+            document.getElementById('editBudgetName').value = b.name;
+            document.getElementById('editBudgetLimit').value = new Intl.NumberFormat('id-ID').format(b.limit || 0);
+            document.getElementById('editBudgetModal').classList.remove('hidden');
+            setTimeout(() => {
+                if (window.initCurrencyInputs) window.initCurrencyInputs();
+            }, 60);
+        }
+
+        function closeEditBudgetModal() {
+            document.getElementById('editBudgetModal').classList.add('hidden');
+        }
+
+        function handleSaveEditBudget(e) {
+            e.preventDefault();
+            const id = document.getElementById('editBudgetId').value;
+            const newName = document.getElementById('editBudgetName').value.trim();
+            const rawLimit = document.getElementById('editBudgetLimit').value;
+            const newLimit = window.parseFormattedNominal ? window.parseFormattedNominal(rawLimit) : (parseFloat(rawLimit.replace(/\D/g, '')) || 0);
+            if (!newName || newLimit <= 0) {
+                if (window.showToast) window.showToast('Silakan isi nama dan nominal budget yang valid!', 'error');
+                return;
+            }
+
+            const state = getState();
+            const b = state.budgets.find(item => item.id === id);
+            if (b) {
+                const oldName = b.name;
+                b.name = newName;
+                b.limit = newLimit;
+
+                // Sync customCategories
+                state.customCategories = state.customCategories || [];
+                const idx = state.customCategories.indexOf(oldName);
+                if (idx !== -1) {
+                    state.customCategories[idx] = newName;
+                } else if (!state.customCategories.includes(newName)) {
+                    state.customCategories.push(newName);
+                }
+                saveState(state);
+                closeEditBudgetModal();
+                if (window.showToast) {
+                    window.showToast(`✓ Budgeting berhasil diperbarui menjadi "${newName}"!`, 'success');
+                }
+            }
+        }
+
+        function handleDeleteBudget(id) {
+            if (!id) id = document.getElementById('editBudgetId').value;
+            if (!id) return;
+
+            const state = getState();
+            const b = (state.budgets || []).find(item => item.id === id);
+            if (!b) return;
+
+            const bName = b.name;
+            state.budgets = (state.budgets || []).filter(item => item.id !== id);
+            if (state.customCategories) {
+                state.customCategories = state.customCategories.filter(c => c !== bName);
+            }
+
+            saveState(state);
+            closeEditBudgetModal();
+            if (window.showToast) {
+                window.showToast(`✓ Kategori budgeting "${bName}" berhasil dihapus.`, 'info');
+            }
+        }
+
+        window.renderBudgets = renderBudgets;
+        window.addEventListener('tatadana-state-updated', () => {
+            renderBudgets();
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderBudgets();
+            initIconPicker();
+        });
+    </script>
+    <!-- UNIFIED AI BOT & ACCOUNT FOR ALL PAGES -->
+    <script src="/tatadana-supabase.js"></script>
+    <script src="/tatadana-ai-bot.js"></script>
+    <script src="/tatadana-account.js"></script>
+</body>
+</html>

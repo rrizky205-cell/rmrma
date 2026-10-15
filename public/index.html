@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TataDana - Quantum Fintech Chat Telegram & Smart Finance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* High-contrast ultra-visible cyber cursor */
+        * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpolygon points='1,1 1,22 6.5,17 11,26 15,24 10.5,15 18,15' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3Cpolygon points='3,4 3,18 7,14.5 11,22.5 13,21.5 9,13.5 14,13.5' fill='%23FFFFFF' opacity='0.45'/%3E%3C/svg%3E") 1 1, default; }
+        html, body { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpolygon points='1,1 1,22 6.5,17 11,26 15,24 10.5,15 18,15' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3Cpolygon points='3,4 3,18 7,14.5 11,22.5 13,21.5 9,13.5 14,13.5' fill='%23FFFFFF' opacity='0.45'/%3E%3C/svg%3E") 1 1, default !important; }
+        a, button, [onclick], input[type="submit"], input[type="button"], select, [role="button"], .cursor-pointer, .cat-card-btn { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpath d='M8 2v13.5l-2.5-2.5a2.2 2.2 0 0 0-3.1 3.1l6.8 6.8A7.5 7.5 0 0 0 14.5 25H18a7 7 0 0 0 7-7v-7.5a2 2 0 0 0-2-2 2 2 0 0 0-1.8 1.1A2 2 0 0 0 19.5 8a2 2 0 0 0-1.8.8A2 2 0 0 0 14 7a2 2 0 0 0-2-2V2a2 2 0 0 0-4 0z' fill='%23FFE600' stroke='%23000000' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") 8 2, pointer !important; }
+        input[type="text"], input[type="password"], input[type="email"], textarea { cursor: text !important; }
+        #custom-cursor, #custom-cursor-dot { display: none !important; }
+
+        body {
+            background-color: #070A12;
+            color: #F8FAFC;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(250, 204, 21, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(234, 179, 8, 0.06) 0%, transparent 40%),
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+        }
+        .cyber-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(8, 12, 20, 0.95));
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 1px 1px rgba(250, 204, 21, 0.1);
+        }
+        .yellow-btn {
+            background: linear-gradient(135deg, #FFE600 0%, #FACC15 50%, #EAB308 100%);
+            color: #050811;
+            font-weight: 800;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 20px rgba(250, 204, 21, 0.35);
+        }
+        .yellow-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 0 30px rgba(250, 204, 21, 0.6);
+        }
+        .yellow-glow-text {
+            color: #FACC15;
+            text-shadow: 0 0 15px rgba(250, 204, 21, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-yellow-400 selection:text-black">
+    <!-- NAVBAR (STICKY) -->
+    <nav class="sticky top-0 z-50 bg-slate-950/85 backdrop-blur-xl border-b border-yellow-500/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="/" class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-yellow-500 via-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black shadow-[0_0_20px_rgba(250,204,21,0.4)] border border-yellow-200">
+                        <svg class="w-6 h-6 text-slate-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="text-xl font-black tracking-wider text-white">TATA<span class="yellow-glow-text">DANA</span></span>
+                        <div class="text-[9px] font-mono tracking-widest text-yellow-400/80 uppercase">Quantum Fintech</div>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="hidden lg:flex items-center gap-8 text-xs font-mono font-bold text-slate-300">
+                <a href="#perbandingan" class="hover:text-yellow-400 transition-colors">FREE VS PREMIUM</a>
+                <a href="#fitur" class="hover:text-yellow-400 transition-colors">FITUR UNGGULAN</a>
+                <a href="#demo" class="hover:text-yellow-400 transition-colors">SIMULASI BOT</a>
+                <a href="#faq" class="hover:text-yellow-400 transition-colors">FAQ</a>
+            </div>
+
+            <!-- ACTION & ACCOUNT MENU -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="/tatadana-project.zip" download="tatadana-project.zip" class="px-3 sm:px-3.5 py-2 rounded-xl text-xs font-bold text-emerald-400 bg-emerald-400/10 hover:bg-emerald-400 hover:text-slate-950 border border-emerald-400/40 transition inline-flex items-center gap-1.5 shadow-[0_0_15px_rgba(16,185,129,0.2)]" title="Unduh Source Code Lengkap (.ZIP)">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span class="hidden sm:inline">Download</span> .ZIP
+                </a>
+
+                <a id="navLoginBtn" href="/login" class="px-3 sm:px-4 py-2 rounded-xl text-xs font-bold text-slate-200 hover:text-yellow-400 hover:bg-slate-900 border border-slate-700/60 transition inline-flex items-center gap-1.5 shadow-sm">
+                    <i data-lucide="log-in" class="w-3.5 h-3.5 text-yellow-400"></i>
+                    <span>Masuk / Login</span>
+                </a>
+
+                <a id="navAdminBtn" href="/admin" class="px-3 sm:px-4 py-2 rounded-xl text-xs font-bold text-yellow-400 bg-yellow-400/10 hover:bg-yellow-400 hover:text-slate-950 border border-yellow-400/40 transition inline-flex items-center gap-1.5 shadow-[0_0_15px_rgba(250,204,21,0.2)]">
+                    <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+                    <span>Panel Admin</span>
+                </a>
+
+                <button onclick="openAccountModal()" id="navAccountBtn" class="px-3 sm:px-3.5 py-2 rounded-xl text-xs font-extrabold bg-slate-900/90 border border-yellow-500/40 text-yellow-400 hover:bg-slate-800 transition inline-flex items-center gap-2 shadow-[0_0_15px_rgba(250,204,21,0.15)]" title="Menu Akun & Profil">
+                    <span class="w-5 h-5 rounded-lg bg-yellow-400 text-slate-950 flex items-center justify-center font-black text-[10px]">👤</span>
+                    <span id="navAccountLabel">Akun</span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                </button>
+
+                <a href="/register" class="yellow-btn px-3.5 sm:px-4 py-2 rounded-xl text-xs font-black shadow inline-flex items-center gap-1.5">
+                    <span>Daftar Akun Baru</span>
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                </a>
+
+                <button onclick="openMobileDrawer()" class="md:hidden p-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 hover:text-yellow-400" title="Buka Menu Navigasi">
+                    <i data-lucide="menu" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="relative pt-16 pb-20 overflow-hidden text-center">
+        <div class="max-w-5xl mx-auto px-4 relative z-10 space-y-6">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-400/10 border border-yellow-400/30 text-xs font-mono font-bold text-yellow-400 animate-pulse shadow-[0_0_15px_rgba(250,204,21,0.2)]">
+                <span>⚡</span> PROTOKOL KEUANGAN QUANTUM AI & BOT TELEGRAM
+            </div>
+
+            <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-[1.15]">
+                Gaji habis sebelum akhir bulan? Sudah saatnya kamu tahu <span class="yellow-glow-text">ke mana uangmu pergi.</span>
+            </h1>
+
+            <p class="text-base sm:text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed font-mono text-xs sm:text-sm">
+                TataDana mencatat setiap pengeluaranmu langsung dari chat Telegram atau scan struk. Mulai akun baru dengan <strong>saldo bersih Rp0</strong>, nikmati pilihan <strong>Paket Free</strong> atau <strong>Paket Premium</strong> (Rp 24.999 / 6 Bulan & Rp 49.999 Lifetime) dengan aktivasi cepat!
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4 flex-wrap">
+                <a href="/register?plan=pro" class="yellow-btn px-6 py-3.5 rounded-xl text-xs font-black shadow flex items-center gap-2">
+                    <i data-lucide="crown" class="w-4 h-4"></i>
+                    <span>Pilih Paket Premium (Mulai Rp 24.999) &rarr;</span>
+                </a>
+                <a href="/register?plan=gratis" class="px-5 py-3.5 rounded-xl text-xs font-bold text-slate-200 bg-slate-900 border border-yellow-500/30 hover:border-yellow-400 hover:text-yellow-400 transition flex items-center gap-2">
+                    <i data-lucide="zap" class="w-4 h-4 text-yellow-400"></i>
+                    <span>Daftar Akun Free (Rp0)</span>
+                </a>
+                <a href="/tatadana-project.zip" download="tatadana-project.zip" class="px-5 py-3.5 rounded-xl text-xs font-black text-emerald-300 bg-emerald-950/80 border border-emerald-500/50 hover:bg-emerald-500 hover:text-slate-950 transition flex items-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>Download Source Code (.ZIP)</span>
+                </a>
+                <a href="/dashboard" class="px-4 py-3.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition">
+                    Buka Dashboard &rarr;
+                </a>
+            </div>
+
+            <!-- KEY STATS PILLS -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 max-w-3xl mx-auto text-left font-mono">
+                <div class="p-3 rounded-xl bg-slate-900/80 border border-yellow-500/20">
+                    <span class="text-[10px] text-slate-400 block">Akun Baru Mulai Dari</span>
+                    <span class="text-sm font-bold text-yellow-400">Rp0 Bersih</span>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900/80 border border-yellow-500/20">
+                    <span class="text-[10px] text-slate-400 block">Bot Telegram</span>
+                    <span class="text-sm font-bold text-emerald-400">@DANATATA_BOT</span>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900/80 border border-yellow-500/20">
+                    <span class="text-[10px] text-slate-400 block">Multi-AI Failover</span>
+                    <span class="text-sm font-bold text-cyan-400">Gemini & GPT & DS</span>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900/80 border border-yellow-500/20">
+                    <span class="text-[10px] text-slate-400 block">Paket Premium</span>
+                    <span class="text-sm font-bold text-white">Mulai Rp 24.999</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION PERBANDINGAN PAKET: FREE VS PREMIUM -->
+    <section id="perbandingan" class="py-20 bg-slate-950/80 border-y border-yellow-500/20 relative">
+        <div class="max-w-6xl mx-auto px-4 space-y-12">
+            <div class="text-center space-y-3">
+                <span class="text-xs text-yellow-400 font-mono uppercase tracking-widest bg-yellow-400/10 px-3.5 py-1 rounded-full border border-yellow-400/30">
+                    TRANSPARANSI FITUR PENUH
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white">
+                    Pilih Paket Anda: <span class="yellow-glow-text">Free (Starter)</span> atau <span class="yellow-glow-text">Premium Executive</span>
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-400 font-mono max-w-2xl mx-auto">
+                    Keduanya dirancang untuk privasi penuh tanpa iklan. Paket Premium memberikan kebebasan transaksi tanpa batas dengan aktivasi cepat.
+                </p>
+            </div>
+
+            <!-- TWO COMPARISON CARDS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-5xl mx-auto">
+                <!-- PAKET FREE -->
+                <div class="cyber-card p-7 sm:p-8 rounded-3xl border border-slate-800 space-y-6 flex flex-col justify-between hover:border-slate-700 transition">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-mono font-bold bg-slate-800 text-slate-300 border border-slate-700 uppercase">
+                                FREE STARTER
+                            </span>
+                            <span class="text-xs font-mono text-emerald-400">● Instan Aktif</span>
+                        </div>
+
+                        <div>
+                            <h3 class="text-2xl font-black text-white">Paket Free</h3>
+                            <p class="text-xs text-slate-400 mt-1 font-mono">Untuk pencatatan pengeluaran harian individu yang simpel.</p>
+                        </div>
+
+                        <div class="py-2 border-y border-slate-800">
+                            <span class="text-4xl font-black text-white font-mono">Rp 0</span>
+                            <span class="text-xs text-slate-400 font-mono">/ selamanya tanpa biaya</span>
+                        </div>
+
+                        <!-- Feature Checklist -->
+                        <div class="space-y-3 font-mono text-xs text-slate-300 pt-2">
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                                <span><strong>Akses Multi-Dompet</strong> (BCA, Mandiri, GoPay, Cash)</span>
+                            </div>
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                                <span><strong>Custom Kategori</strong> Pemasukan & Pengeluaran</span>
+                            </div>
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                                <span><strong>Target Budgeting</strong> & Indikator Batas Bulanan</span>
+                            </div>
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                                <span><strong>Saldo Awal Bersih Rp0</strong> saat akun baru dibuat</span>
+                            </div>
+                            <div class="flex items-center gap-2.5 text-amber-300">
+                                <i data-lucide="alert-circle" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                                <span><strong>Maksimal 25 Transaksi Per Hari</strong></span>
+                            </div>
+                            <div class="flex items-center gap-2.5 text-slate-500">
+                                <i data-lucide="x" class="w-4 h-4 text-slate-600 shrink-0"></i>
+                                <span class="line-through">Chat Bot AI & Telegram Bot (@DANATATA_BOT)</span>
+                            </div>
+                            <div class="flex items-center gap-2.5 text-slate-500">
+                                <i data-lucide="x" class="w-4 h-4 text-slate-600 shrink-0"></i>
+                                <span class="line-through">Ekspor Laporan Dokumen PDF & Excel</span>
+                            </div>
+                            <div class="flex items-center gap-2.5 text-slate-500">
+                                <i data-lucide="x" class="w-4 h-4 text-slate-600 shrink-0"></i>
+                                <span class="line-through">Scan Struk / Nota Otomatis OCR Vision</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="/register?plan=gratis" class="w-full py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 border border-yellow-500/40 text-yellow-400 text-xs font-bold font-mono text-center block transition shadow">
+                        Daftar Akun Free Sekarang &rarr;
+                    </a>
+                </div>
+
+                <!-- PAKET PREMIUM -->
+                <div class="cyber-card p-7 sm:p-8 rounded-3xl border-2 border-yellow-400 space-y-6 flex flex-col justify-between relative shadow-[0_0_40px_rgba(250,204,21,0.25)] bg-gradient-to-b from-yellow-500/10 via-slate-950 to-slate-950">
+                    <span class="absolute -top-3.5 right-6 px-3.5 py-1 rounded-full text-[10px] font-mono font-black bg-gradient-to-r from-yellow-400 to-amber-400 text-slate-950 uppercase tracking-widest shadow-lg">
+                        👑 PALING DIREKOMENDASIKAN
+                    </span>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-mono font-bold bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 uppercase">
+                                PREMIUM EXECUTIVE
+                            </span>
+                            <span class="text-xs font-mono text-amber-400 font-bold">● Akses Penuh Semua Fitur</span>
+                        </div>
+
+                        <div>
+                            <h3 class="text-2xl font-black text-white flex items-center gap-2">
+                                Paket Premium
+                                <span class="text-yellow-400 text-lg">💎</span>
+                            </h3>
+                            <p class="text-xs text-slate-300 mt-1 font-mono">Kontrol finansial eksekutif, tanpa limit transaksi, AI Bot & export lengkap.</p>
+                        </div>
+
+                        <div class="py-2 border-y border-yellow-500/20 flex items-baseline justify-between">
+                            <div>
+                                <span class="text-3xl font-black text-yellow-400 font-mono">Rp 24.999</span>
+                                <span class="text-xs text-yellow-200/80 font-mono">/ 6 Bulan</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[10px] text-slate-400 font-mono block">Lifetime 👑</span>
+                                <span class="text-xl font-black text-yellow-400 font-mono">Rp 49.999</span>
+                            </div>
+                        </div>
+
+                        <!-- Feature Checklist -->
+                        <div class="space-y-3 font-mono text-xs text-slate-200 pt-2">
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-400 shrink-0"></i>
+                                <span><strong>UNLIMITED Transaksi</strong> tanpa batasan kuota harian</span>
+                            </div>
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-400 shrink-0"></i>
+                                <span><strong>Akses Penuh Chat Bot AI & Telegram Bot</strong> (@DANATATA_BOT)</span>
+                            </div>
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-400 shrink-0"></i>
+                                <span><strong>Ekspor Laporan PDF Berwarna & Excel Lengkap</strong> kapan saja</span>
+                            </div>
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-400 shrink-0"></i>
+                                <span><strong>UNLIMITED Multi-Dompet</strong> (Bank, E-Wallet, Cash)</span>
+                            </div>
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-400 shrink-0"></i>
+                                <span><strong>UNLIMITED Custom Categories & Target Budgeting</strong></span>
+                            </div>
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-400 shrink-0"></i>
+                                <span><strong>Scan Struk & Nota Otomatis (OCR Vision)</strong></span>
+                            </div>
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-400 shrink-0"></i>
+                                <span><strong>Multi-AI Failover:</strong> Gemini 2.5 + GPT-4o Mini + DeepSeek</span>
+                            </div>
+                            <div class="flex items-center gap-2.5">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-yellow-400 shrink-0"></i>
+                                <span><strong>Aktivasi Instan & Aman</strong> lewat verifikasi transfer</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="/register?plan=pro" class="yellow-btn w-full py-3.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider text-center block shadow-[0_0_25px_rgba(250,204,21,0.4)]">
+                        Pilih Paket Premium (Mulai Rp 24.999) &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LIVE TERMINAL PREVIEW SECTION -->
+    <section id="demo" class="py-16 bg-slate-950/60 border-b border-yellow-500/20">
+        <div class="max-w-6xl mx-auto px-4 text-center space-y-8">
+            <div>
+                <span class="text-xs text-yellow-400 font-mono uppercase tracking-widest">INTERAKTIF & REALTIME</span>
+                <h2 class="text-3xl font-black text-white mt-1">Simulasi Terminal Pencatatan Langsung</h2>
+                <p class="text-xs text-slate-400 font-mono mt-1">Coba ketik atau klik contoh pesan di bawah untuk melihat bagaimana AI TataDana mencatat finansial secara otomatis:</p>
+            </div>
+
+            <div class="cyber-card p-6 rounded-3xl max-w-2xl mx-auto text-left space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-yellow-500/20">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span class="text-xs font-mono font-bold text-yellow-400">@DANATATA_BOT &bull; Telegram Node</span>
+                    </div>
+                    <span class="text-[10px] text-emerald-400 font-mono">SYNCHRONIZED</span>
+                </div>
+
+                <!-- Simulation Output -->
+                <div id="simLogBox" class="p-4 bg-slate-950 rounded-2xl font-mono text-xs space-y-2 text-slate-300 min-h-[140px] max-h-60 overflow-y-auto">
+                    <div class="text-yellow-400 font-bold">⚡ TataDana Quantum AI Ready</div>
+                    <div class="text-slate-400">Silakan klik salah satu contoh di bawah atau buka bot Telegram langsung:</div>
+                </div>
+
+                <!-- Quick Buttons -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 font-mono text-[11px]">
+                    <button onclick="runSimulation('makan siang 35rb di bca', 'expense', 35000, 'BCA', '🍜 Makanan & Minuman')" class="p-2 rounded-xl bg-slate-900 border border-yellow-500/30 hover:border-yellow-400 text-yellow-300 text-left transition">
+                        🍜 "makan siang 35rb bca"
+                    </button>
+                    <button onclick="runSimulation('gajian 10jt bca', 'income', 10000000, 'BCA', '💰 Gaji Pokok')" class="p-2 rounded-xl bg-slate-900 border border-yellow-500/30 hover:border-yellow-400 text-yellow-300 text-left transition">
+                        💰 "gajian 10jt bca"
+                    </button>
+                    <button onclick="runSimulation('transfer 200rb bca ke gopay', 'transfer', 200000, 'GoPay', '🔄 Transfer')" class="p-2 rounded-xl bg-slate-900 border border-yellow-500/30 hover:border-yellow-400 text-yellow-300 text-left transition">
+                        🔄 "tf 200k bca ke gopay"
+                    </button>
+                </div>
+
+                <div class="pt-2">
+                    <a href="https://t.me/DANATATA_BOT" target="_blank" rel="noopener noreferrer" class="yellow-btn block w-full py-3 rounded-xl text-center text-xs font-black shadow flex items-center justify-center gap-2">
+                        <span>Buka Bot Telegram Asli (@DANATATA_BOT)</span>
+                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURE HIGHLIGHTS -->
+    <section id="fitur" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div class="text-center space-y-3">
+            <span class="text-xs text-yellow-400 font-mono uppercase tracking-widest bg-yellow-400/10 px-3.5 py-1 rounded-full border border-yellow-400/30">
+                ARSITEKTUR CYBER FINTECH
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-black text-white">Fitur Unggulan TataDana</h2>
+            <p class="text-xs sm:text-sm text-slate-400 font-mono max-w-2xl mx-auto">
+                Dibangun untuk performa super cepat tanpa lag, visualisasi keuangan instan, dan kontrol finansial yang rapi.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="cyber-card p-6 rounded-2xl space-y-3">
+                <div class="w-10 h-10 rounded-xl bg-yellow-400/20 text-yellow-400 flex items-center justify-center font-black">
+                    <i data-lucide="bot" class="w-5 h-5"></i>
+                </div>
+                <h3 class="font-extrabold text-white text-base">Bot Telegram Realtime</h3>
+                <p class="text-xs text-slate-400 font-mono leading-relaxed">
+                    Catat pengeluaran lewat chat, foto nota, atau voice note kapan saja. Respon < 200ms langsung sinkron ke dashboard.
+                </p>
+            </div>
+
+            <div class="cyber-card p-6 rounded-2xl space-y-3">
+                <div class="w-10 h-10 rounded-xl bg-yellow-400/20 text-yellow-400 flex items-center justify-center font-black">
+                    <i data-lucide="cpu" class="w-5 h-5"></i>
+                </div>
+                <h3 class="font-extrabold text-white text-base">Multi-AI Failover</h3>
+                <p class="text-xs text-slate-400 font-mono leading-relaxed">
+                    Didukung Google Gemini 2.5, OpenAI GPT-4o Mini, dan DeepSeek. Sistem failover otomatis memastikan pencatatan tidak pernah gagal.
+                </p>
+            </div>
+
+            <div class="cyber-card p-6 rounded-2xl space-y-3">
+                <div class="w-10 h-10 rounded-xl bg-yellow-400/20 text-yellow-400 flex items-center justify-center font-black">
+                    <i data-lucide="refresh-cw" class="w-10 h-10"></i>
+                </div>
+                <h3 class="font-extrabold text-white text-base">Reset Bersih Akun Baru</h3>
+                <p class="text-xs text-slate-400 font-mono leading-relaxed">
+                    Setiap registrasi akun baru dijamin memulai dengan saldo Rp0, riwayat kosong, dan data transaksi murni milik Anda sendiri.
+                </p>
+            </div>
+
+            <div class="cyber-card p-6 rounded-2xl space-y-3">
+                <div class="w-10 h-10 rounded-xl bg-yellow-400/20 text-yellow-400 flex items-center justify-center font-black">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                </div>
+                <h3 class="font-extrabold text-white text-base">Target Budget & Laporan</h3>
+                <p class="text-xs text-slate-400 font-mono leading-relaxed">
+                    Tetapkan limit pengeluaran bulanan, pantau progress bar visual real-time, dan unduh laporan audit PDF serta Excel kapan saja.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section id="faq" class="py-16 bg-slate-950/80 border-t border-yellow-500/20">
+        <div class="max-w-4xl mx-auto px-4 space-y-8">
+            <div class="text-center space-y-2">
+                <span class="text-xs text-yellow-400 font-mono uppercase tracking-widest">PERTANYAAN UMUM</span>
+                <h2 class="text-3xl font-black text-white">Frequently Asked Questions</h2>
+            </div>
+
+            <div class="space-y-4 font-mono text-xs">
+                <div class="cyber-card p-5 rounded-2xl space-y-2">
+                    <h4 class="font-extrabold text-white text-sm">Bagaimana cara verifikasi/approval pembayaran Paket Premium?</h4>
+                    <p class="text-slate-400 leading-relaxed">
+                        Setelah Anda memilih durasi Paket Premium (6 Bulan Rp 24.999 atau Lifetime Rp 49.999) dan melakukan transfer ke rekening resmi (BCA/Mandiri/QRIS), unggah bukti transfer di formulir yang tersedia. Sistem verifikasi TataDana akan segera menyetujui dan akun Premium Anda langsung aktif.
+                    </p>
+                </div>
+
+                <div class="cyber-card p-5 rounded-2xl space-y-2">
+                    <h4 class="font-extrabold text-white text-sm">Apa perbedaan mendasar antara Paket Free dan Paket Premium?</h4>
+                    <p class="text-slate-400 leading-relaxed">
+                        Paket Free memberikan fasilitas pencatatan harian hingga 25 transaksi per hari, akses multi-dompet, dan budgeting bulanan. Paket Premium memberikan kebebasan transaksi tanpa batas, akses penuh ke Chat Bot AI & Telegram Bot (@DANATATA_BOT), serta kemampuan ekspor laporan PDF dan Excel kapan saja.
+                    </p>
+                </div>
+
+                <div class="cyber-card p-5 rounded-2xl space-y-2">
+                    <h4 class="font-extrabold text-white text-sm">Apakah data transaksi akun baru saya benar-benar mulai dari Rp0?</h4>
+                    <p class="text-slate-400 leading-relaxed">
+                        Ya, 100%! Sistem pendaftaran TataDana otomatis mereset seluruh saldo, pemasukan, pengeluaran, dan riwayat mutasi ke angka 0 saat akun baru dibuat. Anda tidak akan melihat data demo orang lain.
+                    </p>
+                </div>
+
+                <div class="cyber-card p-5 rounded-2xl space-y-2">
+                    <h4 class="font-extrabold text-white text-sm">Bagaimana cara menghubungkan akun saya ke Bot Telegram?</h4>
+                    <p class="text-slate-400 leading-relaxed">
+                        Cukup buka Telegram dan cari username <strong>@DANATATA_BOT</strong>, lalu kirim pesan <code>/start</code>. Nomor WhatsApp yang Anda daftarkan menjadi kunci tautan sinkronisasi otomatis.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto py-8 text-center text-xs font-mono text-slate-500 border-t border-yellow-500/10 space-y-2">
+        <div class="flex items-center justify-center gap-4 text-slate-400">
+            <a href="/" class="hover:text-yellow-400 transition">Beranda</a>
+            <span>&bull;</span>
+            <a href="/register?plan=gratis" class="hover:text-yellow-400 transition">Paket Free</a>
+            <span>&bull;</span>
+            <a href="/register?plan=pro" class="hover:text-yellow-400 transition">Paket Premium</a>
+            <span>&bull;</span>
+            <a href="/login" class="hover:text-yellow-400 transition">Masuk</a>
+            <span>&bull;</span>
+            <a href="/admin" class="hover:text-yellow-400 transition text-yellow-400/90 font-bold">🛡️ Panel Admin</a>
+            <span>&bull;</span>
+            <a href="/tatadana-project.zip" download="tatadana-project.zip" class="hover:text-emerald-400 transition text-emerald-400 font-bold">⬇️ Download Source Code (.ZIP)</a>
+            <span>&bull;</span>
+            <a href="https://t.me/DANATATA_BOT" target="_blank" class="hover:text-yellow-400 transition">Telegram Bot</a>
+        </div>
+        <p>&copy; 2026 TataDana Quantum Fintech. All rights reserved. Zero-leak isolated architecture.</p>
+    </footer>
+
+    <script src="/tatadana-supabase.js"></script>
+    <script src="/tatadana-account.js"></script>
+    <script>
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+            lucide.createIcons();
+        }
+
+        function runSimulation(text, type, nominal, wallet, category) {
+            const box = document.getElementById('simLogBox');
+            if (!box) return;
+
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('id-ID');
+            const sign = type === 'expense' ? '-' : (type === 'income' ? '+' : '');
+            const color = type === 'expense' ? 'text-rose-400' : (type === 'income' ? 'text-emerald-400' : 'text-cyan-400');
+            const formatted = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(nominal);
+
+            box.innerHTML = `
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-yellow-500/30 space-y-1 animate-in fade-in duration-200">
+                    <div class="flex items-center justify-between text-yellow-400 text-[10px]">
+                        <span>📱 Anda mengirim ke @DANATATA_BOT:</span>
+                        <span class="text-slate-500">${timeStr}</span>
+                    </div>
+                    <div class="font-bold text-white text-xs">"${text}"</div>
+                </div>
+                <div class="p-2.5 rounded-xl bg-slate-900/90 border border-emerald-500/40 space-y-1 animate-in fade-in duration-300">
+                    <div class="flex items-center justify-between text-emerald-400 text-[10px]">
+                        <span>🤖 Respon Otomatis Bot Telegram:</span>
+                        <span class="text-slate-500">Latency: 118ms</span>
+                    </div>
+                    <div class="text-slate-200 font-mono text-[11px] leading-relaxed">
+                        ✓ Transaksi Berhasil Dicatat!<br/>
+                        ├ Nominal : <strong class="${color}">${sign}${formatted}</strong><br/>
+                        ├ Kategori : ${category}<br/>
+                        ├ Dompet : 👛 ${wallet}<br/>
+                        └ Status : <span class="text-emerald-400 font-bold">Tersinkronisasi Realtime ke Dashboard</span>
+                    </div>
+                </div>
+            `;
+            box.scrollTop = box.scrollHeight;
+        }
+    </script>
+</body>
+</html>
