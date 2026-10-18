@@ -3,7 +3,7 @@
                     {
                         "id":  "w1",
                         "name":  "BCA",
-                        "balance":  0,
+                        "balance":  15000000,
                         "type":  "bank",
                         "color":  "#0066AE",
                         "isDefault":  true
@@ -14,14 +14,6 @@
                         "balance":  0,
                         "type":  "bank",
                         "color":  "#003D79",
-                        "isDefault":  false
-                    },
-                    {
-                        "id":  "w3",
-                        "name":  "GoPay",
-                        "balance":  0,
-                        "type":  "ewallet",
-                        "color":  "#00AED6",
                         "isDefault":  false
                     },
                     {
@@ -48,17 +40,88 @@
                          ],
     "chatHistory":  [
                         {
+                            "id":  "ch_init_1792079633946",
+                            "text":  "Pendaftaran akun baru: Mimah (anggora11@gmail.com)",
+                            "time":  "2026-10-15 22:53",
+                            "reply":  "Selamat datang di TataDana! Seluruh saldo dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
+                            "sender":  "system",
+                            "platform":  "web"
+                        },
+                        {
+                            "id":  "ch_init_1792079633881",
+                            "text":  "Pendaftaran akun baru: Mimah (anggora11@gmail.com)",
+                            "time":  "2026-10-15 15:53",
+                            "reply":  "Selamat datang di TataDana! Seluruh saldo, budgeting, dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
+                            "sender":  "system",
+                            "platform":  "web"
+                        },
+                        {
+                            "id":  "ch_init_1792079988790",
+                            "text":  "Pendaftaran akun baru: Monyet (beruk99@gmail.com)",
+                            "time":  "2026-10-15 22:59",
+                            "reply":  "Selamat datang di TataDana! Seluruh saldo dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
+                            "sender":  "system",
+                            "platform":  "web"
+                        },
+                        {
+                            "id":  "ch_init_1792079988740",
+                            "text":  "Pendaftaran akun baru: Monyet (beruk99@gmail.com)",
+                            "time":  "2026-10-15 15:59",
+                            "reply":  "Selamat datang di TataDana! Seluruh saldo, budgeting, dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
+                            "sender":  "system",
+                            "platform":  "web"
+                        },
+                        {
+                            "id":  "ch_init_1792084483424",
+                            "text":  "Pendaftaran akun baru: Daniel (81244567998@tatadana.id)",
+                            "time":  "2026-10-16 00:14",
+                            "reply":  "Selamat datang di TataDana! Seluruh saldo dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
+                            "sender":  "system",
+                            "platform":  "web"
+                        },
+                        {
+                            "id":  "ch_init_1792084483367",
+                            "text":  "Pendaftaran akun baru: Daniel (81244567998@tatadana.id)",
+                            "time":  "2026-10-15 17:14",
+                            "reply":  "Selamat datang di TataDana! Seluruh saldo, budgeting, dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
+                            "sender":  "system",
+                            "platform":  "web"
+                        },
+                        {
                             "id":  "ch_init_1792302948369",
                             "sender":  "system",
                             "text":  "Pendaftaran akun baru: Rizky Muhammad Riady (rizkymr822@gmail.com)",
                             "reply":  "Selamat datang di TataDana! Seluruh saldo dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
                             "time":  "2026-10-18 12:55",
                             "platform":  "web"
+                        },
+                        {
+                            "id":  "ch_init_1792302948334",
+                            "sender":  "system",
+                            "text":  "Pendaftaran akun baru: Rizky Muhammad Riady (rizkymr822@gmail.com)",
+                            "reply":  "Selamat datang di TataDana! Seluruh saldo, budgeting, dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
+                            "time":  "2026-10-18 05:55",
+                            "platform":  "web"
                         }
                     ],
     "transactions":  [
-
+                         {
+                             "id":  "tx_1792317458806",
+                             "type":  "income",
+                             "amount":  15000000,
+                             "walletId":  "w1",
+                             "walletName":  "BCA",
+                             "targetWalletId":  null,
+                             "targetWalletName":  null,
+                             "category":  "💰 Gaji Pokok \u0026 Upah",
+                             "note":  "",
+                             "date":  "2026-10-18",
+                             "datetime":  "2026-10-18 16:57"
+                         }
                      ],
+    "telegramToken":  "8901649639:AAEiVyOO7dM76YAl8RmhoFiGtwekD7KFmhQ",
+    "telegramBotUsername":  "DANATATA_BOT",
+    "deletedTxIds":  null,
     "deletedWalletIds":  [
                              "w3",
                              "w",
@@ -142,10 +205,5 @@
                       "role":  "Superadmin",
                       "telegramUsername":  "@DANATATA_BOT"
                   }
-              ],
-    "deletedTxIds":  [
-
-                     ],
-    "telegramToken":  "8901649639:AAEiVyOO7dM76YAl8RmhoFiGtwekD7KFmhQ",
-    "telegramBotUsername":  "DANATATA_BOT"
+              ]
 }
