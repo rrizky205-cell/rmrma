@@ -1,1 +1,7 @@
-{}
+{
+  "outputDirectory": "public",
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/transaksi", "destination": "/dashboard.html" }
+  ]
+}

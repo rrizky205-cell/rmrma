@@ -19,3 +19,10 @@ dist/
 # OS Files
 Thumbs.db
 .DS_Store
+
+# Backups
+_src_backup/
+_next.config.mjs.bak
+scripts/bundle_html.ps1
+scripts/setup_routes.ps1
+scripts/update_redirects.ps1
