@@ -1,4 +1,4 @@
-# Comprehensive Test script for TataDana Telegram mirroring logic
+﻿# Comprehensive Test script for TataDana Telegram mirroring logic
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $baseDir = $PSScriptRoot
 . (Join-Path $baseDir "telegram_logic.ps1")

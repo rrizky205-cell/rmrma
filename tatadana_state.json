@@ -3,7 +3,7 @@
                     {
                         "id":  "w1",
                         "name":  "BCA",
-                        "balance":  9000000,
+                        "balance":  8800000,
                         "type":  "bank",
                         "color":  "#0066AE",
                         "isDefault":  true
@@ -11,17 +11,9 @@
                     {
                         "id":  "w2",
                         "name":  "Mandiri",
-                        "balance":  200000,
+                        "balance":  0,
                         "type":  "bank",
                         "color":  "#003D79",
-                        "isDefault":  false
-                    },
-                    {
-                        "id":  "w3",
-                        "name":  "GoPay",
-                        "balance":  0,
-                        "type":  "ewallet",
-                        "color":  "#00AED6",
                         "isDefault":  false
                     },
                     {
@@ -31,12 +23,20 @@
                         "type":  "cash",
                         "color":  "#10B981",
                         "isDefault":  false
+                    },
+                    {
+                        "id":  "w_1792084540167",
+                        "name":  "BSI",
+                        "balance":  0,
+                        "type":  "bank",
+                        "color":  "#d0494f",
+                        "isDefault":  false
                     }
                 ],
     "budgets":  [
                     {
-                        "id":  "b_1792080151725",
-                        "name":  "⛽ Bensin",
+                        "id":  "b_1792084676880",
+                        "name":  "⛽ BENSIN PERTAMAX",
                         "limit":  500000,
                         "color":  "#facc15"
                     }
@@ -48,7 +48,8 @@
                              "✈️ Traveling",
                              "🚗 Transportasi",
                              "🌐 Kuota",
-                             "⛽ Bensin"
+                             "⛽ Bensin",
+                             "⛽ BENSIN PERTAMAX"
                          ],
     "chatHistory":  [
                         {
@@ -69,24 +70,66 @@
                         },
                         {
                             "id":  "ch_init_1792079988790",
-                            "sender":  "system",
                             "text":  "Pendaftaran akun baru: Monyet (beruk99@gmail.com)",
-                            "reply":  "Selamat datang di TataDana! Seluruh saldo dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
                             "time":  "2026-10-15 22:59",
+                            "reply":  "Selamat datang di TataDana! Seluruh saldo dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
+                            "sender":  "system",
                             "platform":  "web"
                         },
                         {
                             "id":  "ch_init_1792079988740",
-                            "sender":  "system",
                             "text":  "Pendaftaran akun baru: Monyet (beruk99@gmail.com)",
-                            "reply":  "Selamat datang di TataDana! Seluruh saldo, budgeting, dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
                             "time":  "2026-10-15 15:59",
+                            "reply":  "Selamat datang di TataDana! Seluruh saldo, budgeting, dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
+                            "sender":  "system",
+                            "platform":  "web"
+                        },
+                        {
+                            "id":  "ch_init_1792084483424",
+                            "sender":  "system",
+                            "text":  "Pendaftaran akun baru: Daniel (81244567998@tatadana.id)",
+                            "reply":  "Selamat datang di TataDana! Seluruh saldo dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
+                            "time":  "2026-10-16 00:14",
+                            "platform":  "web"
+                        },
+                        {
+                            "id":  "ch_init_1792084483367",
+                            "sender":  "system",
+                            "text":  "Pendaftaran akun baru: Daniel (81244567998@tatadana.id)",
+                            "reply":  "Selamat datang di TataDana! Seluruh saldo, budgeting, dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
+                            "time":  "2026-10-15 17:14",
                             "platform":  "web"
                         }
                     ],
     "transactions":  [
                          {
-                             "id":  "tx_1792080127508",
+                             "id":  "tx_1792084700987",
+                             "type":  "expense",
+                             "amount":  80000,
+                             "walletId":  "w1",
+                             "walletName":  "BCA",
+                             "targetWalletId":  null,
+                             "targetWalletName":  null,
+                             "category":  "⛽ BENSIN PERTAMAX",
+                             "note":  "",
+                             "date":  "2026-10-15",
+                             "datetime":  "2026-10-15 00:18"
+                         },
+                         {
+                             "id":  "tx_1792084625186",
+                             "type":  "expense",
+                             "amount":  120000,
+                             "walletId":  "w1",
+                             "walletName":  "BCA",
+                             "targetWalletId":  null,
+                             "targetWalletName":  null,
+                             "category":  "🚗 Transportasi \u0026 Ojol",
+                             "note":  "",
+                             "date":  "2026-10-15",
+                             "datetime":  "2026-10-15 00:17"
+                         },
+                         {
+                             "id":  "tx_1792084584009",
                              "type":  "income",
                              "amount":  9000000,
                              "walletId":  "w1",
@@ -96,25 +139,40 @@
                              "category":  "💰 Gaji Pokok \u0026 Upah",
                              "note":  "",
                              "date":  "2026-10-15",
-                             "datetime":  "2026-10-15 23:02"
-                         },
-                         {
-                             "id":  "tx_1792080100529",
-                             "type":  "income",
-                             "amount":  200000,
-                             "walletId":  "w2",
-                             "walletName":  "Mandiri",
-                             "targetWalletId":  null,
-                             "targetWalletName":  null,
-                             "category":  "⚡ Bonus, THR \u0026 Insentif",
-                             "note":  "",
-                             "date":  "2026-10-15",
-                             "datetime":  "2026-10-15 23:01"
+                             "datetime":  "2026-10-15 00:16"
                          }
                      ],
     "deletedTxIds":  null,
-    "deletedWalletIds":  null,
+    "deletedWalletIds":  [
+                             "w3",
+                             "w",
+                             "3"
+                         ],
     "users":  [
+                  {
+                      "id":  "usr_1792084483420",
+                      "name":  "Daniel",
+                      "email":  "81244567998@tatadana.id",
+                      "phone":  "+62 81244567998",
+                      "registeredAt":  "2026-10-16 00:14",
+                      "plan":  "Gratis",
+                      "paymentStatus":  "Aktif",
+                      "paymentMethod":  "-",
+                      "role":  "User",
+                      "telegramUsername":  "-"
+                  },
+                  {
+                      "id":  "usr_1792084276353",
+                      "name":  "Rizky Muhammad Riady",
+                      "email":  "anggora19@gmail.com",
+                      "phone":  "+62 81231090398",
+                      "registeredAt":  "2026-10-16 00:11",
+                      "plan":  "Pro",
+                      "paymentStatus":  "Approved",
+                      "paymentMethod":  "Mandiri Transfer",
+                      "role":  "Pro Quantum",
+                      "telegramUsername":  "-"
+                  },
                   {
                       "id":  "usr_1792079988779",
                       "name":  "Monyet",

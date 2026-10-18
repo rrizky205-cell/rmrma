@@ -557,9 +557,6 @@
                                     Pengaturan
                                 </a>
                             </div>
-                            <a href="/tatadana-project.zip" download="tatadana-project.zip" class="w-full py-2.5 px-4 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-emerald-300 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition">
-                                <span>⬇️ Download Source Code (.ZIP)</span>
-                            </a>
                             <button onclick="logoutTataDana()" class="w-full py-2.5 px-4 rounded-xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 text-red-400 hover:text-red-300 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition">
                                 <span>🚪 Keluar / Logout Akun</span>
                             </button>
@@ -570,9 +567,6 @@
                             <div class="p-3 rounded-xl bg-yellow-400/10 border border-yellow-400/30 text-yellow-400 text-xs font-mono text-center">
                                 Anda sedang dalam <strong>Mode Publik / Tamu</strong>. Silakan masuk untuk sinkronisasi penuh data Anda.
                             </div>
-                            <a href="/tatadana-project.zip" download="tatadana-project.zip" class="w-full py-2.5 px-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/50 text-emerald-300 text-xs font-bold flex items-center justify-center gap-2 transition">
-                                <span>⬇️ Download Source Code (.ZIP)</span>
-                            </a>
                             <a href="/login" class="w-full py-3 px-4 rounded-xl yellow-btn text-xs font-black flex items-center justify-center gap-2 shadow">
                                 <span>🔑 Masuk ke Akun Anda (Login)</span> &rarr;
                             </a>
@@ -646,9 +640,6 @@
                         <button onclick="openAccountModal(); closeMobileDrawer();" class="w-full py-2.5 px-3 rounded-xl bg-slate-900 border border-yellow-500/30 text-yellow-400 text-xs font-bold text-center block transition">
                             👤 Menu Akun & Profil
                         </button>
-                        <a href="/tatadana-project.zip" download="tatadana-project.zip" class="w-full py-2.5 px-3 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-xs font-bold text-center flex items-center justify-center gap-1.5 transition">
-                            <span>⬇️ Download Source Code (.ZIP)</span>
-                        </a>
                         <div id="drawerAuthBtnContainer">
                             <!-- Populated dynamically by updateAccountUI -->
                         </div>

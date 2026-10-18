@@ -1,4 +1,4 @@
-# TataDana Unified Telegram & NLP Financial Processing Logic
+﻿# TataDana Unified Telegram & NLP Financial Processing Logic
 # Shared between server.ps1, telegram_worker.ps1, and test harnesses
 
 function Parse-IndoNominal([string]$text) {

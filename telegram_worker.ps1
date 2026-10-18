@@ -1,4 +1,4 @@
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+﻿[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 # TataDana Telegram Poller Daemon
 $baseDir = if ($PSScriptRoot) { $PSScriptRoot } else { "C:\Users\RIZKY MUHAMMAD RIADY\.gemini\antigravity\scratch\tatadana" }

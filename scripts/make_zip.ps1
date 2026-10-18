@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 $projPath = "C:\Users\RIZKY MUHAMMAD RIADY\.gemini\antigravity\scratch\tatadana"
 $zipPath = Join-Path $projPath "tatadana-project.zip"
 $pubZip = Join-Path $projPath "public\tatadana-project.zip"

@@ -857,10 +857,6 @@ while ($listener.IsListening) {
         } elseif ($path.EndsWith(".pdf")) {
             $contentType = "application/pdf"
             $targetFile = $path.TrimStart('/')
-        } elseif ($path.EndsWith(".zip") -or $path -eq "/download-zip" -or $path -eq "/download") {
-            $contentType = "application/zip"
-            $response.AddHeader("Content-Disposition", "attachment; filename=tatadana-project.zip")
-            $targetFile = "tatadana-project.zip"
         }
 
         $targetFile = $targetFile.Replace('/', [System.IO.Path]::DirectorySeparatorChar)

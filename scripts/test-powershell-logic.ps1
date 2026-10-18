@@ -1,4 +1,4 @@
-# Comprehensive Test Suite for telegram_logic.ps1
+﻿# Comprehensive Test Suite for telegram_logic.ps1
 $baseDir = "C:\Users\RIZKY MUHAMMAD RIADY\.gemini\antigravity\scratch\tatadana"
 . (Join-Path $baseDir "telegram_logic.ps1")
 

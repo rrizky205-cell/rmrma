@@ -22,7 +22,6 @@ const nextConfig = {
       { source: '/laporan', destination: '/laporan.html' },
       { source: '/settings', destination: '/settings.html' },
       { source: '/transaksi', destination: '/dashboard.html' },
-      { source: '/download-zip', destination: '/tatadana-project.zip' },
     ];
   },
 };
