@@ -132,12 +132,28 @@
         const now = new Date();
         const dateStr = now.toISOString().replace('T', ' ').substring(0, 16);
 
+        const durationRaw = formData.duration || formData.planDuration || (plan === 'Pro' ? '6bulan' : 'lifetime');
+        const is6Bulan = durationRaw.toString().toLowerCase().includes('6') || durationRaw.toString().toLowerCase() === '6bulan';
+        const planDuration = is6Bulan ? '6bulan' : 'lifetime';
+        const durationLabel = is6Bulan ? '6 Bulan' : 'Lifetime';
+        const defaultAmount = plan === 'Pro' ? (is6Bulan ? 24999 : 49999) : 0;
+        const paymentAmount = (formData.amount || formData.paymentAmount || defaultAmount);
+
         const newUser = {
             id: 'usr_' + Date.now(),
             name: displayName,
             email: finalEmail,
             phone: phone,
             plan: plan,
+            duration: planDuration,
+            planDuration: planDuration,
+            durationLabel: durationLabel,
+            amount: paymentAmount,
+            paymentAmount: paymentAmount,
+            planAmount: paymentAmount,
+            senderName: formData.senderName || displayName,
+            senderAccount: formData.senderAccount || '-',
+            proofImage: formData.proofImage || '',
             role: (plan === 'Pro') ? 'Pro (Pending)' : 'Starter',
             paymentStatus: paymentStatus,
             paymentMethod: paymentMethod,
@@ -182,7 +198,16 @@
                     email: finalEmail,
                     phone: phone,
                     plan: plan,
-                    paymentMethod: paymentMethod
+                    duration: planDuration,
+                    planDuration: planDuration,
+                    durationLabel: durationLabel,
+                    amount: paymentAmount,
+                    paymentAmount: paymentAmount,
+                    planAmount: paymentAmount,
+                    paymentMethod: paymentMethod,
+                    senderName: formData.senderName || displayName,
+                    senderAccount: formData.senderAccount || '-',
+                    proofImage: formData.proofImage || ''
                 })
             });
             if (!res.ok) {
@@ -368,11 +393,21 @@
                     curr.plan = matched.plan;
                     curr.paymentStatus = matched.paymentStatus;
                     curr.role = matched.role || (matched.plan === 'Pro' ? 'Pro Quantum' : 'Starter');
-                    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(curr));
                     statusChanged = true;
                 }
-
+                if (matched.paymentAmount && curr.paymentAmount !== matched.paymentAmount) {
+                    curr.paymentAmount = matched.paymentAmount;
+                    curr.planAmount = matched.paymentAmount;
+                    curr.amount = matched.paymentAmount;
+                    statusChanged = true;
+                }
+                if (matched.planDuration && curr.planDuration !== matched.planDuration) {
+                    curr.planDuration = matched.planDuration;
+                    curr.duration = matched.planDuration;
+                    statusChanged = true;
+                }
                 if (statusChanged) {
+                    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(curr));
                     window.updateAccountUI();
                     window.dispatchEvent(new CustomEvent('tatadana-user-status-synced', { detail: curr }));
 
@@ -1034,14 +1069,22 @@
                     senderAccount: senderAccount,
                     proofImage: proofName,
                     amount: amount,
-                    planDuration: durationText
+                    paymentAmount: amount,
+                    planAmount: amount,
+                    duration: plan,
+                    planDuration: plan,
+                    durationText: durationText
                 })
             });
         } catch (err) {}
 
         // Update local session
         user.plan = 'Pro';
-        user.planDuration = durationText;
+        user.planDuration = plan;
+        user.duration = plan;
+        user.durationLabel = durationText;
+        user.amount = amount;
+        user.paymentAmount = amount;
         user.planAmount = amount;
         user.paymentStatus = 'Pending Approval';
         user.paymentMethod = method;

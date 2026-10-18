@@ -238,8 +238,8 @@
                     Pending Approval
                 </span>
             </div>
-            <p class="text-xs text-slate-300 font-mono leading-relaxed">
-                Pembayaran Anda sebesar <strong>Rp99.205</strong> sedang dalam proses verifikasi Admin. Bukti transfer telah terkirim ke rekening Admin TataDana (BCA 8830-1913-205 / Mandiri 132-00-1913205-1). Status Pro akan aktif secara otomatis setelah di-approve oleh Admin.
+            <p id="proPendingDesc" class="text-xs text-slate-300 font-mono leading-relaxed">
+                Pembayaran Anda sedang dalam proses verifikasi Admin. Bukti transfer telah terkirim ke rekening Admin TataDana (BCA 8830-1913-205 / Mandiri 132-00-1913205-1). Status Pro akan aktif secara otomatis setelah di-approve oleh Admin.
             </p>
         </div>
 
@@ -253,7 +253,7 @@
                 </p>
             </div>
             <button type="button" onclick="openProPaymentModal()" class="yellow-btn px-4 py-2 rounded-xl text-xs font-black shrink-0 text-center shadow">
-                Upgrade ke Pro (Rp99.000) &rarr;
+                Upgrade ke Pro (Mulai Rp 24.999) &rarr;
             </button>
         </div>
 
@@ -601,6 +601,9 @@
         window.addEventListener('tatadana-state-updated', () => {
             renderDashboard();
         });
+        window.addEventListener('tatadana-user-status-synced', () => {
+            renderDashboard();
+        });
 
         function formatRupiah(num) {
             return 'Rp' + new Intl.NumberFormat('id-ID').format(num || 0);
@@ -623,8 +626,20 @@
                 const isFree = currUser.plan === 'Gratis' || (!isPendingPro && currUser.paymentStatus !== 'Approved' && (!currUser.role || !currUser.role.toLowerCase().includes('pro')));
 
                 if (proPendingBanner) {
-                    if (isPendingPro) proPendingBanner.classList.remove('hidden');
-                    else proPendingBanner.classList.add('hidden');
+                    if (isPendingPro) {
+                        proPendingBanner.classList.remove('hidden');
+                        const pDesc = document.getElementById('proPendingDesc');
+                        if (pDesc) {
+                            const dur = currUser.planDuration || currUser.duration || '6bulan';
+                            const is6Bulan = dur.toString().toLowerCase().includes('6') || dur.toString().toLowerCase() === '6bulan';
+                            const durLabel = is6Bulan ? 'Paket 6 Bulan - Rp 24.999' : 'Paket Lifetime - Rp 49.999';
+                            const nominal = currUser.paymentAmount || currUser.planAmount || currUser.amount || (is6Bulan ? 24999 : 49999);
+                            const nominalFormatted = 'Rp ' + Number(nominal).toLocaleString('id-ID');
+                            pDesc.innerHTML = `Pembayaran Anda untuk <strong>${durLabel}</strong> sebesar <strong class="text-yellow-400 font-bold">${nominalFormatted}</strong> sedang dalam proses verifikasi Admin. Bukti transfer telah terkirim ke rekening Admin TataDana (BCA 8830-1913-205 / Mandiri 132-00-1913205-1). Status Pro akan aktif secara otomatis setelah di-approve oleh Admin.`;
+                        }
+                    } else {
+                        proPendingBanner.classList.add('hidden');
+                    }
                 }
                 if (freePlanBanner) {
                     if (isFree && !isPendingPro) freePlanBanner.classList.remove('hidden');

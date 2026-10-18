@@ -292,6 +292,10 @@ while ($listener.IsListening) {
             $payMethod = if ($bodyObj -and $bodyObj.paymentMethod) { $bodyObj.paymentMethod } else { if ($rawPlan -eq "Pro") { "BCA Transfer" } else { "-" } }
             $payStatus = if ($rawPlan -eq "Pro") { "Pending Approval" } else { "Aktif" }
 
+            $rawDuration = if ($bodyObj -and $bodyObj.duration) { $bodyObj.duration } elseif ($bodyObj -and $bodyObj.planDuration) { $bodyObj.planDuration } else { "6bulan" }
+            $is6Bulan = ($rawDuration -like "*6*") -or ($rawDuration -eq "6bulan")
+            $rawAmount = if ($bodyObj -and $bodyObj.amount) { $bodyObj.amount } elseif ($bodyObj -and $bodyObj.paymentAmount) { $bodyObj.paymentAmount } elseif ($rawPlan -eq "Pro") { if ($is6Bulan) { 24999 } else { 49999 } } else { 0 }
+
             $nowStr = (Get-Date).ToString("yyyy-MM-dd HH:mm")
             $newUId = "usr_" + [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
 
@@ -302,9 +306,17 @@ while ($listener.IsListening) {
                 phone = $rawPhone
                 registeredAt = $nowStr
                 plan = $rawPlan
+                duration = if ($rawPlan -eq "Pro") { if ($is6Bulan) { "6bulan" } else { "lifetime" } } else { "-" }
+                planDuration = if ($rawPlan -eq "Pro") { if ($is6Bulan) { "6bulan" } else { "lifetime" } } else { "-" }
+                amount = $rawAmount
+                paymentAmount = $rawAmount
+                planAmount = $rawAmount
+                senderName = if ($bodyObj -and $bodyObj.senderName) { $bodyObj.senderName } else { "-" }
+                senderAccount = if ($bodyObj -and $bodyObj.senderAccount) { $bodyObj.senderAccount } else { "-" }
+                proofImage = if ($bodyObj -and $bodyObj.proofImage) { $bodyObj.proofImage } else { "" }
                 paymentStatus = $payStatus
                 paymentMethod = $payMethod
-                role = "User"
+                role = if ($rawPlan -eq "Pro") { "Pro (Pending)" } else { "User" }
                 telegramUsername = "-"
             }
 
@@ -353,11 +365,19 @@ while ($listener.IsListening) {
             $token = if ($state.telegramToken) { $state.telegramToken } else { "8901649639:AAEiVyOO7dM76YAl8RmhoFiGtwekD7KFmhQ" }
             $cId = if ($state.telegramChatId) { $state.telegramChatId } else { $null }
             if ($token -and $cId) {
+                $planDetails = if ($rawPlan -eq "Pro") {
+                    $durTitle = if ($is6Bulan) { "Paket 6 Bulan - Rp 24.999" } else { "Paket Lifetime - Rp 49.999" }
+                    "Pro ($durTitle)"
+                } else {
+                    "Gratis (Starter)"
+                }
+                $nomText = if ($rawPlan -eq "Pro") { "• Nominal: Rp " + [string]::Format("{0:N0}", [int64]$rawAmount) + "`n" } else { "" }
                 $tgText = "👤 [REGISTRASI PENGGUNA BARU]`n`n" +
                           "• Nama: $rawName`n" +
                           "• Email: $rawEmail`n" +
                           "• No HP: $rawPhone`n" +
-                          "• Paket: $rawPlan ($payStatus)`n" +
+                          "• Paket: $planDetails ($payStatus)`n" +
+                          $nomText +
                           "• Metode Bayar: $payMethod`n" +
                           "• Status Data: Saldo & Transaksi DI-RESET ke Rp0`n`n" +
                           "Tinjau & kelola di Superadmin: http://localhost:3000/admin"
@@ -468,16 +488,25 @@ while ($listener.IsListening) {
             }
 
             $upgradedUser = $null
+            $durRaw = if ($bodyObj -and $bodyObj.duration) { $bodyObj.duration } elseif ($bodyObj -and $bodyObj.planDuration) { $bodyObj.planDuration } else { "6bulan" }
+            $is6B = ($durRaw -like "*6*") -or ($durRaw -eq "6bulan")
+            $durKey = if ($is6B) { "6bulan" } else { "lifetime" }
+            $durTitle = if ($is6B) { "Paket 6 Bulan - Rp 24.999" } else { "Paket Lifetime - Rp 49.999" }
+            $amt = if ($bodyObj -and $bodyObj.amount) { $bodyObj.amount } elseif ($bodyObj -and $bodyObj.paymentAmount) { $bodyObj.paymentAmount } else { if ($is6B) { 24999 } else { 49999 } }
+
             if ($state -and $state.users) {
                 foreach ($u in $state.users) {
                     if (($targetEmail -and $u.email -eq $targetEmail) -or ($bodyObj -and $bodyObj.userId -and $u.id -eq $bodyObj.userId)) {
                         $u.plan = "Pro"
                         $u.paymentStatus = "Pending Approval"
                         $u.paymentMethod = $payMethod
+                        $u | Add-Member -MemberType NoteProperty -Name "planDuration" -Value $durKey -Force
+                        $u | Add-Member -MemberType NoteProperty -Name "duration" -Value $durKey -Force
+                        $u | Add-Member -MemberType NoteProperty -Name "paymentAmount" -Value $amt -Force
+                        $u | Add-Member -MemberType NoteProperty -Name "planAmount" -Value $amt -Force
                         if ($bodyObj.senderName) { $u | Add-Member -MemberType NoteProperty -Name "senderName" -Value $bodyObj.senderName -Force }
                         if ($bodyObj.senderAccount) { $u | Add-Member -MemberType NoteProperty -Name "senderAccount" -Value $bodyObj.senderAccount -Force }
                         if ($bodyObj.proofImage) { $u | Add-Member -MemberType NoteProperty -Name "proofImage" -Value $bodyObj.proofImage -Force }
-                        if ($bodyObj.amount) { $u | Add-Member -MemberType NoteProperty -Name "paymentAmount" -Value $bodyObj.amount -Force }
                         $upgradedUser = $u
                         break
                     }
@@ -491,6 +520,11 @@ while ($listener.IsListening) {
                         phone = if ($bodyObj -and $bodyObj.phone) { $bodyObj.phone } else { "-" }
                         registeredAt = $nowStr
                         plan = "Pro"
+                        duration = $durKey
+                        planDuration = $durKey
+                        amount = $amt
+                        paymentAmount = $amt
+                        planAmount = $amt
                         paymentStatus = "Pending Approval"
                         paymentMethod = $payMethod
                         role = "Pro (Pending)"
@@ -499,7 +533,6 @@ while ($listener.IsListening) {
                     if ($bodyObj.senderName) { $upgradedUser | Add-Member -MemberType NoteProperty -Name "senderName" -Value $bodyObj.senderName -Force }
                     if ($bodyObj.senderAccount) { $upgradedUser | Add-Member -MemberType NoteProperty -Name "senderAccount" -Value $bodyObj.senderAccount -Force }
                     if ($bodyObj.proofImage) { $upgradedUser | Add-Member -MemberType NoteProperty -Name "proofImage" -Value $bodyObj.proofImage -Force }
-                    if ($bodyObj.amount) { $upgradedUser | Add-Member -MemberType NoteProperty -Name "paymentAmount" -Value $bodyObj.amount -Force }
 
                     $currUsers = if ($state.users) { @($state.users) } else { @() }
                     $state | Add-Member -MemberType NoteProperty -Name "users" -Value (@($upgradedUser) + $currUsers) -Force
@@ -512,12 +545,14 @@ while ($listener.IsListening) {
                     $cId = if ($state.telegramChatId) { $state.telegramChatId } else { $null }
                     if ($token -and $cId) {
                         $sName = if ($upgradedUser.senderName) { $upgradedUser.senderName } else { "-" }
+                        $nomFormatted = "Rp " + [string]::Format("{0:N0}", [int64]$amt)
                         $tgMsg = "💎 [PERMINTAAN UPGRADE PRO MASUK]`n`n" +
                                  "• Pengguna: $($upgradedUser.name)`n" +
                                  "• Email: $($upgradedUser.email)`n" +
+                                 "• Paket: Pro ($durTitle)`n" +
                                  "• Metode: $payMethod`n" +
                                  "• Pengirim: $sName`n" +
-                                 "• Nominal: Rp99.205 (Termasuk Kode Unik)`n" +
+                                 "• Nominal: $nomFormatted`n" +
                                  "• Status: Menunggu Persetujuan Admin`n`n" +
                                  "Buka Admin Console untuk Approve: http://localhost:3000/admin"
                         try {
@@ -857,6 +892,10 @@ while ($listener.IsListening) {
         } elseif ($path.EndsWith(".pdf")) {
             $contentType = "application/pdf"
             $targetFile = $path.TrimStart('/')
+        } elseif ($path.EndsWith(".zip") -or $path -eq "/download-zip" -or $path -eq "/download") {
+            $contentType = "application/zip"
+            $response.AddHeader("Content-Disposition", "attachment; filename=tatadana-project.zip")
+            $targetFile = "tatadana-project.zip"
         }
 
         $targetFile = $targetFile.Replace('/', [System.IO.Path]::DirectorySeparatorChar)

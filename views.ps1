@@ -1,4 +1,4 @@
-﻿# ==============================================================================
+# ==============================================================================
 # TataDana Views & Endpoints Implementation (100% Indonesian, Silver & Slate + Orange)
 # ==============================================================================
 
@@ -570,8 +570,8 @@ Contoh:
                             <span class="px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 text-brand-600 border border-brand-200">Akses Selamanya</span>
                         </div>
                         <div class="mb-6">
-                            <span class="text-4xl font-extrabold text-slate-900">Rp99.000</span>
-                            <span class="text-xs text-slate-500"> / sekali bayar</span>
+                            <span class="text-4xl font-extrabold text-slate-900">Rp49.999</span>
+                            <span class="text-xs text-slate-500"> / lifetime &bull; Rp24.999 / 6 bln</span>
                         </div>
                         <p class="text-xs text-slate-600 mb-6 pb-6 border-b border-slate-100">
                             Pilihan utama profesional dan keluarga untuk otomasi finansial tanpa batas dan analitik mendalam.
@@ -2042,7 +2042,7 @@ function Get-AdminDashboardHtml {
                                 <td class="py-3 font-mono text-slate-300">ORD-TATA-PRO-918231</td>
                                 <td class="py-3 text-white font-bold">Reza Pratama</td>
                                 <td class="py-3"><span class="px-2 py-0.5 rounded bg-brand-900/60 text-brand-300 font-bold">Pro Lifetime</span></td>
-                                <td class="py-3 text-emerald-400 font-bold">Rp99.000</td>
+                                <td class="py-3 text-emerald-400 font-bold">Rp49.999</td>
                                 <td class="py-3 text-slate-300">BCA Transfer Manual</td>
                                 <td class="py-3"><span class="px-2 py-0.5 rounded bg-amber-900/60 text-amber-300">Pending Approval</span></td>
                                 <td class="py-3 text-right space-x-2">

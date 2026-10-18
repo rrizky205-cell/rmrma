@@ -1,9 +1,9 @@
-﻿{
+{
     "wallets":  [
                     {
                         "id":  "w1",
                         "name":  "BCA",
-                        "balance":  8800000,
+                        "balance":  0,
                         "type":  "bank",
                         "color":  "#0066AE",
                         "isDefault":  true
@@ -17,29 +17,24 @@
                         "isDefault":  false
                     },
                     {
+                        "id":  "w3",
+                        "name":  "GoPay",
+                        "balance":  0,
+                        "type":  "ewallet",
+                        "color":  "#00AED6",
+                        "isDefault":  false
+                    },
+                    {
                         "id":  "w4",
                         "name":  "Cash",
                         "balance":  0,
                         "type":  "cash",
                         "color":  "#10B981",
                         "isDefault":  false
-                    },
-                    {
-                        "id":  "w_1792084540167",
-                        "name":  "BSI",
-                        "balance":  0,
-                        "type":  "bank",
-                        "color":  "#d0494f",
-                        "isDefault":  false
                     }
                 ],
     "budgets":  [
-                    {
-                        "id":  "b_1792084676880",
-                        "name":  "⛽ BENSIN PERTAMAX",
-                        "limit":  500000,
-                        "color":  "#facc15"
-                    }
+
                 ],
     "customCategories":  [
                              "🎮 Top Up Skin ML",
@@ -53,102 +48,40 @@
                          ],
     "chatHistory":  [
                         {
-                            "id":  "ch_init_1792079633946",
-                            "text":  "Pendaftaran akun baru: Mimah (anggora11@gmail.com)",
-                            "time":  "2026-10-15 22:53",
+                            "id":  "ch_init_1792302948369",
+                            "sender":  "system",
+                            "text":  "Pendaftaran akun baru: Rizky Muhammad Riady (rizkymr822@gmail.com)",
                             "reply":  "Selamat datang di TataDana! Seluruh saldo dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
-                            "sender":  "system",
-                            "platform":  "web"
-                        },
-                        {
-                            "id":  "ch_init_1792079633881",
-                            "text":  "Pendaftaran akun baru: Mimah (anggora11@gmail.com)",
-                            "time":  "2026-10-15 15:53",
-                            "reply":  "Selamat datang di TataDana! Seluruh saldo, budgeting, dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
-                            "sender":  "system",
-                            "platform":  "web"
-                        },
-                        {
-                            "id":  "ch_init_1792079988790",
-                            "text":  "Pendaftaran akun baru: Monyet (beruk99@gmail.com)",
-                            "time":  "2026-10-15 22:59",
-                            "reply":  "Selamat datang di TataDana! Seluruh saldo dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
-                            "sender":  "system",
-                            "platform":  "web"
-                        },
-                        {
-                            "id":  "ch_init_1792079988740",
-                            "text":  "Pendaftaran akun baru: Monyet (beruk99@gmail.com)",
-                            "time":  "2026-10-15 15:59",
-                            "reply":  "Selamat datang di TataDana! Seluruh saldo, budgeting, dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
-                            "sender":  "system",
-                            "platform":  "web"
-                        },
-                        {
-                            "id":  "ch_init_1792084483424",
-                            "sender":  "system",
-                            "text":  "Pendaftaran akun baru: Daniel (81244567998@tatadana.id)",
-                            "reply":  "Selamat datang di TataDana! Seluruh saldo dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
-                            "time":  "2026-10-16 00:14",
-                            "platform":  "web"
-                        },
-                        {
-                            "id":  "ch_init_1792084483367",
-                            "sender":  "system",
-                            "text":  "Pendaftaran akun baru: Daniel (81244567998@tatadana.id)",
-                            "reply":  "Selamat datang di TataDana! Seluruh saldo, budgeting, dan transaksi Anda telah di-reset mulai dari Rp0. Hubungkan bot @DANATATA_BOT untuk mencatat otomatis.",
-                            "time":  "2026-10-15 17:14",
+                            "time":  "2026-10-18 12:55",
                             "platform":  "web"
                         }
                     ],
     "transactions":  [
-                         {
-                             "id":  "tx_1792084700987",
-                             "type":  "expense",
-                             "amount":  80000,
-                             "walletId":  "w1",
-                             "walletName":  "BCA",
-                             "targetWalletId":  null,
-                             "targetWalletName":  null,
-                             "category":  "⛽ BENSIN PERTAMAX",
-                             "note":  "",
-                             "date":  "2026-10-15",
-                             "datetime":  "2026-10-15 00:18"
-                         },
-                         {
-                             "id":  "tx_1792084625186",
-                             "type":  "expense",
-                             "amount":  120000,
-                             "walletId":  "w1",
-                             "walletName":  "BCA",
-                             "targetWalletId":  null,
-                             "targetWalletName":  null,
-                             "category":  "🚗 Transportasi \u0026 Ojol",
-                             "note":  "",
-                             "date":  "2026-10-15",
-                             "datetime":  "2026-10-15 00:17"
-                         },
-                         {
-                             "id":  "tx_1792084584009",
-                             "type":  "income",
-                             "amount":  9000000,
-                             "walletId":  "w1",
-                             "walletName":  "BCA",
-                             "targetWalletId":  null,
-                             "targetWalletName":  null,
-                             "category":  "💰 Gaji Pokok \u0026 Upah",
-                             "note":  "",
-                             "date":  "2026-10-15",
-                             "datetime":  "2026-10-15 00:16"
-                         }
+
                      ],
-    "deletedTxIds":  null,
     "deletedWalletIds":  [
                              "w3",
                              "w",
                              "3"
                          ],
     "users":  [
+                  {
+                      "id":  "usr_1792302948367",
+                      "name":  "Rizky Muhammad Riady",
+                      "email":  "rizkymr822@gmail.com",
+                      "phone":  "+62 82116156884",
+                      "registeredAt":  "2026-10-18 12:55",
+                      "plan":  "Pro",
+                      "duration":  "6bulan",
+                      "planDuration":  "6bulan",
+                      "amount":  24999,
+                      "paymentAmount":  24999,
+                      "planAmount":  24999,
+                      "paymentStatus":  "Pending Approval",
+                      "paymentMethod":  "BCA Transfer",
+                      "role":  "User",
+                      "telegramUsername":  "-"
+                  },
                   {
                       "id":  "usr_1792084483420",
                       "name":  "Daniel",
@@ -210,6 +143,9 @@
                       "telegramUsername":  "@DANATATA_BOT"
                   }
               ],
+    "deletedTxIds":  [
+
+                     ],
     "telegramToken":  "8901649639:AAEiVyOO7dM76YAl8RmhoFiGtwekD7KFmhQ",
     "telegramBotUsername":  "DANATATA_BOT"
 }
