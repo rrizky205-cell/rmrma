@@ -10,18 +10,58 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  async rewrites() {
+  async redirects() {
     return [
-      { source: '/', destination: '/index.html' },
-      { source: '/dashboard', destination: '/dashboard.html' },
-      { source: '/admin', destination: '/admin.html' },
-      { source: '/login', destination: '/login.html' },
-      { source: '/register', destination: '/register.html' },
-      { source: '/budget', destination: '/budget.html' },
-      { source: '/wallet', destination: '/wallet.html' },
-      { source: '/laporan', destination: '/laporan.html' },
-      { source: '/settings', destination: '/settings.html' },
-      { source: '/transaksi', destination: '/dashboard.html' },
+      {
+        source: '/',
+        destination: '/index.html',
+        permanent: false,
+      },
+      {
+        source: '/dashboard',
+        destination: '/dashboard.html',
+        permanent: false,
+      },
+      {
+        source: '/admin',
+        destination: '/admin.html',
+        permanent: false,
+      },
+      {
+        source: '/login',
+        destination: '/login.html',
+        permanent: false,
+      },
+      {
+        source: '/register',
+        destination: '/register.html',
+        permanent: false,
+      },
+      {
+        source: '/budget',
+        destination: '/budget.html',
+        permanent: false,
+      },
+      {
+        source: '/wallet',
+        destination: '/wallet.html',
+        permanent: false,
+      },
+      {
+        source: '/laporan',
+        destination: '/laporan.html',
+        permanent: false,
+      },
+      {
+        source: '/settings',
+        destination: '/settings.html',
+        permanent: false,
+      },
+      {
+        source: '/transaksi',
+        destination: '/dashboard.html',
+        permanent: false,
+      },
     ];
   },
 };

@@ -77,9 +77,9 @@
                       "amount":  24999,
                       "paymentAmount":  24999,
                       "planAmount":  24999,
-                      "paymentStatus":  "Pending Approval",
+                      "paymentStatus":  "Approved",
                       "paymentMethod":  "BCA Transfer",
-                      "role":  "User",
+                      "role":  "Pro Quantum",
                       "telegramUsername":  "-"
                   },
                   {
