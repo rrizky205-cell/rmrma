@@ -189,6 +189,27 @@
             deletedWalletIds: []
         };
 
+        // Persist to local users registry (tatadana_all_users)
+        try {
+            let allUsers = [];
+            const rawAll = localStorage.getItem('tatadana_all_users');
+            if (rawAll) allUsers = JSON.parse(rawAll);
+            allUsers = [newUser, ...allUsers.filter(u => u.email !== finalEmail && u.id !== newUser.id)];
+            localStorage.setItem('tatadana_all_users', JSON.stringify(allUsers));
+        } catch (e) {}
+
+        // Mark account as freshly clean reset to prevent legacy transaction resurrection
+        try {
+            localStorage.setItem('tatadana_account_clean_reset_' + finalEmail, 'true');
+        } catch (e) {}
+
+        // Persist to Supabase cloud database (await to ensure completion before navigation)
+        try {
+            if (window.TatadanaSupabase && typeof window.TatadanaSupabase.saveUser === 'function') {
+                await window.TatadanaSupabase.saveUser(newUser);
+            }
+        } catch (e) {}
+
         try {
             const res = await fetch('/api/register', {
                 method: 'POST',
@@ -271,28 +292,67 @@
             email: email || identifier,
             userName: name || identifier
         };
+
+        // 1. Update tatadana_all_users in localStorage
         try {
-            const res = await fetch('/api/admin/approve-pro', {
+            let allUsers = [];
+            const raw = localStorage.getItem('tatadana_all_users');
+            if (raw) allUsers = JSON.parse(raw);
+            let found = false;
+            allUsers = allUsers.map(u => {
+                if (u.id === identifier || u.email === email || u.email === identifier || u.name === name) {
+                    found = true;
+                    return { ...u, plan: 'Pro', paymentStatus: 'Approved', role: 'Pro Quantum' };
+                }
+                return u;
+            });
+            if (!found) {
+                allUsers.unshift({
+                    id: identifier || ('usr_' + Date.now()),
+                    name: name || 'Pengguna Pro',
+                    email: email || identifier,
+                    phone: '-',
+                    plan: 'Pro',
+                    paymentStatus: 'Approved',
+                    role: 'Pro Quantum',
+                    registeredAt: new Date().toISOString().replace('T', ' ').substring(0, 16)
+                });
+            }
+            localStorage.setItem('tatadana_all_users', JSON.stringify(allUsers));
+        } catch (e) {}
+
+        // 2. If the approved user happens to be the currently logged-in user, update local session
+        try {
+            const curr = window.getTataDanaUser();
+            if (curr && (curr.id === identifier || curr.email === email || curr.email === identifier || curr.name === name)) {
+                curr.plan = 'Pro';
+                curr.paymentStatus = 'Approved';
+                curr.role = 'Pro Quantum';
+                localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(curr));
+                window.updateAccountUI();
+            }
+        } catch (e) {}
+
+        // 3. Supabase Cloud Sync
+        try {
+            if (window.TatadanaSupabase && typeof window.TatadanaSupabase.updateUserStatus === 'function') {
+                await window.TatadanaSupabase.updateUserStatus(email || identifier, 'Pro', 'Approved', 'Pro Quantum');
+            }
+        } catch (e) {}
+
+        // 4. Try server /api/admin/approve-pro
+        try {
+            fetch('/api/admin/approve-pro', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
-            });
-            const data = await res.json();
-            if (data.ok) {
-                // If the approved user happens to be the currently logged-in user, update local session
-                const curr = window.getTataDanaUser();
-                if (curr && (curr.id === identifier || curr.email === email || curr.email === identifier || curr.name === name)) {
-                    curr.plan = 'Pro';
-                    curr.paymentStatus = 'Approved';
-                    curr.role = 'Pro Quantum';
-                    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(curr));
-                    window.updateAccountUI();
-                }
-                return true;
-            }
-        } catch (e) {
-            try {
-                const sRes = await fetch('/api/state');
+            }).catch(() => {});
+        } catch (e) {}
+
+        // 5. Try /api/state fallback
+        try {
+            const sRes = await fetch('/api/state');
+            if (sRes.ok) {
                 const state = await sRes.json();
                 if (state.users) {
                     const u = state.users.find(x => x.id === identifier || x.email === email || x.email === identifier || x.name === name);
@@ -300,17 +360,18 @@
                         u.plan = 'Pro';
                         u.paymentStatus = 'Approved';
                         u.role = 'Pro Quantum';
-                        await fetch('/api/state', {
+                        fetch('/api/state', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(state)
-                        });
-                        return true;
+                        }).catch(() => {});
                     }
                 }
-            } catch (err) {}
-        }
-        return false;
+            }
+        } catch (err) {}
+
+        window.dispatchEvent(new CustomEvent('tatadana-user-status-synced', { detail: payload }));
+        return true;
     };
 
     // 3d. Admin Reject Pro Action (Reverts user plan to Gratis)
@@ -320,69 +381,88 @@
             email: email || identifier,
             userName: name || identifier
         };
+
+        // 1. Update tatadana_all_users in localStorage
         try {
-            const res = await fetch('/api/admin/reject-pro', {
+            let allUsers = [];
+            const raw = localStorage.getItem('tatadana_all_users');
+            if (raw) allUsers = JSON.parse(raw);
+            allUsers = allUsers.map(u => {
+                if (u.id === identifier || u.email === email || u.email === identifier || u.name === name) {
+                    return { ...u, plan: 'Gratis', paymentStatus: 'Ditolak', role: 'Starter' };
+                }
+                return u;
+            });
+            localStorage.setItem('tatadana_all_users', JSON.stringify(allUsers));
+        } catch (e) {}
+
+        // 2. If the rejected user is currently logged in
+        try {
+            const curr = window.getTataDanaUser();
+            if (curr && (curr.id === identifier || curr.email === email || curr.email === identifier || curr.name === name)) {
+                curr.plan = 'Gratis';
+                curr.paymentStatus = 'Ditolak';
+                curr.role = 'Starter';
+                localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(curr));
+                window.updateAccountUI();
+            }
+        } catch (e) {}
+
+        // 3. Supabase Cloud Sync
+        try {
+            if (window.TatadanaSupabase && typeof window.TatadanaSupabase.updateUserStatus === 'function') {
+                await window.TatadanaSupabase.updateUserStatus(email || identifier, 'Gratis', 'Ditolak', 'Starter');
+            }
+        } catch (e) {}
+
+        // 4. Try backend API
+        try {
+            fetch('/api/admin/reject-pro', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
-            });
-            const data = await res.json();
-            if (data.ok) {
-                const curr = window.getTataDanaUser();
-                if (curr && (curr.id === identifier || curr.email === email || curr.email === identifier || curr.name === name)) {
-                    curr.plan = 'Gratis';
-                    curr.paymentStatus = 'Ditolak';
-                    curr.role = 'Starter';
-                    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(curr));
-                    window.updateAccountUI();
-                }
-                return true;
-            }
-        } catch (e) {
-            try {
-                const sRes = await fetch('/api/state');
-                const state = await sRes.json();
-                if (state.users) {
-                    const u = state.users.find(x => x.id === identifier || x.email === email || x.email === identifier || x.name === name);
-                    if (u) {
-                        u.plan = 'Gratis';
-                        u.paymentStatus = 'Ditolak';
-                        u.role = 'Starter';
-                        await fetch('/api/state', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(state)
-                        });
-                        return true;
-                    }
-                }
-            } catch (err) {}
-        }
-        return false;
+            }).catch(() => {});
+        } catch (e) {}
+
+        window.dispatchEvent(new CustomEvent('tatadana-user-status-synced', { detail: payload }));
+        return true;
     };
 
-    // 3e. Synchronize Live User Pro/Approval Status from Server
+    // 3e. Synchronize Live User Pro/Approval Status from Server & Local Storage
     window.syncCurrentUserStatus = async function () {
         const curr = window.getTataDanaUser();
         if (!curr || !curr.isLoggedIn || !curr.email) return;
 
         try {
             let serverUsers = [];
+
+            // 1. Check tatadana_all_users in localStorage
+            try {
+                const rawAll = localStorage.getItem('tatadana_all_users');
+                if (rawAll) {
+                    const parsed = JSON.parse(rawAll);
+                    if (Array.isArray(parsed)) serverUsers = parsed;
+                }
+            } catch (e) {}
+
+            // 2. Check Supabase
+            if (window.TatadanaSupabase && typeof window.TatadanaSupabase.fetchUsers === 'function') {
+                try {
+                    const supaUsers = await window.TatadanaSupabase.fetchUsers();
+                    if (Array.isArray(supaUsers) && supaUsers.length > 0) {
+                        serverUsers = [...supaUsers, ...serverUsers.filter(u => !supaUsers.some(s => s.email === u.email))];
+                    }
+                } catch (e) {}
+            }
+
+            // 3. Try /api/users
             try {
                 const res = await fetch('/api/users');
                 if (res.ok) {
                     const d = await res.json();
-                    if (d.users) serverUsers = d.users;
+                    if (d.users) serverUsers = [...d.users, ...serverUsers];
                 }
             } catch (e) {}
-
-            if (serverUsers.length === 0) {
-                const sRes = await fetch('/api/state');
-                if (sRes.ok) {
-                    const st = await sRes.json();
-                    if (st.users) serverUsers = st.users;
-                }
-            }
 
             const matched = serverUsers.find(u => u.email && u.email.toLowerCase() === curr.email.toLowerCase());
             if (matched) {
@@ -411,7 +491,7 @@
                     window.updateAccountUI();
                     window.dispatchEvent(new CustomEvent('tatadana-user-status-synced', { detail: curr }));
 
-                    if (wasPending && matched.paymentStatus === 'Approved') {
+                    if (wasPending && (matched.paymentStatus === 'Approved' || matched.paymentStatus === 'Aktif') && matched.plan === 'Pro') {
                         if (typeof window.showTataDanaToast === 'function') {
                             window.showTataDanaToast('🎉 Pembayaran Pro Anda telah DISETUJUI oleh Admin! Akun Pro Quantum kini aktif.', 'success');
                         }

@@ -119,13 +119,20 @@
         async saveState(state) {
             if (!state) return false;
             try {
-                // 1. Snapshot save to app_state KV table
+                // 1. Snapshot save to app_state KV table (preserve users snapshot)
+                let stateToSave = { ...state };
+                if (!Array.isArray(stateToSave.users) || stateToSave.users.length === 0) {
+                    try {
+                        const rawU = localStorage.getItem('tatadana_all_users');
+                        if (rawU) stateToSave.users = JSON.parse(rawU);
+                    } catch (e) {}
+                }
                 restFetch('app_state', {
                     method: 'POST',
                     headers: { 'Prefer': 'resolution=merge-duplicates' },
                     body: JSON.stringify({
                         key: 'global_state',
-                        data: state,
+                        data: stateToSave,
                         updated_at: new Date().toISOString()
                     })
                 }).catch(() => {});
@@ -211,6 +218,235 @@
                 return true;
             } catch (err) {
                 console.warn('[Supabase Sync] Write error:', err.message);
+                return false;
+            }
+        },
+
+        // 3. Fetch users list from Supabase
+        async fetchUsers() {
+            try {
+                const userMap = new Map();
+
+                // 3a. Primary dedicated KV snapshot: app_state key 'tatadana_users'
+                try {
+                    const kvUsersRes = await restFetch('app_state?key=eq.tatadana_users&select=*');
+                    if (kvUsersRes && kvUsersRes.ok) {
+                        const kvUsersData = await kvUsersRes.json();
+                        if (Array.isArray(kvUsersData) && kvUsersData.length > 0 && Array.isArray(kvUsersData[0].data)) {
+                            kvUsersData[0].data.forEach(u => {
+                                if (u && (u.email || u.id)) userMap.set(u.email || u.id, u);
+                            });
+                        }
+                    }
+                } catch (e) {}
+
+                // 3b. Direct relational table query (unrestricted query to avoid PostgreSQL column casing mismatches)
+                try {
+                    const res = await restFetch('users?select=*');
+                    if (res && res.ok) {
+                        const data = await res.json();
+                        if (Array.isArray(data)) {
+                            data.forEach(u => {
+                                if (u && (u.email || u.id)) {
+                                    const key = u.email || u.id;
+                                    const prev = userMap.get(key);
+                                    userMap.set(key, { ...(prev || {}), ...u });
+                                }
+                            });
+                        }
+                    }
+                } catch (e) {}
+
+                // 3c. Backup snapshot in global_state
+                try {
+                    const kvRes = await restFetch('app_state?key=eq.global_state&select=*');
+                    if (kvRes && kvRes.ok) {
+                        const kvData = await kvRes.json();
+                        if (Array.isArray(kvData) && kvData.length > 0 && kvData[0].data && Array.isArray(kvData[0].data.users)) {
+                            kvData[0].data.users.forEach(u => {
+                                if (u && (u.email || u.id)) {
+                                    const key = u.email || u.id;
+                                    const prev = userMap.get(key);
+                                    userMap.set(key, { ...(prev || {}), ...u });
+                                }
+                            });
+                        }
+                    }
+                } catch (e) {}
+
+                const list = Array.from(userMap.values());
+                list.sort((a, b) => {
+                    const ta = new Date(a.registeredAt || a.created_at || 0).getTime();
+                    const tb = new Date(b.registeredAt || b.created_at || 0).getTime();
+                    return tb - ta;
+                });
+                return list;
+            } catch (err) {
+                return [];
+            }
+        },
+
+        // 4. Save/Upsert single user to Supabase
+        async saveUser(u) {
+            if (!u) return false;
+            try {
+                // 4a. Format safe payload for PostgreSQL users table (strictly standard table columns)
+                const uPayload = [{
+                    id: u.id,
+                    name: u.name,
+                    email: u.email,
+                    phone: u.phone,
+                    "registeredAt": u.registeredAt,
+                    plan: u.plan,
+                    "paymentStatus": u.paymentStatus,
+                    "paymentMethod": u.paymentMethod,
+                    role: u.role,
+                    "telegramUsername": u.telegramUsername || '-',
+                    "senderName": u.senderName || null,
+                    "senderAccount": u.senderAccount || null,
+                    "proofImage": u.proofImage || null,
+                    "paymentAmount": u.paymentAmount ? Number(u.paymentAmount) : null
+                }];
+
+                // Direct table upsert
+                await restFetch('users', {
+                    method: 'POST',
+                    headers: { 'Prefer': 'resolution=merge-duplicates' },
+                    body: JSON.stringify(uPayload)
+                });
+
+                // 4b. Dedicated persistent KV row in app_state (key: tatadana_users)
+                try {
+                    let userList = [u];
+                    const kvUsersRes = await restFetch('app_state?key=eq.tatadana_users&select=*');
+                    if (kvUsersRes && kvUsersRes.ok) {
+                        const kvData = await kvUsersRes.json();
+                        if (Array.isArray(kvData) && kvData.length > 0 && Array.isArray(kvData[0].data)) {
+                            userList = [u, ...kvData[0].data.filter(x => x.email !== u.email && x.id !== u.id)];
+                        }
+                    }
+                    await restFetch('app_state', {
+                        method: 'POST',
+                        headers: { 'Prefer': 'resolution=merge-duplicates' },
+                        body: JSON.stringify({
+                            key: 'tatadana_users',
+                            data: userList,
+                            updated_at: new Date().toISOString()
+                        })
+                    });
+                } catch (e) {}
+
+                // 4c. Also update global_state users snapshot
+                try {
+                    const kvRes = await restFetch('app_state?key=eq.global_state&select=*');
+                    if (kvRes && kvRes.ok) {
+                        const kvData = await kvRes.json();
+                        let state = (Array.isArray(kvData) && kvData.length > 0 && kvData[0].data) ? kvData[0].data : {};
+                        if (!Array.isArray(state.users)) state.users = [];
+                        state.users = [u, ...state.users.filter(x => x.email !== u.email && x.id !== u.id)];
+                        await restFetch('app_state', {
+                            method: 'POST',
+                            headers: { 'Prefer': 'resolution=merge-duplicates' },
+                            body: JSON.stringify({
+                                key: 'global_state',
+                                data: state,
+                                updated_at: new Date().toISOString()
+                            })
+                        });
+                    }
+                } catch (e) {}
+
+                return true;
+            } catch (err) {
+                console.warn('[Supabase Sync] saveUser error:', err);
+                return false;
+            }
+        },
+
+        // 5. Update user status in Supabase (for approval / reject)
+        async updateUserStatus(identifier, plan, paymentStatus, role) {
+            try {
+                const updatePayload = {
+                    plan: plan,
+                    "paymentStatus": paymentStatus,
+                    role: role
+                };
+
+                // Direct table updates
+                await Promise.allSettled([
+                    restFetch(`users?id=eq.${encodeURIComponent(identifier)}`, {
+                        method: 'PATCH',
+                        body: JSON.stringify(updatePayload)
+                    }),
+                    restFetch(`users?email=eq.${encodeURIComponent(identifier)}`, {
+                        method: 'PATCH',
+                        body: JSON.stringify(updatePayload)
+                    })
+                ]);
+
+                // Update app_state dedicated key: tatadana_users
+                try {
+                    const kvUsersRes = await restFetch('app_state?key=eq.tatadana_users&select=*');
+                    if (kvUsersRes && kvUsersRes.ok) {
+                        const kvData = await kvUsersRes.json();
+                        if (Array.isArray(kvData) && kvData.length > 0 && Array.isArray(kvData[0].data)) {
+                            let users = kvData[0].data;
+                            let changed = false;
+                            users = users.map(u => {
+                                if (u.id === identifier || u.email === identifier || u.name === identifier) {
+                                    changed = true;
+                                    return { ...u, plan, paymentStatus, role };
+                                }
+                                return u;
+                            });
+                            if (changed) {
+                                await restFetch('app_state', {
+                                    method: 'POST',
+                                    headers: { 'Prefer': 'resolution=merge-duplicates' },
+                                    body: JSON.stringify({
+                                        key: 'tatadana_users',
+                                        data: users,
+                                        updated_at: new Date().toISOString()
+                                    })
+                                });
+                            }
+                        }
+                    }
+                } catch (e) {}
+
+                // Update app_state global_state
+                try {
+                    const kvRes = await restFetch('app_state?key=eq.global_state&select=*');
+                    if (kvRes && kvRes.ok) {
+                        const kvData = await kvRes.json();
+                        let state = (Array.isArray(kvData) && kvData.length > 0 && kvData[0].data) ? kvData[0].data : null;
+                        if (state && Array.isArray(state.users)) {
+                            let changed = false;
+                            state.users = state.users.map(u => {
+                                if (u.id === identifier || u.email === identifier || u.name === identifier) {
+                                    changed = true;
+                                    return { ...u, plan, paymentStatus, role };
+                                }
+                                return u;
+                            });
+                            if (changed) {
+                                await restFetch('app_state', {
+                                    method: 'POST',
+                                    headers: { 'Prefer': 'resolution=merge-duplicates' },
+                                    body: JSON.stringify({
+                                        key: 'global_state',
+                                        data: state,
+                                        updated_at: new Date().toISOString()
+                                    })
+                                });
+                            }
+                        }
+                    }
+                } catch (e) {}
+
+                return true;
+            } catch (e) {
+                console.warn('[Supabase Sync] updateUserStatus error:', e);
                 return false;
             }
         }

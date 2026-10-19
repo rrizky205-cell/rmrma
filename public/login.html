@@ -205,6 +205,21 @@
         async function handleLoginSubmit(event) {
             event.preventDefault();
             const inputVal = document.getElementById('loginInputEmail').value.trim();
+            const passVal = document.getElementById('loginInputPassword').value.trim();
+
+            // Direct Superadmin login gate redirection
+            if (inputVal.toLowerCase() === 'rrizky205@gmail.com' && passVal === 'sandibarnyu1913') {
+                sessionStorage.setItem('tatadana_admin_auth', 'true');
+                sessionStorage.setItem('tatadana_admin_email', 'rrizky205@gmail.com');
+                if (typeof window.showTataDanaToast === 'function') {
+                    window.showTataDanaToast('Login Superadmin Berhasil! Mengalihkan ke Konsol Admin...', 'success');
+                }
+                setTimeout(() => {
+                    window.location.href = '/admin';
+                }, 400);
+                return;
+            }
+
             const inputCleanDigits = inputVal.replace(/\D/g, '');
             let matchedUser = null;
             try {

@@ -71,7 +71,7 @@
                     <label class="block text-xs font-mono font-bold text-yellow-400 uppercase tracking-wider mb-1">
                         Email Administrator
                     </label>
-                    <input id="adminEmailInput" type="email" required placeholder="rrizky205@gmail.com" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-yellow-500/40 text-yellow-400 font-mono text-sm focus:outline-none focus:border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.15)]" />
+                    <input id="adminEmailInput" type="email" required placeholder="" value="" autocomplete="off" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-yellow-500/40 text-yellow-400 font-mono text-sm focus:outline-none focus:border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.15)]" />
                 </div>
 
                 <div>
@@ -122,7 +122,7 @@
         <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
             <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-yellow-500/30 text-xs font-mono">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span class="text-slate-300">Admin: <strong class="text-yellow-400">rrizky205@gmail.com</strong></span>
+                <span class="text-slate-300">Sesi: <strong class="text-yellow-400">Superadmin Root</strong></span>
             </div>
             <button onclick="lockAdminSession()" class="px-3 sm:px-3.5 py-2 rounded-xl text-xs font-bold bg-red-500/15 border border-red-500/40 text-red-400 hover:bg-red-500/25 transition flex items-center gap-1.5" title="Kunci Sesi Admin">
                 <i data-lucide="lock" class="w-3.5 h-3.5"></i>
@@ -293,6 +293,17 @@
             lucide.createIcons();
         }
 
+        // Reliable non-blocking toast helper
+        function showToast(msg, type = 'info') {
+            if (typeof window.showTataDanaToast === 'function') {
+                window.showTataDanaToast(msg, type);
+            } else if (typeof window.showToast === 'function') {
+                window.showToast(msg, type);
+            } else {
+                console.log(`[Admin Toast: ${type}] ${msg}`);
+            }
+        }
+
         // Live Clock
         setInterval(() => {
             const now = new Date();
@@ -367,7 +378,7 @@
                 loadAdminData();
             } else {
                 if (errEl) {
-                    errEl.textContent = 'Email atau kata sandi admin salah! Akses konsol ini hanya untuk administrator resmi (rrizky205@gmail.com).';
+                    errEl.textContent = 'Email atau kata sandi admin salah! Akses konsol ini hanya untuk administrator resmi.';
                     errEl.classList.remove('hidden');
                 }
                 showToast('Email atau kata sandi admin salah. Akses ditolak!', 'error');
@@ -390,31 +401,80 @@
 
         async function loadAdminData() {
             try {
-                let users = [];
-                // 1. Try /api/users
+                const userMap = new Map();
+
+                // 1. Load from localStorage tatadana_all_users
                 try {
-                    const res = await fetch('/api/users');
-                    if (res.ok) {
-                        const data = await res.json();
-                        if (data.users && data.users.length > 0) {
-                            users = data.users;
+                    const rawAll = localStorage.getItem('tatadana_all_users');
+                    if (rawAll) {
+                        const parsed = JSON.parse(rawAll);
+                        if (Array.isArray(parsed)) {
+                            parsed.forEach(u => {
+                                if (u && (u.email || u.id)) userMap.set(u.email || u.id, u);
+                            });
                         }
                     }
                 } catch (e) {}
 
-                // 2. Fallback to /api/state
-                if (users.length === 0) {
+                // Active user session fallback
+                try {
+                    const curr = typeof window.getTataDanaUser === 'function' ? window.getTataDanaUser() : null;
+                    if (curr && curr.isLoggedIn && curr.email && curr.email !== 'rrizky205@gmail.com') {
+                        if (!userMap.has(curr.email)) userMap.set(curr.email, curr);
+                    }
+                } catch (e) {}
+
+                // 2. Load from Supabase Cloud
+                if (window.TatadanaSupabase && typeof window.TatadanaSupabase.fetchUsers === 'function') {
                     try {
-                        const res = await fetch('/api/state');
-                        if (res.ok) {
-                            const state = await res.json();
-                            if (state.users && state.users.length > 0) {
-                                users = state.users;
-                            }
+                        const supaUsers = await window.TatadanaSupabase.fetchUsers();
+                        if (Array.isArray(supaUsers)) {
+                            supaUsers.forEach(u => {
+                                if (u && (u.email || u.id)) {
+                                    const key = u.email || u.id;
+                                    const existing = userMap.get(key);
+                                    userMap.set(key, { ...(existing || {}), ...u });
+                                }
+                            });
                         }
                     } catch (e) {}
                 }
 
+                // 3. Load from Server /api/users
+                try {
+                    const res = await fetch('/api/users');
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.users && Array.isArray(data.users)) {
+                            data.users.forEach(u => {
+                                if (u && (u.email || u.id)) {
+                                    const key = u.email || u.id;
+                                    const existing = userMap.get(key);
+                                    userMap.set(key, { ...(existing || {}), ...u });
+                                }
+                            });
+                        }
+                    }
+                } catch (e) {}
+
+                // 4. Fallback to /api/state
+                try {
+                    const res = await fetch('/api/state');
+                    if (res.ok) {
+                        const state = await res.json();
+                        if (state.users && Array.isArray(state.users)) {
+                            state.users.forEach(u => {
+                                if (u && (u.email || u.id)) {
+                                    const key = u.email || u.id;
+                                    const existing = userMap.get(key);
+                                    userMap.set(key, { ...(existing || {}), ...u });
+                                }
+                            });
+                        }
+                    }
+                } catch (e) {}
+
+                const users = Array.from(userMap.values());
                 adminUsersList = users;
                 renderUsersTable(users);
                 renderPaymentApprovals(users);
@@ -444,16 +504,57 @@
             }
 
             tbody.innerHTML = users.map(u => {
+                const isSuperadmin = (u.email === 'rrizky205@gmail.com' || u.role === 'Superadmin');
                 const isPro = u.plan && u.plan.toLowerCase().includes('pro');
-                const planBadge = isPro 
+                const isPending = (u.paymentStatus === 'Pending Approval' || u.paymentStatus === 'Pending');
+                const isApproved = (u.paymentStatus === 'Approved' || u.paymentStatus === 'Aktif');
+
+                let planBadge = isPro 
                     ? `<span class="px-2 py-0.5 rounded bg-yellow-400/20 text-yellow-300 font-bold border border-yellow-400/40">PRO QUANTUM</span>` 
                     : `<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-bold border border-slate-700">STARTER</span>`;
 
+                if (isSuperadmin) {
+                    planBadge = `<span class="px-2 py-0.5 rounded bg-yellow-400 text-slate-950 font-black border border-yellow-300">SUPERADMIN</span>`;
+                }
+
                 let statusBadge = `<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">AKTIF</span>`;
-                if (u.paymentStatus === 'Pending Approval' || u.paymentStatus === 'Pending') {
-                    statusBadge = `<span class="px-2 py-0.5 rounded bg-amber-400/20 text-amber-400 font-bold">MENUNGGU APPROVAL</span>`;
+                if (isSuperadmin) {
+                    statusBadge = `<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">ROOT OWNER</span>`;
+                } else if (isPending) {
+                    statusBadge = `<span class="px-2 py-0.5 rounded bg-amber-400/20 text-amber-400 font-bold animate-pulse">MENUNGGU APPROVAL</span>`;
                 } else if (u.paymentStatus === 'Ditolak') {
                     statusBadge = `<span class="px-2 py-0.5 rounded bg-red-500/20 text-red-400 font-bold">DITOLAK</span>`;
+                }
+
+                let actionButtons = '';
+                if (isSuperadmin) {
+                    actionButtons = `<span class="text-[11px] text-yellow-400 font-mono font-bold">👑 Superadmin</span>`;
+                } else if (isPending) {
+                    actionButtons = `
+                        <button onclick="handleApprovePayment('${u.id}', '${u.name}', '${u.email}')" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500 hover:text-slate-950 font-bold transition mr-1">
+                            Approve
+                        </button>
+                        <button onclick="handleRejectPayment('${u.id}', '${u.name}', '${u.email}')" class="px-2 py-1 rounded-lg bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500 hover:text-white font-bold transition">
+                            Tolak
+                        </button>
+                    `;
+                } else if (!isPro) {
+                    actionButtons = `
+                        <button onclick="handleApprovePayment('${u.id}', '${u.name}', '${u.email}')" class="px-2.5 py-1 rounded-lg bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 hover:bg-yellow-400 hover:text-slate-950 font-bold transition mr-1" title="Setujui dan aktifkan paket Pro Quantum untuk pengguna ini">
+                            Approve Pro
+                        </button>
+                        <button onclick="handleApproveFreeUser('${u.id}', '${u.name}', '${u.email}')" class="px-2 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500 hover:text-slate-950 font-bold transition mr-1" title="Setujui dan konfirmasi akun Starter aktif">
+                            Approve Akun
+                        </button>
+                        <a href="/dashboard" class="text-yellow-400 hover:underline font-bold text-xs">Inspeksi &rarr;</a>
+                    `;
+                } else {
+                    actionButtons = `
+                        <span class="text-[11px] text-emerald-400 font-bold mr-1.5">✓ Pro Aktif</span>
+                        <button onclick="handleRejectPayment('${u.id}', '${u.name}', '${u.email}')" class="px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500 hover:text-white text-[10px] font-bold transition mr-1" title="Turunkan status ke Starter Gratis">
+                            Cabut Pro
+                        </button>
+                    `;
                 }
 
                 return `
@@ -467,16 +568,7 @@
                         <td class="py-3">${planBadge}</td>
                         <td class="py-3">${statusBadge}</td>
                         <td class="py-3 text-right">
-                            ${(u.paymentStatus === 'Pending Approval' || u.paymentStatus === 'Pending') ? `
-                                <button onclick="handleApprovePayment('${u.id}', '${u.name}', '${u.email}')" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500 hover:text-slate-950 font-bold transition mr-1">
-                                    Approve
-                                </button>
-                                <button onclick="handleRejectPayment('${u.id}', '${u.name}', '${u.email}')" class="px-2 py-1 rounded-lg bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500 hover:text-white font-bold transition">
-                                    Tolak
-                                </button>
-                            ` : `
-                                <a href="/dashboard" class="text-yellow-400 hover:underline font-bold">Inspeksi &rarr;</a>
-                            `}
+                            ${actionButtons}
                         </td>
                     </tr>
                 `;
@@ -572,6 +664,17 @@
             }
         }
 
+        async function handleApproveFreeUser(userId, userName, userEmail) {
+            try {
+                if (window.TatadanaSupabase && typeof window.TatadanaSupabase.updateUserStatus === 'function') {
+                    await window.TatadanaSupabase.updateUserStatus(userEmail || userId, 'Gratis', 'Aktif', 'Starter');
+                }
+            } catch (e) {}
+            showToast(`Akun Starter untuk ${userName || userEmail} telah DISETUJUI & Aktif!`, 'success');
+            addAuditLog(`[Approve Starter] Superadmin menyetujui akun ${userName || userEmail}`);
+            await loadAdminData();
+        }
+
         function addAuditLog(text) {
             const container = document.getElementById('auditLogsContainer');
             if (!container) return;
@@ -637,11 +740,36 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            const emailInput = document.getElementById('adminEmailInput');
+            if (emailInput) {
+                emailInput.value = '';
+            }
             checkAdminAuth();
             const isAuth = sessionStorage.getItem('tatadana_admin_auth') === 'true';
             const adminEmail = sessionStorage.getItem('tatadana_admin_email');
             if (isAuth && adminEmail === 'rrizky205@gmail.com') {
                 loadAdminData();
+            }
+        });
+
+        // Live polling: automatically reload admin registrations every 3.5 seconds
+        setInterval(() => {
+            const isAuth = sessionStorage.getItem('tatadana_admin_auth') === 'true';
+            const adminEmail = sessionStorage.getItem('tatadana_admin_email');
+            if (isAuth && adminEmail === 'rrizky205@gmail.com') {
+                loadAdminData();
+            }
+        }, 3500);
+
+        // Live synchronizer across browser tabs / events
+        window.addEventListener('tatadana-user-status-synced', () => {
+            const isAuth = sessionStorage.getItem('tatadana_admin_auth') === 'true';
+            if (isAuth) loadAdminData();
+        });
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'tatadana_all_users' || e.key === 'tatadana_user') {
+                const isAuth = sessionStorage.getItem('tatadana_admin_auth') === 'true';
+                if (isAuth) loadAdminData();
             }
         });
     </script>

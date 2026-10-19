@@ -3,7 +3,7 @@
                     {
                         "id":  "w1",
                         "name":  "BCA",
-                        "balance":  15000000,
+                        "balance":  0,
                         "type":  "bank",
                         "color":  "#0066AE",
                         "isDefault":  true
@@ -105,19 +105,6 @@
                         }
                     ],
     "transactions":  [
-                         {
-                             "id":  "tx_1792317458806",
-                             "type":  "income",
-                             "amount":  15000000,
-                             "walletId":  "w1",
-                             "walletName":  "BCA",
-                             "targetWalletId":  null,
-                             "targetWalletName":  null,
-                             "category":  "💰 Gaji Pokok \u0026 Upah",
-                             "note":  "",
-                             "date":  "2026-10-18",
-                             "datetime":  "2026-10-18 16:57"
-                         }
                      ],
     "telegramToken":  "8901649639:AAEiVyOO7dM76YAl8RmhoFiGtwekD7KFmhQ",
     "telegramBotUsername":  "DANATATA_BOT",

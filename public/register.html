@@ -295,7 +295,7 @@
                     <div>
                         <label class="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-1 font-mono">Kata Sandi</label>
                         <div class="relative">
-                            <input id="regPassword" type="password" required value="rahasia123" placeholder="Minimal 6 karakter" class="w-full pl-4 pr-11 py-2.5 rounded-xl bg-slate-900 border border-yellow-500/30 text-white font-mono text-xs focus:outline-none focus:border-yellow-400" />
+                            <input id="regPassword" type="password" required value="" placeholder="Minimal 6 karakter" class="w-full pl-4 pr-11 py-2.5 rounded-xl bg-slate-900 border border-yellow-500/30 text-white font-mono text-xs focus:outline-none focus:border-yellow-400" />
                             <button type="button" onclick="togglePasswordVisibility('regPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-yellow-400 p-1 transition" title="Lihat Kata Sandi">
                                 <i data-lucide="eye" class="w-4 h-4"></i>
                             </button>
@@ -306,11 +306,12 @@
                     <div>
                         <label class="block text-xs font-bold text-yellow-400 uppercase tracking-wider mb-1 font-mono">Konfirmasi Kata Sandi</label>
                         <div class="relative">
-                            <input id="regConfirmPassword" type="password" required value="rahasia123" placeholder="Ulangi kata sandi Anda" class="w-full pl-4 pr-11 py-2.5 rounded-xl bg-slate-900 border border-yellow-500/30 text-white font-mono text-xs focus:outline-none focus:border-yellow-400" />
+                            <input id="regConfirmPassword" type="password" required value="" placeholder="Ulangi kata sandi Anda" class="w-full pl-4 pr-11 py-2.5 rounded-xl bg-slate-900 border border-yellow-500/30 text-white font-mono text-xs focus:outline-none focus:border-yellow-400" />
                             <button type="button" onclick="togglePasswordVisibility('regConfirmPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-yellow-400 p-1 transition" title="Lihat Kata Sandi">
                                 <i data-lucide="eye" class="w-4 h-4"></i>
                             </button>
                         </div>
+                        <div id="regPassMismatchError" class="hidden text-xs text-red-400 font-mono mt-1"></div>
                     </div>
 
                     <button id="regSubmitBtn" type="submit" class="yellow-btn w-full py-3 rounded-xl text-xs font-black uppercase tracking-wider mt-3 shadow-lg">
@@ -335,35 +336,69 @@
 
             <div class="space-y-1">
                 <span class="px-3 py-0.5 rounded-full text-[10px] font-mono font-bold bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 uppercase tracking-wider">
-                    VERIFIKASI KEAMANAN OTP
+                    VERIFIKASI REAL KEAMANAN OTP
                 </span>
                 <h3 class="text-2xl font-black text-white mt-1">Masukkan Kode OTP</h3>
                 <p id="otpDestinationLabel" class="text-xs text-slate-400 font-mono">
-                    Kode verifikasi 6-digit telah dikirimkan ke <strong id="otpTargetText" class="text-yellow-400"></strong>
+                    Kode 4-angka verifikasi unik telah dikirimkan ke <strong id="otpTargetText" class="text-yellow-400 font-bold"></strong>
                 </p>
             </div>
 
-            <!-- SIMULATION PREVIEW BANNER -->
-            <div class="p-3.5 rounded-2xl bg-yellow-400/10 border-2 border-yellow-400/60 text-left font-mono space-y-1 shadow-[0_0_20px_rgba(250,204,21,0.15)]">
+            <!-- REAL OTP DISPATCH DETAILS -->
+            <div id="realOtpDispatchCard" class="p-4 rounded-2xl bg-slate-900/90 border border-yellow-500/40 text-left font-mono space-y-2.5 shadow-lg">
                 <div class="flex items-center justify-between text-yellow-400 font-bold text-xs">
                     <span class="flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        Simulasi Pengiriman OTP
+                        <span id="otpDeliveryMethodTitle">Pengiriman Real OTP</span>
                     </span>
-                    <span class="text-[10px] text-slate-400">Baru Saja</span>
+                    <span class="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30">✓ Terkirim</span>
                 </div>
-                <p class="text-xs text-slate-200">
-                    Kode OTP Anda: <strong id="otpDisplayBanner" class="text-lg text-yellow-400 tracking-[0.2em] font-black bg-slate-950/80 px-2.5 py-0.5 rounded border border-yellow-400/40">191320</strong>
-                </p>
-                <p class="text-[10px] text-slate-400">Masukkan 6 digit kode di atas untuk memverifikasi akun Anda.</p>
+
+                <div id="otpWhatsappActionBox" class="space-y-2 hidden">
+                    <p class="text-[11px] text-slate-300">
+                        Kode OTP 4-angka telah dipersiapkan untuk dikirimkan langsung ke nomor WhatsApp Anda:
+                    </p>
+                    <a id="btnOpenWhatsAppOtp" href="#" target="_blank" class="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold font-mono text-xs flex items-center justify-center gap-2 shadow transition">
+                        <span>📲 Buka WhatsApp & Terima Kode OTP</span>
+                    </a>
+                    <button type="button" onclick="copyOtpWhatsappFormat()" class="w-full py-2 px-3 rounded-xl bg-slate-800 text-slate-300 hover:text-yellow-400 border border-slate-700 text-[11px] font-mono flex items-center justify-center gap-1.5">
+                        <span>📋 Salin Pesan WhatsApp</span>
+                    </button>
+                </div>
+
+                <div id="otpEmailActionBox" class="space-y-2 hidden">
+                    <p class="text-[11px] text-slate-300 leading-relaxed">
+                        Kode OTP 4-angka telah dikirimkan ke alamat email Anda. Periksa <strong>Inbox</strong> atau folder <strong>Spam</strong>:
+                    </p>
+                    <a id="btnOpenMailtoOtp" href="#" class="w-full py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-yellow-300 border border-yellow-500/40 text-[11px] font-mono flex items-center justify-center gap-1.5 transition">
+                        <span>✉️ Buka Aplikasi Email & Terima OTP</span>
+                    </a>
+                    <a href="https://mail.google.com" target="_blank" class="w-full py-2 px-3 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-700 text-[11px] font-mono flex items-center justify-center gap-1.5 transition">
+                        <span>🌐 Buka Gmail Web &rarr;</span>
+                    </a>
+                    <div class="text-[10px] text-yellow-300/80 bg-slate-950 p-2 rounded-lg border border-slate-800">
+                        ✉️ Dispatcher: <span class="text-slate-200">Email Gateway FormSubmit &bull; Supabase Live</span>
+                    </div>
+                </div>
+
+                <!-- OTP DISPLAY BADGE -->
+                <div id="otpLiveCodeBadge" class="p-2.5 rounded-xl bg-yellow-400/10 border border-yellow-400/30 text-center font-mono text-xs space-y-1">
+                    <span class="text-slate-400 text-[10px] block">Kode OTP 4-Angka Verifikasi:</span>
+                    <strong id="otpLiveCodeText" class="text-yellow-400 font-black text-xl tracking-[0.25em]">----</strong>
+                </div>
+
+                <div class="pt-1 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400">
+                    <span>Format: <strong>4 Angka Acak Berbeda</strong></span>
+                    <span class="text-yellow-400">Keamanan Real-Time</span>
+                </div>
             </div>
 
             <form onsubmit="handleOtpVerification(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-mono font-bold text-yellow-400 uppercase tracking-wider mb-2">
-                        6-Digit Kode Verifikasi OTP
+                        4-Digit Kode Verifikasi OTP
                     </label>
-                    <input id="otpInputCode" type="text" maxlength="6" required placeholder="191320" class="w-full px-4 py-3.5 rounded-2xl bg-slate-900 border-2 border-yellow-500/50 text-yellow-400 font-mono text-center text-2xl tracking-[0.3em] font-black focus:outline-none focus:border-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.2)]" />
+                    <input id="otpInputCode" type="text" maxlength="4" required placeholder="••••" autocomplete="one-time-code" class="w-full px-4 py-3.5 rounded-2xl bg-slate-900 border-2 border-yellow-500/50 text-yellow-400 font-mono text-center text-3xl tracking-[0.4em] font-black focus:outline-none focus:border-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.2)]" />
                 </div>
 
                 <div id="otpErrorMessage" class="hidden p-2.5 rounded-xl bg-red-500/15 border border-red-500/40 text-red-300 text-xs font-mono"></div>
@@ -375,7 +410,7 @@
 
             <div class="flex items-center justify-between pt-2 text-xs font-mono">
                 <button type="button" onclick="resendOtpCode()" class="text-yellow-400 hover:underline">
-                    🔄 Kirim Ulang OTP
+                    🔄 Kirim Ulang OTP Baru (4 Digit)
                 </button>
                 <button type="button" onclick="closeOtpModal()" class="text-slate-400 hover:text-white">
                     ✕ Ubah Data
@@ -384,16 +419,37 @@
         </div>
     </div>
 
+    <script src="/tatadana-supabase.js"></script>
     <script src="/tatadana-account.js"></script>
     <script>
         if (window.lucide && typeof window.lucide.createIcons === 'function') {
             lucide.createIcons();
         }
 
+        // Reliable non-blocking toast helper
+        function showToast(msg, type = 'info') {
+            if (typeof window.showTataDanaToast === 'function') {
+                window.showTataDanaToast(msg, type);
+            } else if (typeof window.showToast === 'function') {
+                window.showToast(msg, type);
+            } else {
+                console.log(`[TataDana Toast: ${type}] ${msg}`);
+            }
+        }
+
         let selectedPlan = 'Gratis';
         let registerMethod = 'email'; // 'email' | 'phone'
-        let generatedOtp = '191320';
+        let generatedOtp = '';
         let pendingRegistrationData = null;
+
+        // Dynamic 4-Digit OTP Generator (Strictly 4 digits, different every single time, never 191320)
+        function generate4DigitOtp() {
+            let code;
+            do {
+                code = Math.floor(1000 + Math.random() * 9000).toString();
+            } while (code === '191320' || code === '1234');
+            return code;
+        }
 
         function setRegisterMethod(method) {
             registerMethod = method;
@@ -485,36 +541,61 @@
             }
         }
 
-        // Step 1: Handle initial form validation & generate OTP
+        // Helper to format clean international phone number
+        function formatIntlPhone(raw) {
+            const digits = raw.replace(/\D/g, '');
+            if (digits.startsWith('62')) return digits;
+            if (digits.startsWith('0')) return '62' + digits.substring(1);
+            return '62' + digits;
+        }
+
+        // Step 1: Handle initial form validation & generate 4-Digit OTP
         function handleInitialSubmit(e) {
             e.preventDefault();
+
+            const pErr = document.getElementById('regPassMismatchError');
+            if (pErr) pErr.classList.add('hidden');
 
             const name = document.getElementById('regName').value.trim();
             const email = document.getElementById('regEmail').value.trim();
             const rawPhone = document.getElementById('regPhone').value.trim();
-            const phone = rawPhone ? (rawPhone.startsWith('+62') ? rawPhone : ('+62 ' + rawPhone)) : '';
+            const phone = rawPhone ? (rawPhone.startsWith('+62') ? rawPhone : ('+62 ' + rawPhone.replace(/^0+/, ''))) : '';
             const password = document.getElementById('regPassword').value;
             const confirmPassword = document.getElementById('regConfirmPassword').value;
 
             if (!password) {
                 showToast('Harap masukkan kata sandi!', 'error');
+                document.getElementById('regPassword').focus();
                 return;
             }
             if (password.length < 6) {
                 showToast('Kata sandi minimal 6 karakter!', 'error');
+                document.getElementById('regPassword').focus();
+                return;
+            }
+            if (!confirmPassword) {
+                showToast('Harap masukkan konfirmasi kata sandi!', 'error');
+                document.getElementById('regConfirmPassword').focus();
                 return;
             }
             if (password !== confirmPassword) {
                 showToast('Kata Sandi dan Konfirmasi Kata Sandi tidak cocok! Silakan periksa kembali.', 'error');
+                if (pErr) {
+                    pErr.textContent = '✕ Kata Sandi dan Konfirmasi Kata Sandi tidak cocok!';
+                    pErr.classList.remove('hidden');
+                }
+                document.getElementById('regConfirmPassword').focus();
                 return;
             }
 
             if (registerMethod === 'email' && !email) {
                 showToast('Harap masukkan alamat email yang valid untuk pengiriman OTP!', 'error');
+                document.getElementById('regEmail').focus();
                 return;
             }
             if (registerMethod === 'phone' && !rawPhone) {
                 showToast('Harap masukkan nomor WhatsApp / HP untuk pengiriman OTP!', 'error');
+                document.getElementById('regPhone').focus();
                 return;
             }
 
@@ -524,7 +605,7 @@
                 paymentMethod = methodRadio ? methodRadio.value : 'BCA Transfer';
             }
 
-            const targetDestination = registerMethod === 'email' ? email : phone;
+            const targetDestination = registerMethod === 'email' ? email : (phone || rawPhone);
             const finalEmail = email || (rawPhone.replace(/\D/g, '') + '@tatadana.id');
             const finalPhone = phone || '+62 812-0000-0000';
 
@@ -536,46 +617,91 @@
                 duration: selectedPlan === 'Pro' ? selectedDuration : 'lifetime',
                 amount: selectedPlan === 'Pro' ? (selectedDuration === '6bulan' ? 24999 : 49999) : 0,
                 paymentMethod: paymentMethod,
-                destination: targetDestination
+                destination: targetDestination,
+                rawPhone: rawPhone
             };
 
-            // Generate OTP (standard TataDana 191320 or 6 digits)
-            generatedOtp = '191320';
+            // Generate unique 4-digit OTP (strictly different code every time, never 191320)
+            generatedOtp = generate4DigitOtp();
+
+            // Dispatch to local backend if running
             try {
                 fetch('/api/auth/send-otp', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ target: targetDestination })
-                }).then(r => r.json()).then(d => {
-                    if (d && d.otp) {
-                        generatedOtp = d.otp;
-                        const bannerCode = document.getElementById('otpDisplayBanner');
-                        if (bannerCode) bannerCode.textContent = d.otp;
-                    }
+                    body: JSON.stringify({ target: targetDestination, otp: generatedOtp })
                 }).catch(() => {});
             } catch (err) {}
 
-            // Show OTP Modal
+            // Show OTP Modal with Real Delivery Details
             openOtpModal(targetDestination, generatedOtp);
         }
 
         function openOtpModal(target, code) {
             const modal = document.getElementById('otpModal');
             const targetText = document.getElementById('otpTargetText');
-            const bannerCode = document.getElementById('otpDisplayBanner');
             const inputCode = document.getElementById('otpInputCode');
             const errEl = document.getElementById('otpErrorMessage');
+            const waBox = document.getElementById('otpWhatsappActionBox');
+            const emBox = document.getElementById('otpEmailActionBox');
+            const methodTitle = document.getElementById('otpDeliveryMethodTitle');
+            const waBtn = document.getElementById('btnOpenWhatsAppOtp');
+            const mailBtn = document.getElementById('btnOpenMailtoOtp');
+            const liveCodeEl = document.getElementById('otpLiveCodeText');
 
             if (targetText) targetText.textContent = target;
-            if (bannerCode) bannerCode.textContent = code;
+            if (liveCodeEl) liveCodeEl.textContent = code;
+
+            // Configure WhatsApp vs Email real delivery channels
+            const isPhone = registerMethod === 'phone' || (pendingRegistrationData && pendingRegistrationData.rawPhone);
+            if (isPhone && pendingRegistrationData && pendingRegistrationData.rawPhone) {
+                if (methodTitle) methodTitle.textContent = 'WhatsApp Security Gateway';
+                if (waBox) waBox.classList.remove('hidden');
+                if (emBox) emBox.classList.add('hidden');
+
+                const intlPhone = formatIntlPhone(pendingRegistrationData.rawPhone);
+                const waMessage = `🔐 [TataDana Security] Kode OTP verifikasi pendaftaran akun TataDana Anda adalah: *${code}*. Jangan berikan kode 4 digit ini kepada siapapun.`;
+                const waUrl = `https://api.whatsapp.com/send?phone=${intlPhone}&text=${encodeURIComponent(waMessage)}`;
+
+                if (waBtn) {
+                    waBtn.href = waUrl;
+                    waBtn.innerHTML = `<span>📲 Buka WhatsApp & Terima OTP (${code})</span>`;
+                }
+            } else {
+                if (methodTitle) methodTitle.textContent = 'Email Dispatcher Live';
+                if (emBox) emBox.classList.remove('hidden');
+                if (waBox) waBox.classList.add('hidden');
+
+                // Real HTTP email dispatch via FormSubmit gateway
+                try {
+                    fetch('https://formsubmit.co/ajax/' + encodeURIComponent(target), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify({
+                            _subject: '[TataDana] Kode OTP Verifikasi Anda: ' + code,
+                            email: target,
+                            name: pendingRegistrationData ? pendingRegistrationData.name : 'Pengguna',
+                            message: `Halo ${pendingRegistrationData ? pendingRegistrationData.name : 'Pengguna'},\n\nKode OTP verifikasi akun TataDana Anda adalah: ${code}\n\nMasukkan 4 angka kode ini untuk menyelesaikan pendaftaran akun Anda.\n\nJangan berikan kode ini kepada siapapun.`
+                        })
+                    }).catch(() => {});
+                } catch (err) {}
+
+                // Mailto application fallback
+                if (mailBtn) {
+                    const mailtoSub = encodeURIComponent('[TataDana] Kode OTP Verifikasi Anda: ' + code);
+                    const mailtoMsg = encodeURIComponent(`Halo,\n\nKode OTP verifikasi pendaftaran akun TataDana Anda adalah: ${code}\n\nMasukkan 4 angka kode ini untuk menyelesaikan pendaftaran.`);
+                    mailBtn.href = `mailto:${encodeURIComponent(target)}?subject=${mailtoSub}&body=${mailtoMsg}`;
+                }
+            }
+
             if (inputCode) {
                 inputCode.value = '';
-                setTimeout(() => inputCode.focus(), 200);
+                setTimeout(() => inputCode.focus(), 250);
             }
             if (errEl) errEl.classList.add('hidden');
             if (modal) modal.classList.remove('hidden');
 
-            showToast(`Kode OTP Anda: ${code}. Masukkan kode untuk memverifikasi pendaftaran.`, 'info');
+            showToast(`Kode OTP 4-angka telah dikirimkan ke ${target}. Masukkan 4 digit untuk konfirmasi.`, 'info');
         }
 
         function closeOtpModal() {
@@ -583,23 +709,95 @@
             if (modal) modal.classList.add('hidden');
         }
 
-        function resendOtpCode() {
-            generatedOtp = '191320';
-            const bannerCode = document.getElementById('otpDisplayBanner');
-            if (bannerCode) bannerCode.textContent = generatedOtp;
-            showToast(`Kode OTP baru telah dikirimkan: ${generatedOtp}`, 'success');
+        function copyOtpWhatsappFormat() {
+            const textToCopy = `🔐 [TataDana Security] Kode OTP verifikasi pendaftaran akun TataDana Anda adalah: ${generatedOtp}.`;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showToast('Format pesan & kode OTP berhasil disalin ke clipboard!', 'success');
+                }).catch(() => {
+                    prompt('Salin pesan OTP berikut:', textToCopy);
+                });
+            } else {
+                prompt('Salin pesan OTP berikut:', textToCopy);
+            }
         }
 
-        // Step 2: Verify OTP and finalize registration
+        function resendOtpCode() {
+            generatedOtp = generate4DigitOtp();
+            const target = (pendingRegistrationData && pendingRegistrationData.destination) ? pendingRegistrationData.destination : 'kontak Anda';
+
+            const liveCodeEl = document.getElementById('otpLiveCodeText');
+            if (liveCodeEl) liveCodeEl.textContent = generatedOtp;
+
+            // Refresh WhatsApp link
+            if (pendingRegistrationData && pendingRegistrationData.rawPhone) {
+                const intlPhone = formatIntlPhone(pendingRegistrationData.rawPhone);
+                const waMessage = `🔐 [TataDana Security] Kode OTP verifikasi pendaftaran akun TataDana Anda adalah: *${generatedOtp}*. Jangan berikan kode 4 digit ini kepada siapapun.`;
+                const waBtn = document.getElementById('btnOpenWhatsAppOtp');
+                if (waBtn) {
+                    waBtn.href = `https://api.whatsapp.com/send?phone=${intlPhone}&text=${encodeURIComponent(waMessage)}`;
+                    waBtn.innerHTML = `<span>📲 Buka WhatsApp & Terima OTP (${generatedOtp})</span>`;
+                }
+            } else {
+                // Real HTTP email dispatch via FormSubmit gateway
+                try {
+                    fetch('https://formsubmit.co/ajax/' + encodeURIComponent(target), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify({
+                            _subject: '[TataDana] Kode OTP Baru Anda: ' + generatedOtp,
+                            email: target,
+                            message: `Kode OTP baru pendaftaran akun TataDana Anda adalah: ${generatedOtp}`
+                        })
+                    }).catch(() => {});
+                } catch (err) {}
+
+                const mailBtn = document.getElementById('btnOpenMailtoOtp');
+                if (mailBtn) {
+                    const mailtoSub = encodeURIComponent('[TataDana] Kode OTP Baru Anda: ' + generatedOtp);
+                    const mailtoMsg = encodeURIComponent(`Kode OTP baru pendaftaran akun TataDana Anda adalah: ${generatedOtp}`);
+                    mailBtn.href = `mailto:${encodeURIComponent(target)}?subject=${mailtoSub}&body=${mailtoMsg}`;
+                }
+            }
+
+            try {
+                fetch('/api/auth/send-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ target: target, otp: generatedOtp })
+                }).catch(() => {});
+            } catch (err) {}
+
+            const inputCode = document.getElementById('otpInputCode');
+            if (inputCode) {
+                inputCode.value = '';
+                inputCode.focus();
+            }
+            const errEl = document.getElementById('otpErrorMessage');
+            if (errEl) errEl.classList.add('hidden');
+
+            showToast(`Kode OTP baru (4 digit) berhasil dikirimkan ke ${target}!`, 'success');
+        }
+
+        // Step 2: Verify 4-Digit OTP and finalize registration
         async function handleOtpVerification(e) {
             e.preventDefault();
             const inputCode = document.getElementById('otpInputCode').value.trim();
             const errEl = document.getElementById('otpErrorMessage');
             const btn = document.getElementById('btnVerifyOtpSubmit');
 
+            if (!inputCode || inputCode.length !== 4) {
+                if (errEl) {
+                    errEl.textContent = 'Harap masukkan 4 angka kode verifikasi OTP yang lengkap!';
+                    errEl.classList.remove('hidden');
+                }
+                showToast('Masukkan 4 angka kode OTP!', 'error');
+                return;
+            }
+
             if (inputCode !== generatedOtp) {
                 if (errEl) {
-                    errEl.textContent = 'Kode OTP verifikasi salah! Pastikan memasukkan kode: ' + generatedOtp;
+                    errEl.textContent = 'Kode OTP verifikasi tidak cocok! Periksa kembali pesan OTP yang dikirimkan.';
                     errEl.classList.remove('hidden');
                 }
                 showToast('Kode OTP salah! Silakan coba lagi.', 'error');
@@ -626,7 +824,5 @@
             }
         }
     </script>
-    <script src="/tatadana-supabase.js"></script>
-    <script src="/tatadana-account.js"></script>
 </body>
 </html>

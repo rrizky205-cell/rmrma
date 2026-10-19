@@ -253,7 +253,7 @@ while ($listener.IsListening) {
             try { $bodyObj = ConvertFrom-Json $bodyText } catch {}
 
             $target = if ($bodyObj -and $bodyObj.target) { $bodyObj.target.Trim() } else { "" }
-            $otpCode = "191320" # Standard verification code for TataDana
+            $otpCode = if ($bodyObj -and $bodyObj.otp) { $bodyObj.otp.ToString().Trim() } else { (Get-Random -Minimum 1000 -Maximum 9999).ToString() }
             $json = ConvertTo-Json @{ 
                 ok = $true
                 otp = $otpCode
@@ -360,6 +360,27 @@ while ($listener.IsListening) {
             $state.chatHistory = @($welcomeChat)
 
             [System.IO.File]::WriteAllText($stateFile, (ConvertTo-Json $state -Depth 10), $utf8NoBom)
+
+            # Sync to Supabase app_state
+            try {
+                $supaUrl = "https://wchpkvxjufjujaganaca.supabase.co"
+                $supaKey = "sb_publishable_qBhFiLibDHVoM22HjP0Vvw_Gtw_fpbd"
+                $kvBody = ConvertTo-Json @{ key = "global_state"; data = $state } -Depth 10 -Compress
+                $sBytes = [System.Text.Encoding]::UTF8.GetBytes($kvBody)
+                $sReq = [System.Net.HttpWebRequest]::Create("$supaUrl/rest/v1/app_state")
+                $sReq.Method = "POST"
+                $sReq.ContentType = "application/json"
+                $sReq.Headers["apikey"] = $supaKey
+                $sReq.Headers["Authorization"] = "Bearer $supaKey"
+                $sReq.Headers["Prefer"] = "resolution=merge-duplicates"
+                $sReq.Timeout = 1500
+                $sReq.ContentLength = $sBytes.Length
+                $sStream = $sReq.GetRequestStream()
+                $sStream.Write($sBytes, 0, $sBytes.Length)
+                $sStream.Close()
+                $sResp = $sReq.GetResponse()
+                $sResp.Close()
+            } catch {}
 
             # Send Telegram Bot Notification for new registration
             $token = if ($state.telegramToken) { $state.telegramToken } else { "8901649639:AAEiVyOO7dM76YAl8RmhoFiGtwekD7KFmhQ" }

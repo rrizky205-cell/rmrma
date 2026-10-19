@@ -298,11 +298,34 @@
             changed = true;
         }
 
+        // Account Clean-Reset Protection (Guarantees newly registered users start and stay at Rp0 saldo, 0 tx, 0 budget)
+        const currUser = (typeof window.getTataDanaUser === 'function') ? window.getTataDanaUser() : null;
+        const isCleanReset = currUser && currUser.isLoggedIn && currUser.email && (localStorage.getItem('tatadana_account_clean_reset_' + currUser.email) === 'true');
+
+        if (isCleanReset) {
+            if (!local.transactions || local.transactions.length === 0) {
+                if (serverState) serverState.transactions = [];
+                local.transactions = [];
+            }
+            if (!local.budgets || local.budgets.length === 0) {
+                if (serverState) serverState.budgets = [];
+                local.budgets = [];
+            }
+            if ((local.transactions || []).length === 0) {
+                if (serverState && Array.isArray(serverState.wallets)) {
+                    serverState.wallets = serverState.wallets.map(w => ({ ...w, balance: 0 }));
+                }
+                if (Array.isArray(local.wallets)) {
+                    local.wallets = local.wallets.map(w => ({ ...w, balance: 0 }));
+                }
+            }
+        }
+
         // 4. Merge server transactions (skipping any deleted ones)
         if (Array.isArray(serverState.transactions)) {
-            if (serverState.transactions.length === 0) {
-                // If server transactions have been reset to 0, synchronize local transactions to 0
-                if ((local.transactions || []).length > 0) {
+            if (serverState.transactions.length === 0 || (isCleanReset && (local.transactions || []).length === 0)) {
+                // If server transactions have been reset to 0 or account is clean reset, keep local transactions clean
+                if (!isCleanReset && (local.transactions || []).length > 0 && serverState.transactions.length === 0) {
                     local.transactions = [];
                     changed = true;
                 }
@@ -332,7 +355,10 @@
 
         // 6. Merge wallets (filter out deleted wallets)
         if (Array.isArray(serverState.wallets) && serverState.wallets.length > 0) {
-            const filteredServerWallets = serverState.wallets.filter(w => !mergedDelW.has(w.id));
+            let filteredServerWallets = serverState.wallets.filter(w => !mergedDelW.has(w.id));
+            if (isCleanReset && (local.transactions || []).length === 0) {
+                filteredServerWallets = filteredServerWallets.map(w => ({ ...w, balance: 0 }));
+            }
             if (filteredServerWallets.length > 0) {
                 const localWStr = JSON.stringify(local.wallets || []);
                 const serverWStr = JSON.stringify(filteredServerWallets);
@@ -345,11 +371,15 @@
 
         // 7. Merge budgets
         if (Array.isArray(serverState.budgets)) {
-            const localBStr = JSON.stringify(local.budgets || []);
-            const serverBStr = JSON.stringify(serverState.budgets);
-            if (localBStr !== serverBStr) {
-                local.budgets = serverState.budgets;
-                changed = true;
+            if (isCleanReset && (!local.budgets || local.budgets.length === 0)) {
+                // Keep budgets clean for newly registered accounts
+            } else {
+                const localBStr = JSON.stringify(local.budgets || []);
+                const serverBStr = JSON.stringify(serverState.budgets);
+                if (localBStr !== serverBStr) {
+                    local.budgets = serverState.budgets;
+                    changed = true;
+                }
             }
         }
 
